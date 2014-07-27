@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:cc="http://java.sun.com/jsf/composite/cc">
+
+<ui:composition template="/WEB-INF/templates/newsmaintemplate.xhtml">
+	<!-- define the title for each page -->
+	<ui:define name="title">#{newsBackingBean.news.subject}
+	<f:event type="preRenderComponent" listener="#{newsBackingBean.loadNews()}" />
+	</ui:define>
+	<ui:define name="description">
+		<meta name="description" content="#{newsBackingBean.news.subject}"></meta>
+	</ui:define>
+	<ui:define name="js">
+		<h:outputScript library="js" name="profile.js" target="head"></h:outputScript>
+	</ui:define>
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="id" value="${sessionScope.newsId}"></f:viewParam>
+		</f:metadata>
+
+	</ui:define>
+	<ui:define name="navigation">
+		<h:panelGroup id="navigationPanelId">
+			<ui:include src="/navigationNews.xhtml"></ui:include>
+
+		</h:panelGroup>
+	</ui:define>
+	<ui:define name="leftpage">
+		<ui:include src="../WEB-INF/templates/faceBookPlugin.xhtml"></ui:include>
+		<!-- News Form -->
+		<div>
+			<h:form id="viewNewsForm" prependId="false">
+				<table class="viewNewsTable">
+					<tr>
+						<td class="newsSubject">
+							<h1>
+								<h:outputText value="#{newsBackingBean.news.subject}"></h:outputText>
+							</h1>
+						</td>
+					</tr>
+					<tr>
+
+						<td>
+							<div class="newssubtitle">
+
+								<div class="readFloor_Main_Top_Misc">
+									#{msgs.Post_Label}
+									<h:outputFormat value="#{newsBackingBean.news.createTime}">
+										<f:convertDateTime pattern="yyyy-MM-dd HH:mm a" />
+									</h:outputFormat>
+									| <em>#{newsBackingBean.news.numOfViews}</em> #{msgs.Viewed}| <em>#{newsBackingBean.news.numOfComments}</em> #{msgs.Comments}| <em><h:outputText
+											id="scoreId" value="#{newsBackingBean.getVote(newsBackingBean.news.id)}" /></em> #{msgs.Like}
+								</div>
+								<div style="display: inline">
+									<div class="facebookshare">
+										<ui:include src="../WEB-INF/templates/twitterPlugin.xhtml"></ui:include>
+									</div>
+									<div class="facebookshare">
+										<a id="share_button" href="#"> <img src="/resources/images/facebook.png" alt="facebook" height="25px" />
+										</a>
+									</div>
+									<div class="readFloor_Main_Top_Rating">
+										<p:commandLink actionListener="${newsBackingBean.handleVotes(1)}" process="@this" update="scoreId">
+											<img src="/resources/images/like.jpg" alt="Like" height="25px" />
+										</p:commandLink>
+
+									</div>
+								</div>
+
+							</div>
+							<div class="readFloor_Main_Content">
+
+								<h:panelGrid columns="1" id="readFloor_Main_Content_Table">
+									<h:panelGroup>
+										<p:inputText id="threadSubject" value="#{newsBackingBean.news.subject}" label="#{msgs.promptThreadSubject}"
+											rendered="${newsBackingBean.editMode}">
+										</p:inputText>
+										<p:message id="ThreadSubjectMess" for="threadSubject" rendered="${newsBackingBean.editMode}"></p:message>
+									</h:panelGroup>
+
+									<h:panelGroup>
+										<h:outputText id="contentDetail" value="#{newsBackingBean.news.content}" rendered="#{!newsBackingBean.editMode}" escape="false"
+											styleClass="zhengwen"></h:outputText>
+										<cc:xheditor value="#{newsBackingBean.news.content}" style="width:650px;height:500px;" id="contentid" rendered="#{newsBackingBean.editMode}"></cc:xheditor>
+
+										<p:message for="contentid"></p:message>
+									</h:panelGroup>
+
+									<h:inputHidden value="#{newsBackingBean.news.id}" />
+									<!-- update the picURL when news is updated -->
+									<h:inputHidden id="newsThumbPicURL" value="#{newsBackingBean.news.thumbPicURL}" />
+
+									<h:panelGroup>
+										<p:commandButton value="#{msgs.UPDATE}" id="updatecommand" action="#{newsBackingBean.updateNews}" process="@form" update="@form"
+											rendered="#{newsBackingBean.editMode}" onclick="searchAndSetThumbPicURL('#viewNewsForm','#newsThumbPicURL');">
+										</p:commandButton>
+										<p:commandButton value="#{msgs.CANCEL}" action="#{newsBackingBean.enableEditMode(false)}" rendered="#{newsBackingBean.editMode}"
+											process="@form" update="@form">
+										</p:commandButton>
+									</h:panelGroup>
+								</h:panelGrid>
+
+								<br />
+							</div>
+							<div class="readFloor_Main_Content_Action">
+
+								<p:outputPanel autoUpdate="true">
+									<p:commandButton value="#{msgs.EDIT}" update="@form" process="@this" id="editbutton"
+										oncomplete="initTextAreaWithEditor();jumpTo('#readFloor_Main_Content_Table')" actionListener="#{newsBackingBean.enableEditMode(true)}"
+										rendered="#{!newsBackingBean.editMode &amp;&amp; (login.userInSysadmin ||  newsBackingBean.ownerForCurrCategory || login.getCurrentUser().equals(newsBackingBean.news.owner))}">
+										<f:viewParam name="id" value="#{newsBackingBean.news.id}"></f:viewParam>
+									</p:commandButton>
+
+									<p:commandButton value="#{msgs.lockButton}" update="@form" id="logckbutton" process="@this"
+										actionListener="#{newsBackingBean.lockNews(true)}" disabled="#{newsBackingBean.news.locked}"
+										rendered='#{login.userInSysadmin || newsBackingBean.ownerForCurrCategory}'>
+									</p:commandButton>
+									<p:commandButton value="#{msgs.unLockButton}" update="@form" id="unlockbutton" process="@this" disabled="#{!newsBackingBean.news.locked}"
+										actionListener="#{newsBackingBean.lockNews(false)}" rendered='#{login.userInSysadmin || newsBackingBean.ownerForCurrCategory}'>
+									</p:commandButton>
+
+								</p:outputPanel>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</h:form>
+		</div>
+		<ui:include src="/ad/leaderboard.xhtml"></ui:include>
+
+		<div id="comment">
+			<ui:include src="comment/createcomment.xhtml"></ui:include>
+			<h:form id="commentTableForm" prependId="false">
+				<p:dataList id="commentTable" styleClass="commentMainContainer" lazy="true" value="#{commentBackingBean.lazyCommentDataModel}" var="comment"
+					paginator="true" paginatorAlwaysVisible="false" paginatorTemplate="{PreviousPageLink}  {CurrentPageReport} {NextPageLink} " type="none"
+					effectSpeed="slow" rows="5" paginatorPosition="bottom">
+					<f:facet name="header"> #{commentBackingBean.news.numOfComments} Comments</f:facet>
+					<li>
+						<div class="ui-comment">
+							<div class="readFloor_comment_left">
+								<h:graphicImage name="#{comment.owner.profilePicName}" library="profilepic" styleClass="commentUserProfilePic" />
+							</div>
+							<div class="readFloor_comment_right">
+								<div class="readFloor_Main_Content_Action">
+
+									<p:commandLink value="#{msgs.replylink}" id="replyButton" actionListener="#{commentBackingBean.replyTo(comment)}" process="@this"
+										update=":createCommentForm" oncomplete="jumpTo('#createCommentDiv')">
+									</p:commandLink>
+
+									<p:commandLink value="#{msgs.EDIT}" process="@this" update="@form" id="editButton"
+										actionListener="#{commentBackingBean.setEditMode(comment)}"
+										rendered="#{!comment.equals(commentBackingBean.commentInEdit) &amp;&amp; (login.userInSysadmin || login.isUserInNewsCategory_Owner(comment.news.newsCategory)|| login.getCurrentUser().equals(comment.owner))}">
+									</p:commandLink>
+
+									<p:commandLink value="#{msgs.deleteButton}" id="deleteButton" process="@this" update="@form"
+										actionListener="#{commentBackingBean.deleteComment(comment)}"
+										rendered="#{login.userInSysadmin ||login.isUserInNewsCategory_Owner(comment.news.newsCategory) }">
+									</p:commandLink>
+								</div>
+								<cite> <p:commandLink value="#{comment.owner.userId}" actionListener="#{userBackingBean.populateUser(comment.owner.userId)}"
+										process="@this" update=":viewProfileForm" oncomplete="viewProfileWidget.show()" /> <span> • </span> <h:outputFormat
+										value="#{comment.createTime}">
+										<f:convertDateTime pattern="yyyy-MM-dd" />
+									</h:outputFormat>
+								</cite>
+
+
+								<div class="readFloor_Comment_Content">
+									<h:panelGroup>
+										<blockquote>
+											<h:outputText value="#{comment.content}" escape="false" rendered="#{!comment.equals(commentBackingBean.commentInEdit)}"></h:outputText>
+										</blockquote>
+										<p:inputTextarea id="commentInEdit" value="#{commentBackingBean.commentInEdit.content}"
+											rendered="#{comment.equals(commentBackingBean.commentInEdit)}"></p:inputTextarea>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{comment.equals(commentBackingBean.commentInEdit)}">
+										<br />
+										<p:commandButton value="#{msgs.UPDATE}" id="updateButton" action="#{commentBackingBean.updateComment()}" process="@form" update="@form">
+										</p:commandButton>
+
+										<p:commandButton value="#{msgs.CANCEL}" id="cancelButton" action="#{commentBackingBean.cancelUpdate()}" process="@this" update="@form"
+											immediate="true">
+										</p:commandButton>
+									</h:panelGroup>
+								</div>
+
+							</div>
+						</div>
+					</li>
+				</p:dataList>
+			</h:form>
+
+			<ui:include src="/user/viewprofile.xhtml"></ui:include>
+		</div>
+	</ui:define>
+	<ui:define name="rightpage">
+		<h:form>
+			<p:dataList lazy="true" value="#{newsCacheEjb.getRecentNews(newsBackingBean.belongingNewsCategory.categoryName,newsBackingBean.news)}" var="news"
+				itemType="disc" rows="15">
+				<f:facet name="header">#{msgs.NEWSFORYOU}</f:facet>
+				<h:link value="#{news.subject}" outcome="viewnews" styleClass="longstyle">
+					<f:param name="id" value="#{news.id}"></f:param>
+				</h:link>
+			</p:dataList>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

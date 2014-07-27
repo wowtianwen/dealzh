@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:web="http://java.sun.com/xml/ns/javaee" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>deal4</display-name>
+  <context-param>
+    <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+    <param-value>.xhtml</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+    <param-value>2</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <description>
+			Tell the runtime where we are in the project development
+			lifecycle. Valid values are:
+			Development, UnitTest, SystemTest, or Production.
+			The runtime will display helpful hints to correct common mistakes
+			when the value is Development.
+		</description>
+    <param-name>javax.faces.PROJECT_STAGE</param-name>
+    <param-value>Production</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>server</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+    <param-value>resources.application</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>com.sun.faces.defaultResourceMaxAge</param-name>
+    <param-value>3628800000</param-value>
+  </context-param>
+  <filter>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    <init-param>
+      <param-name>thresholdSize</param-name>
+      <param-value>51200</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <servlet-name>Faces Servlet</servlet-name>
+  </filter-mapping>
+  <filter>
+    <description>forward to login page if the user is not logged in yet.
+		</description>
+    <display-name>VerifyLoginFilter</display-name>
+    <filter-name>VerifyLoginFilter</filter-name>
+    <filter-class>com.junhong.forum.servlet.VerifyLoginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>VerifyLoginFilter</filter-name>
+    <url-pattern>/message/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>VerifyLoginFilter</filter-name>
+    <url-pattern>/user/profilesetting/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>VerifyLoginFilter</filter-name>
+    <url-pattern>/category/createcategory.xhtml</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>VerifyLoginFilter</filter-name>
+    <url-pattern>/category/editcategory.xhtml</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <servlet-name>XhEditorUploadServlet</servlet-name>
+    <servlet-class>com.junhong.forum.servlet.UploadFileServlet</servlet-class>
+    <init-param>
+      <param-name>baseDir</param-name>
+      <param-value>/ARTICLE_IMG/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>fileExt</param-name>
+      <param-value>jpg,jpeg,gif,bmp,png</param-value>
+    </init-param>
+    <init-param>
+      <param-name>maxSize</param-name>
+      <param-value>1024000</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirType</param-name>
+      <param-value>1</param-value>
+    </init-param>
+    <load-on-startup>5</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>XhEditorUploadServlet</servlet-name>
+    <url-pattern>/XhEditorUploadServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>procLink</servlet-name>
+    <servlet-class>com.junhong.forum.servlet.ProcessLinkServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>procLink</servlet-name>
+    <url-pattern>/procLink</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.xhtml</welcome-file>
+  </welcome-file-list>
+  <error-page>
+    <exception-type>com.sun.faces.context.FacesFileNotFoundException</exception-type>
+    <location>/error.xhtml</location>
+  </error-page>
+  <error-page>
+    <location>/error.xhtml</location>
+  </error-page>
+  <mime-mapping>
+    <extension>js</extension>
+    <mime-type>application/javascript</mime-type>
+  </mime-mapping>
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.xhtml</url-pattern>
+  </servlet-mapping>
+</web-app>

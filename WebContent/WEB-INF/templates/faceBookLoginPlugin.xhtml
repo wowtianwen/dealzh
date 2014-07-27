@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:cc="http://java.sun.com/jsf/composite/cc" xmlns:fb="http://www.facebook.com/2008/fbml">
+
+<ui:composition>
+	<div class="socialLoginComp">
+		<div id="fb-root"></div>
+		
+
+		<!--
+  Below we include the Login Button social plugin. This button uses the JavaScript SDK to
+  present a graphical Login button that triggers the FB.login() function when clicked. -->
+
+		<fb:login-button width="200" max-rows="1" size="large" scope="basic_info,email" auto_logout_link="true">Login with facebook</fb:login-button>
+
+	</div>
+</ui:composition>
+</html>

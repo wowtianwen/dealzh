@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition>
+	<h:form id="navigationForm">
+		<div class="navigation">
+			<h:link value="#{msgs.Home}->" outcome="/index.xhtml">
+			</h:link>
+			<h:link value="#{msgs.HotDeals}" outcome="/category/indexthreads4AllCategory.xhtml">
+			</h:link>
+			<ui:repeat value="#{navigationMapBackingBean.navigationMap}" var="navMapCategory">
+				<h:link value="->#{navMapCategory.categoryName}" outcome="/category/listcategories.xhtml" rendered="#{navMapCategory.childrenCategory.size()>0}">
+					<f:param name="#{constants.nameToValueMap.NAVIGATION_CATEGORY_ID}" value="#{navMapCategory.id}"></f:param>
+				</h:link>
+				<h:link value="->#{navMapCategory.categoryName}" rendered="#{navMapCategory.childrenCategory==null||navMapCategory.childrenCategory.size()==0}"
+					outcome="/thread/listthreads.xhtml">
+					<f:param name="#{constants.nameToValueMap.CATEGORY__THREAD_ID}" value="#{navMapCategory.id}"></f:param>
+				</h:link>
+			</ui:repeat>
+			<h:link value="->#{navigationMapBackingBean.currentThread.subject}" outcome="/thread/viewthread.xhtml"
+				rendered="#{navigationMapBackingBean.currentThread!=null}">
+				<f:param name="id" value="#{navigationMapBackingBean.currentThread.id}"></f:param>
+			</h:link>
+		</div>
+	</h:form>
+</ui:composition>
+</html>

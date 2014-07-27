@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/UserGroup_Role"
+	xmlns:tns="http://www.example.org/UserGroup_Role" elementFormDefault="qualified">
+
+	<element name="roles">
+		<complexType>
+			<sequence>
+				<element name="description" type="string" maxOccurs="1"></element>
+				<element name="role" type="tns:RoleType" minOccurs="1"
+					maxOccurs="unbounded"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<complexType name="RoleType">
+		<sequence>
+			<element name="usergroup" type="string" maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="name" type="string"></attribute>
+	</complexType>
+
+</schema>

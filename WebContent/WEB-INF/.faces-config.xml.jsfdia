@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#category#listcategories.xhtml"
+  PATH="/category/listcategories.xhtml" SHAPE="216,216,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#category#listcategories.xhtml:0" NAME="item"
+   PATH="/category/listcategories.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{categoryBackingBean.loadCategory}:#category#editcategory.xhtml"
+    NAME="output" PATH="/category/editcategory.xhtml"
+    TARGET="rules:#category#editcategory.xhtml"
+    TITLE="#{categoryBackingBean.loadCategory}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#category#createcategory.xhtml"
+  PATH="/category/createcategory.xhtml" SHAPE="24,32,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#category#createcategory.xhtml:0" NAME="item"
+   PATH="/category/createcategory.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{categoryBackingBean.createCategory()}:#category#listcategories.xhtml"
+    NAME="output" PATH="/category/listcategories.xhtml"
+    TARGET="rules:#category#listcategories.xhtml"
+    TITLE="#{categoryBackingBean.createCategory()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#category#editcategory.xhtml"
+  PATH="/category/editcategory.xhtml" SHAPE="272,88,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#category#editcategory.xhtml:0" NAME="item"
+   PATH="/category/editcategory.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{categoryBackingBean.updateCategory}:#category#listcategories.xhtml"
+    NAME="output" PATH="/category/listcategories.xhtml"
+    TARGET="rules:#category#listcategories.xhtml"
+    TITLE="#{categoryBackingBean.updateCategory}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#thread#createthread.xhtml"
+  PATH="/thread/createthread.xhtml" SHAPE="16,488,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#thread#createthread.xhtml:0" NAME="item"
+   PATH="/thread/createthread.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{threadBackingBean.createThread()}:#thread#listthreads.xhtml"
+    NAME="output" PATH="/thread/listthreads.xhtml"
+    TARGET="rules:#thread#listthreads.xhtml"
+    TITLE="#{threadBackingBean.createThread()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#thread#viewthread.xhtml"
+  PATH="/thread/viewthread.xhtml" SHAPE="160,616,50,57" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#thread#viewthread.xhtml:0" NAME="item"
+   PATH="/thread/viewthread.xhtml" SHAPE="175,622,47,15" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{threadBackingBean.updateThread}:#thread#listthreads.xhtml"
+    NAME="output" PATH="/thread/listthreads.xhtml"
+    TARGET="rules:#thread#listthreads.xhtml"
+    TITLE="#{threadBackingBean.updateThread}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#thread#viewthread.xhtml:1" NAME="item1"
+   PATH="/thread/viewthread.xhtml" SHAPE="208,326,47,15" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{replyBackingBean.createReply(forumReply)}:#thread#viewthread.xhtml"
+    NAME="output" PATH="/thread/viewthread.xhtml"
+    TARGET="rules:#thread#viewthread.xhtml"
+    TITLE="#{replyBackingBean.createReply(forumReply)}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#login.xhtml" PATH="/login.xhtml"
+  SHAPE="56,296,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#login.xhtml:0" NAME="item"
+   PATH="/login.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="SUCCESS:#{login.login()}:#index.xhtml"
+    NAME="output" PATH="/index.xhtml" TARGET="rules:#index.xhtml"
+    TITLE="#{login.login()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="createthread:#{login.login()}:#thread#createthread.xhtml"
+    NAME="output1" PATH="/thread/createthread.xhtml"
+    TARGET="rules:#thread#createthread.xhtml"
+    TITLE="#{login.login()}:createthread" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="createthread4AllCategory:#{login.login()}:#thread#createthread4AllCategory.xhtml"
+    NAME="output2" PATH="/thread/createthread4AllCategory.xhtml"
+    TARGET="rules:#thread#createthread4AllCategory.xhtml"
+    TITLE="#{login.login()}:createthread4AllCategory" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="createthread4Event:#{login.login()}:#thread#createthread4Event.xhtml"
+    NAME="output3" PATH="/thread/createthread4Event.xhtml"
+    TARGET="rules:#thread#createthread4Event.xhtml"
+    TITLE="#{login.login()}:createthread4Event" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="#thread#viewthread.xhtml:#{login.login()}:#thread#viewthread.xhtml"
+    NAME="output4" PATH="/thread/viewthread.xhtml"
+    TARGET="rules:#thread#viewthread.xhtml"
+    TITLE="#{login.login()}:/thread/viewthread.xhtml" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="#stores#viewStore.xhtml:#{login.login()}:#stores#viewStore.xhtml"
+    NAME="output5" PATH="/stores/viewStore.xhtml"
+    TARGET="rules:#stores#viewStore.xhtml"
+    TITLE="#{login.login()}:/stores/viewStore.xhtml" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#login.xhtml:1" NAME="item1"
+   PATH="/login.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{userBackingBean.login4Social()}:#index.xhtml"
+    NAME="output" PATH="/index.xhtml" TARGET="rules:#index.xhtml"
+    TITLE="#{userBackingBean.login4Social()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#thread#listthreads.xhtml"
+  PATH="/thread/listthreads.xhtml" SHAPE="616,512,50,73" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#thread#listthreads.xhtml:0" NAME="item"
+   PATH="/thread/listthreads.xhtml" SHAPE="392,446,47,15" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="LOGIN::#login.xhtml" NAME="output"
+    PATH="/login.xhtml" TARGET="rules:#login.xhtml" TITLE="LOGIN" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#thread#listthreads.xhtml:1" NAME="item1"
+   PATH="/thread/listthreads.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="CREATETHREAD:#{login.verifyLogIn(&quot;FROMPOSTTHREAD&quot;)}:#thread#createthread.xhtml"
+    NAME="output" PATH="/thread/createthread.xhtml"
+    TARGET="rules:#thread#createthread.xhtml"
+    TITLE="#{login.verifyLogIn(&quot;FROMPOSTTHREAD&quot;)}:CREATETHREAD" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#registration#enroll.xhtml"
+  PATH="/registration/enroll.xhtml" SHAPE="656,80,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#registration#enroll.xhtml:0" NAME="item"
+   PATH="/registration/enroll.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{userBackingBean.enroll()}:#registration#enrollSuccess.xhtml"
+    NAME="output" PATH="/registration/enrollSuccess.xhtml"
+    TARGET="rules:#registration#enrollSuccess.xhtml"
+    TITLE="#{userBackingBean.enroll()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#registration#enroll.xhtml:1" NAME="item1"
+   PATH="/registration/enroll.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{userBackingBean.login4Social()}:#index.xhtml"
+    NAME="output" PATH="/index.xhtml" TARGET="rules:#index.xhtml"
+    TITLE="#{userBackingBean.login4Social()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:" SHAPE="360,304,53,42" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::0" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="LOGOUT::#index.xhtml" NAME="output"
+    PATH="/index.xhtml"
+    SHAPE="412,336,416,336,416,280,210,280,210,1016,863,1016"
+    TARGET="rules:#index.xhtml" TITLE="LOGOUT" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#category#assigncategoryowner.xhtml"
+  PATH="/category/assigncategoryowner.xhtml" SHAPE="656,801,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#category#assigncategoryowner.xhtml:0"
+   NAME="item" PATH="/category/assigncategoryowner.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{categoryBackingBean.assignCategoryOwner()}:#category#listcategories.xhtml"
+    NAME="output" PATH="/category/listcategories.xhtml"
+    TARGET="rules:#category#listcategories.xhtml"
+    TITLE="#{categoryBackingBean.assignCategoryOwner()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#index.xhtml" PATH="/index.xhtml"
+  SHAPE="864,1009,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#news#createnews.xhtml"
+  PATH="/news/createnews.xhtml" SHAPE="240,1473,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#news#createnews.xhtml:0" NAME="item"
+   PATH="/news/createnews.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{newsBackingBean.createNews()}:#news#listnewsmanage.xhtml"
+    NAME="output" PATH="/news/listnewsmanage.xhtml"
+    TARGET="rules:#news#listnewsmanage.xhtml"
+    TITLE="#{newsBackingBean.createNews()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#newscategory#createcategory.xhtml"
+  PATH="/newscategory/createcategory.xhtml" SHAPE="32,1377,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#newscategory#createcategory.xhtml:0"
+   NAME="item" PATH="/newscategory/createcategory.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{newsCategoryBackingBean.createCategory()}:#newscategory#listcategories.xhtml"
+    NAME="output" PATH="/newscategory/listcategories.xhtml"
+    TARGET="rules:#newscategory#listcategories.xhtml"
+    TITLE="#{newsCategoryBackingBean.createCategory()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#newscategory#listcategories.xhtml"
+  PATH="/newscategory/listcategories.xhtml" SHAPE="240,1281,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#newscategory#editcategory.xhtml"
+  PATH="/newscategory/editcategory.xhtml" SHAPE="32,1713,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#newscategory#editcategory.xhtml:0"
+   NAME="item" PATH="/newscategory/editcategory.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{newsCategoryBackingBean.updateCategory}:#newscategory#listcategories.xhtml"
+    NAME="output" PATH="/newscategory/listcategories.xhtml"
+    TARGET="rules:#newscategory#listcategories.xhtml"
+    TITLE="#{newsCategoryBackingBean.updateCategory}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#news#listnewsmanage.xhtml"
+  PATH="/news/listnewsmanage.xhtml" SHAPE="528,1601,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#thread#createthread4AllCategory.xhtml"
+  PATH="/thread/createthread4AllCategory.xhtml" SHAPE="288,1057,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#thread#createthread4AllCategory.xhtml:0"
+   NAME="item" PATH="/thread/createthread4AllCategory.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{threadBackingBean.createThread4AllCategory()}:#category#indexthreads4AllCategory.xhtml"
+    NAME="output" PATH="/category/indexthreads4AllCategory.xhtml"
+    TARGET="rules:#category#indexthreads4AllCategory.xhtml"
+    TITLE="#{threadBackingBean.createThread4AllCategory()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#thread#createthread4AllCategory.xhtml:1"
+   NAME="item1" PATH="/thread/createthread4AllCategory.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="REVIEW:#{threadBackingBean.createThread4AllCategory()}:#thread#threadSubmitResult.xhtml"
+    NAME="output" PATH="/thread/threadSubmitResult.xhtml"
+    TARGET="rules:#thread#threadSubmitResult.xhtml"
+    TITLE="#{threadBackingBean.createThread4AllCategory()}:REVIEW" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#category#indexthreads4AllCategory.xhtml"
+  PATH="/category/indexthreads4AllCategory.xhtml" SHAPE="448,1937,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#thread#createAnnounceThread4AllCategory.xhtml"
+  PATH="/thread/createAnnounceThread4AllCategory.xhtml"
+  SHAPE="592,2353,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#thread#createAnnounceThread4AllCategory.xhtml:0"
+   NAME="item" PATH="/thread/createAnnounceThread4AllCategory.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{threadBackingBean.createAnnounceThread4AllCategory()}:#category#indexthreads4AllCategory.xhtml"
+    NAME="output" PATH="/category/indexthreads4AllCategory.xhtml"
+    TARGET="rules:#category#indexthreads4AllCategory.xhtml"
+    TITLE="#{threadBackingBean.createAnnounceThread4AllCategory()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="592,2129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{threadBackingBean.openHotDeal()}:#category#indexthreads4AllCategory.xhtml"
+    NAME="output" PATH="/category/indexthreads4AllCategory.xhtml"
+    TARGET="rules:#category#indexthreads4AllCategory.xhtml"
+    TITLE="#{threadBackingBean.openHotDeal()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:1" PATH="*" SHAPE="592,1457,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:1" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{threadBackingBean.openEvent()}:#event#event.xhtml"
+    NAME="output" PATH="/event/event.xhtml"
+    TARGET="rules:#event#event.xhtml"
+    TITLE="#{threadBackingBean.openEvent()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:2" PATH="*" SHAPE="80,1201,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:2" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{login.forwardToLogin('#thread#viewthread.xhtml')}:#login.xhtml"
+    NAME="output" PATH="/login.xhtml" TARGET="rules:#login.xhtml"
+    TITLE="#{login.forwardToLogin('/thread/viewthread.xhtml')}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:3" PATH="*" SHAPE="80,1313,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:3" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{login.forwardToLogin('#stores#viewStore.xhtml')}:#login.xhtml"
+    NAME="output" PATH="/login.xhtml" TARGET="rules:#login.xhtml"
+    TITLE="#{login.forwardToLogin('/stores/viewStore.xhtml')}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:4" PATH="*" SHAPE="240,2481,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:4" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{newsBackingBean.createNews()}:#news#listnewsmanage.xhtml"
+    NAME="output" PATH="/news/listnewsmanage.xhtml"
+    TARGET="rules:#news#listnewsmanage.xhtml"
+    TITLE="#{newsBackingBean.createNews()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:5" PATH="*" SHAPE="816,1217,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:5" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{login.initEnroll()}:#registration#enroll.xhtml"
+    NAME="output" PATH="/registration/enroll.xhtml"
+    TARGET="rules:#registration#enroll.xhtml"
+    TITLE="#{login.initEnroll()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:6" PATH="*" SHAPE="80,1457,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:6" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="SUCCESS:#{login.initLogin()}:#login.xhtml"
+    NAME="output" PATH="/login.xhtml" TARGET="rules:#login.xhtml"
+    TITLE="#{login.initLogin()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#event#createEvent.xhtml"
+  PATH="/event/createEvent.xhtml" SHAPE="32,2129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#event#createEvent.xhtml:0" NAME="item"
+   PATH="/event/createEvent.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{eventBackingBean.createEvent()}:#event#listEvents.xhtml"
+    NAME="output" PATH="/event/listEvents.xhtml"
+    TARGET="rules:#event#listEvents.xhtml"
+    TITLE="#{eventBackingBean.createEvent()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#event#editEvent.xhtml"
+  PATH="/event/editEvent.xhtml" SHAPE="32,2241,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#event#editEvent.xhtml:0" NAME="item"
+   PATH="/event/editEvent.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{eventBackingBean.updateEvent()}:#event#listEvents.xhtml"
+    NAME="output" PATH="/event/listEvents.xhtml"
+    TARGET="rules:#event#listEvents.xhtml"
+    TITLE="#{eventBackingBean.updateEvent()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#thread#createthread4Event.xhtml"
+  PATH="/thread/createthread4Event.xhtml" SHAPE="592,1313,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#thread#createthread4Event.xhtml:0"
+   NAME="item" PATH="/thread/createthread4Event.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{threadBackingBean.createThread4Event()}:#event#event.xhtml"
+    NAME="output" PATH="/event/event.xhtml"
+    TARGET="rules:#event#event.xhtml"
+    TITLE="#{threadBackingBean.createThread4Event()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#thread#createthread4Event.xhtml:1"
+   NAME="item1" PATH="/thread/createthread4Event.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="REVIEW:#{threadBackingBean.createThread4Event()}:#thread#threadSubmitResult.xhtml"
+    NAME="output" PATH="/thread/threadSubmitResult.xhtml"
+    TARGET="rules:#thread#threadSubmitResult.xhtml"
+    TITLE="#{threadBackingBean.createThread4Event()}:REVIEW" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#user#profilesetting#createCashBackWithdrawRequest.xhtml"
+  PATH="/user/profilesetting/createCashBackWithdrawRequest.xhtml"
+  SHAPE="32,2353,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#user#profilesetting#createCashBackWithdrawRequest.xhtml:0"
+   NAME="item"
+   PATH="/user/profilesetting/createCashBackWithdrawRequest.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{userBackingBean.createCashbackWithdrawRequest()}:#user#profilesetting#listCashBackWithdrawRequest.xhtml"
+    NAME="output"
+    PATH="/user/profilesetting/listCashBackWithdrawRequest.xhtml"
+    TARGET="rules:#user#profilesetting#listCashBackWithdrawRequest.xhtml"
+    TITLE="#{userBackingBean.createCashbackWithdrawRequest()}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:7" PATH="*" SHAPE="32,2465,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:7" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{userBackingBean.openUserProfile}:#user#profilesetting#profile.xhtml"
+    NAME="output" PATH="/user/profilesetting/profile.xhtml"
+    TARGET="rules:#user#profilesetting#profile.xhtml"
+    TITLE="#{userBackingBean.openUserProfile}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:8" PATH="*" SHAPE="32,2689,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:8" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{userBackingBean.setManageUser(cashBackHistory.user)}:#user#profilesetting#profileAdmin.xhtml"
+    NAME="output" PATH="/user/profilesetting/profileAdmin.xhtml"
+    TARGET="rules:#user#profilesetting#profileAdmin.xhtml"
+    TITLE="#{userBackingBean.setManageUser(cashBackHistory.user)}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:9" PATH="*" SHAPE="32,2801,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:9" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{userBackingBean.setManageUser(cashBackWithdrawRequest.user)}:#user#profilesetting#profileAdmin.xhtml"
+    NAME="output" PATH="/user/profilesetting/profileAdmin.xhtml"
+    TARGET="rules:#user#profilesetting#profileAdmin.xhtml"
+    TITLE="#{userBackingBean.setManageUser(cashBackWithdrawRequest.user)}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:10" PATH="*" SHAPE="32,2913,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:10" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="SUCCESS:#{userBackingBean.setManageUser(row.user)}:#user#profilesetting#profileAdmin.xhtml"
+    NAME="output" PATH="/user/profilesetting/profileAdmin.xhtml"
+    TARGET="rules:#user#profilesetting#profileAdmin.xhtml"
+    TITLE="#{userBackingBean.setManageUser(row.user)}:SUCCESS" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#registration#enrollSuccess.xhtml"
+  PATH="/registration/enrollSuccess.xhtml" SHAPE="1280,1217,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#event#listEvents.xhtml"
+  PATH="/event/listEvents.xhtml" SHAPE="256,2145,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#user#profilesetting#profile.xhtml"
+  PATH="/user/profilesetting/profile.xhtml" SHAPE="240,2593,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#event#event.xhtml" PATH="/event/event.xhtml"
+  SHAPE="816,1473,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#user#profilesetting#listCashBackWithdrawRequest.xhtml"
+  PATH="/user/profilesetting/listCashBackWithdrawRequest.xhtml"
+  SHAPE="240,2369,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#thread#threadSubmitResult.xhtml"
+  PATH="/thread/threadSubmitResult.xhtml" SHAPE="816,1329,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#user#profilesetting#profileAdmin.xhtml"
+  PATH="/user/profilesetting/profileAdmin.xhtml" SHAPE="272,2705,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#stores#viewStore.xhtml"
+  PATH="/stores/viewStore.xhtml" SHAPE="592,1201,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

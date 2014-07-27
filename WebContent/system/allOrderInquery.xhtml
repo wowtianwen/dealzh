@@ -1,0 +1,159 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<ui:composition>
+	<div>
+		<h:form id="orderInqueryForm" prependId="false" rendered="#{login.isUserInSysadmin()}">
+			<h1>#{msgs.Order_Inquery}</h1>
+			<p:dataTable value="#{userBackingBean.lazyOrderInqueryDataModel}" var="row" paginator="true" rows="20" widgetVar="datatable"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				paginatorPosition="both" tableStyleClass="noBorderTable" lazy="true" paginatorAlwaysVisible="false">
+				<f:event type="preRenderComponent" listener="#{userBackingBean.initDataModelForAll()}"></f:event>
+				<p:column headerText="#{msgs.CreateTime}">
+					<h:outputText value="#{row.createTime}">
+						<f:convertDateTime timeStyle="short" dateStyle="default" type="both"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.userid}" filterBy="#{row.user.userId}">
+					<p:commandLink value="#{row.user.userId}" action="#{userBackingBean.setManageUser(row.user)}" ajax="false"></p:commandLink>
+				</p:column>
+				<p:column headerText="#{msgs.OrderNumber}" filterBy="#{row.orderNumber}">
+					<h:outputText value="#{row.orderNumber}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.STORENAME}">
+					<h:outputText value="#{row.store.name}" />
+				</p:column>
+				<p:column headerText="#{msgs.TransactionDate}">
+					<h:outputText value="#{row.purchaseDate}">
+						<f:convertDateTime pattern="yyyy-MM-dd"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.TransactionAmount}">
+					<h:outputText value="#{row.orderAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.CashBackAmount}">
+					<h:outputText value="#{row.cashBackAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Status}" filterBy="#{row.status}" filterOptions="#{userBackingBean.recordStatusOptions}">
+					<h:outputText value="#{row.status}" />
+				</p:column>
+				<p:column headerText="#{msgs.Note}">
+					<h:outputText value="#{row.note}" />
+				</p:column>
+				<p:column headerText="#{msgs.action}">
+					<p:commandButton value="#{msgs.EDIT}" actionListener="#{userBackingBean.setOrderInquery(row)}" update="@widgetVar(viewEditWidget)"
+						oncomplete="PF('viewEditWidget').show()" process="@form"></p:commandButton>
+					<p:commandButton value="#{msgs.deleteButton}" actionListener="#{userBackingBean.setOrderInquery(row)}" update="@widgetVar(DelConfgDia2)"
+						process="@form" oncomplete="PF('DelConfgDia2').show()" styleClass="commandButtonOrLink " onerror="HandleAjaxError(xhr, satus, exception)">
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</div>
+
+	<p:dialog widgetVar="DelConfgDia2" header="#{msgs.Delete_Dialog_Header} " modal="true" height="150" width="500"
+		rendered="#{login.isUserInSysadmin()}">
+		<h:form>
+			<h:panelGrid id="selectupdate">
+				<h:outputFormat value="#{msgs.OrderInquery_Delete}">
+				</h:outputFormat>
+				<!-- create some space between the label and the button -->
+				<br></br>
+				<br></br>
+				<h:panelGrid columns="2">
+					<p:commandButton id="confirm" value="#{msgs.Delete_Dialog_Yes}" update="@widgetVar(datatable)" process="@this"
+						oncomplete="PF('DelConfgDia2').hide()" actionListener="#{userBackingBean.deleteOrderInquery(userBackingBean.orderInquery)}" />
+					<p:commandButton id="decline" value="#{msgs.Delete_Dialog_No}" onclick="PF('DelConfgDia2').hide()" type="button" />
+				</h:panelGrid>
+
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog widgetVar="viewEditWidget" header="#{msgs.viewOrderInquery}" modal="true" height="450" width="600" closable="true" closeOnEscape="true"
+		rendered="#{login.isUserInSysadmin()}">
+		<p:messages globalOnly="true" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		<h:form prependId="false">
+			<h:panelGrid columns="1" columnClasses="singleGrid">
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.Id}"></h:outputLabel>
+					<h:outputText value="#{userBackingBean.orderInquery.id}"></h:outputText>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+					<h:outputText value="#{userBackingBean.orderInquery.user.userId}"></h:outputText>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.STORENAME}"></h:outputLabel>
+					<h:panelGroup>
+						<p:inplace>
+							<p:autoComplete id="storeName" value="#{userBackingBean.orderInquery.store.name}" minQueryLength="1"
+								completeMethod="${userBackingBean.getStoreList}" required="true" dropdown="true" scrollHeight="250">
+							</p:autoComplete>
+						</p:inplace>
+						<h:message for="storeName" errorClass="errorMessClass"></h:message>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.OrderNumber}"></h:outputLabel>
+					<h:panelGroup>
+						<p:inplace>
+							<p:inputText id="orderNumber" value="#{userBackingBean.orderInquery.orderNumber}" required="true"></p:inputText>
+						</p:inplace>
+						<h:message for="orderNumber" errorClass="errorMessClass"></h:message>
+					</h:panelGroup>
+
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.TransactionAmount}"></h:outputLabel>
+					<h:panelGroup>
+						<p:inplace>
+							<p:inputText id="orderAmount" value="#{userBackingBean.orderInquery.orderAmount}" required="true">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="number"></f:convertNumber>
+							</p:inputText>
+						</p:inplace>
+						<h:message for="orderAmount" errorClass="errorMessClass"></h:message>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.TransactionDate}"></h:outputLabel>
+					<h:panelGroup>
+						<p:inplace>
+							<p:calendar id="purchaseDate" value="#{userBackingBean.orderInquery.purchaseDate}" required="true" pattern="MM/dd/yyyy" mode="popup"
+								showOn="button" navigator="true" popupIconOnly="true"></p:calendar>
+						</p:inplace>
+						<h:message for="purchaseDate" errorClass="errorMessClass"></h:message>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.Status}"></h:outputLabel>
+					<p:inplace>
+						<p:selectOneMenu value="#{userBackingBean.orderInquery.status}">
+							<f:selectItems value="#{userBackingBean.recordStatusOptions}" var="status" itemLabel="#{status.label}" itemValue="#{status.value}"></f:selectItems>
+						</p:selectOneMenu>
+					</p:inplace>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.Note}"></h:outputLabel>
+					<p:inputTextarea value="#{userBackingBean.orderInquery.note}" rows="3" autoResize="true">
+					</p:inputTextarea>
+				</h:panelGroup>
+
+
+				<h:panelGroup>
+					<h:outputLabel value=""></h:outputLabel>
+					<p:commandButton value="#{msgs.UPDATE}" actionListener="#{userBackingBean.updateOrderInquery(userBackingBean.orderInquery)}" process="@form"
+						update="@form @widgetVar(datatable)" oncomplete="handleComplete(xhr, status, args)">
+					</p:commandButton>
+				</h:panelGroup>
+				<h:outputText></h:outputText>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+</ui:composition>
+</html>

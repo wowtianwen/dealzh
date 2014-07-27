@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="globalMesages">
+		<p:messages id="globalMessageId" globalOnly="false" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form>
+			<h1>#{msgs.PopularStores}</h1>
+
+			<p:dataGrid value="#{systemCacheEjb.popularStores}" var="popularStore" lazy="false" columns="9" styleClass="smallGrid">
+				<div>
+					<h:panelGroup layout="block">
+						<div>
+							<h:graphicImage name="money.jpg" library="images" styleClass="moneySign" title="#{msgs.CashBack}"></h:graphicImage>
+							<h:outputFormat value="#{popularStore.cashBackPercent}" rendered="#{popularStore.cashBackPercent!=0}" styleClass="green"
+								title="#{msgs.CashBack}">
+								<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+							</h:outputFormat>
+							<h:outputFormat value="#{msgs.ComingSoon}" rendered="#{popularStore.cashBackPercent==0}" title="#{msgs.CashBack}">
+							</h:outputFormat>
+						</div>
+						<h:link outcome="viewStore">
+							<f:param name="id" value="#{popularStore.id}"></f:param>
+							<div class="indexImg">
+								<h:graphicImage url="/resources/storePic/#{popularStore.storePicturePathURL}" styleClass="dealPic"
+									rendered="#{!popularStore.storePicturePathURL}" />
+							</div>
+
+						</h:link>
+
+					</h:panelGroup>
+
+				</div>
+			</p:dataGrid>
+
+		</h:form>
+		<h:form prependId="false" target="_blank">
+			<p:dataTable id="storeTable" widgetVar="storeTable1" value="#{storeBackingBean.storeDataModel}" var="store" paginator="true" rows="40"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				paginatorPosition="bottom" tableStyleClass="tab_two" lazy="true" rowStyleClass="whiteBackGround" filterDelay="1000" styleClass="highSpace">
+				<f:facet name="header">
+					<p:outputPanel styleClass="searchStore">
+						<h:outputText value="Search store:" />
+						<p:autoComplete completeMethod="#{storeBackingBean.findStoreNames}" style="width:150px" forceSelection="true" queryDelay="500"
+							minQueryLength="2">
+							<p:ajax event="itemSelect" listener="#{storeBackingBean.handleSelect}" update="@form" partialSubmit="true" process="@this" />
+						</p:autoComplete>
+					</p:outputPanel>
+				</f:facet>
+				<p:column headerText="#{msgs.Logo}" styleClass="deals">
+					<h:link outcome="viewStore">
+						<f:param name="id" value="#{store.id}"></f:param>
+						<h:graphicImage url="/resources/storePic/#{store.storePicturePathURL}" styleClass="storePicInListing"
+							rendered="#{empty popularStore.storePicturePathURL}" />
+
+					</h:link>
+				</p:column>
+				<p:column headerText="#{msgs.Name}" styleClass="name deals">
+					<h:link outcome="viewStore" value="#{store.name}">
+						<f:param name="id" value="#{store.id}"></f:param>
+					</h:link>
+				</p:column>
+				<p:column headerText="#{msgs.Deals}" styleClass="deals">
+					<h:link outcome="viewStore" value="#{store.name} #{msgs.Deals}">
+						<f:param name="id" value="#{store.id}"></f:param>
+					</h:link>
+				</p:column>
+
+				<p:column headerText="#{msgs.CashBackPercent}" styleClass="deals">
+					<h:link outcome="viewStore" rendered="#{store.cashBackPercent!=0}">
+						<h:outputFormat value="#{store.cashBackPercent}">
+							<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+						</h:outputFormat>
+						<f:param name="id" value="#{store.id}"></f:param>
+					</h:link>
+					<h:link outcome="viewStore" value="#{msgs.ComingSoon}" rendered="#{store.cashBackPercent==0}">
+						<f:param name="id" value="#{store.id}"></f:param>
+					</h:link>
+				</p:column>
+				<p:column headerText="#{msgs.Shop}" styleClass="deals">
+					<p:commandButton action="#{storeBackingBean.processGenericStoreLinkClick(store)}" value="#{msgs.Shop}" styleClass="greenButton"
+						rendered="#{!empty store.genericStoreLink}" target="_blank" ajax="false">
+					</p:commandButton>
+
+					<p:button value="#{msgs.ComingSoon}" styleClass="greenButton" rendered="#{empty store.genericStoreLink}" target="_blank" disabled="true"></p:button>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

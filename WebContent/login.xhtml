@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="js">
+		<h:outputScript library="js" name="socialLogin-min.js" target="head"></h:outputScript>
+	</ui:define>
+	<ui:define name="content">
+		<div class="socialWrapper">
+			<div class="socialLogin">
+				<div class="title">Login with social Account</div>
+				<ui:include src="/WEB-INF/templates/faceBookLoginPlugin.xhtml"></ui:include>
+				<ui:include src="/WEB-INF/templates/googleLoginPlugin.xhtml"></ui:include>
+				<ui:include src="/WEB-INF/templates/qqLoginPlugin.xhtml"></ui:include>
+				<ui:include src="/WEB-INF/templates/socialLoginPluginForms.xhtml"></ui:include>
+			</div>
+			<p:separator></p:separator>
+			<h:form id="loginForm" rendered="#{sessionScope.LOGINTYPE.equals(constants.nameToValueMap.LOGIN_TYPE_SELF)}">
+				<div>
+					<h:panelGrid columns="3" styleClass="loginPanelGrid" columnClasses="thNarrow">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.login_Welcome}"></h:outputText>
+						</f:facet>
+						<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+						<p:inputText id="userid" value="#{login.user.userId}">
+						</p:inputText>
+						<h:message id="userIdErr" for="userid"></h:message>
+
+						<h:outputLabel value="#{msgs.password}"></h:outputLabel>
+						<p:password id="password" value="#{login.user.password}" feedback="false">
+						</p:password>
+						<h:message id="passwordErr" for="password"></h:message>
+
+						<h:outputText value="" />
+						<p:commandButton value="#{msgs.Login}" action="#{login.login()}" ajax="false" styleClass="bigButton">
+						</p:commandButton>
+					</h:panelGrid>
+					<!-- pass along outcome page. if the user click createThread on the listThread page -->
+					<h:inputHidden value="#{requestScope.loginOutcome}" />
+					<h:link value="#{msgs.USER_FORGOT_PASSWORD}" outcome="/registration/resetpassword.xhtml" />
+					<br></br>
+					<h:link outcome="/registration/enroll.xhtml" value="#{msgs.newUser} " rendered="#{!login.userLoggedIn}"></h:link>
+					<br></br>
+					<h:link outcome="/registration/accountActivation.xhtml" value="#{msgs.ResendActiationEmail} " rendered="#{!login.userLoggedIn}"></h:link>
+				</div>
+
+			</h:form>
+		</div>
+
+	</ui:define>
+
+
+</ui:composition>
+
+</html>

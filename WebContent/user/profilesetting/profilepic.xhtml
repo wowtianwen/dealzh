@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<h:body>
+	<ui:composition>
+		<h:form enctype="multipart/form-data" rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_PROFILE_PIC)}">
+			<h1>#{msgs.ProfilePic}</h1>
+			<div class="changeProfilePicDiv">
+				<p:selectOneRadio value="#{userBackingBean.systemProfilePic}" styleClass="profilePic">
+					<p:ajax event="change" update="@form"></p:ajax>
+					<f:selectItem itemLabel="#{msgs.user_profile_system_profile_label}" itemValue="true" />
+					<f:selectItem itemLabel="#{msgs.user_profile_upload_profile_label}" itemValue="false" />
+				</p:selectOneRadio>
+				<h:panelGrid rendered="#{userBackingBean.systemProfilePic}">
+					<p:selectOneRadio id="systemProfilePicRadio" value="#{userBackingBean.basicUser.profilePicName}" layout="custom">
+						<p:ajax event="change" listener="#{userBackingBean.updateProfilePic()}" update=":userLeftSideForm  @form" partialSubmit="false" process="@this"></p:ajax>
+						<f:selectItem itemLabel="Option 1" itemValue="cat.jpg" />
+						<f:selectItem itemLabel="Option 2" itemValue="dog.jpg" />
+						<f:selectItem itemLabel="Option 3" itemValue="femaleDefault.gif" />
+						<f:selectItem itemLabel="Option 4" itemValue="maleDefault.gif" />
+						<f:selectItem itemLabel="Option 5" itemValue="cartoon.jpg" />
+					</p:selectOneRadio>
+					<h:panelGrid columns="10">
+						<p:radioButton id="opt1" for="systemProfilePicRadio" itemIndex="0" />
+						<h:graphicImage value="/resources/profilepic/cat.jpg" />
+						<p:radioButton id="opt2" for="systemProfilePicRadio" itemIndex="1" />
+						<h:graphicImage value="/resources/profilepic/dog.jpg" />
+						<p:radioButton id="opt3" for="systemProfilePicRadio" itemIndex="2" />
+						<h:graphicImage value="/resources/profilepic/femaleDefault.gif" />
+						<p:radioButton id="opt4" for="systemProfilePicRadio" itemIndex="3" />
+						<h:graphicImage value="/resources/profilepic/maleDefault.gif" />
+						<p:radioButton id="opt5" for="systemProfilePicRadio" itemIndex="4" />
+						<h:graphicImage value="/resources/profilepic/cartoon.jpg" />
+					</h:panelGrid>
+
+
+				</h:panelGrid>
+
+				<h:panelGroup rendered="#{!userBackingBean.systemProfilePic}">
+
+					<p:fileUpload fileUploadListener="#{userBackingBean.handleProfilePicFileUpload}" mode="advanced" auto="true" sizeLimit="1000000000"
+						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" oncomplete="refeshPic('#userProfilePicId')" update=":userLeftSideForm @form" styleClass="grayBackGround"/>
+				</h:panelGroup>
+
+				<h:outputText value="#{requestScope.SAVE_SUCCESS}"></h:outputText>
+			</div>
+		</h:form>
+	</ui:composition>
+
+</h:body>
+
+</html>

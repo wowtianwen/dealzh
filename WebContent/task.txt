@@ -1,0 +1,55 @@
+1. profile picture  -----done
+2. viewthread page,  user information on the left panel----done
+search functionality---------------------------------------done
+
+------testing------
+
+create/update/delete/assign owner for each category------------UT done
+create thread/edit/delete   -------------------------------------UT done
+profile setting -----------------------------------------------UT done
+
+profile(profilepic/basicinfo/mypost/myreply/mywatchlist)-------UT Done
+create/edit/dete reply-----------------------------------------UT Done
+send/delete message/group message------------------------------UT Done
+forgot password------------------------------------------------UT Done
+Viewprofile----------------------add profile pic and change the--UT Done
+
+
+
+
+
+---------------------TODO------------------------
+
+user numOfReplys/posts should use updatable or not---------------------think about it.
+should create index on the threadid and categoryId of the dashboard entity.----done
+
+add search functionary using google custom search.-------done
+
+
+enalbe https
+web error code page-------------------------------------------Done
+context root as /---------------------------------------------Done
+encode the url
+add the robot validation
+
+fix the display issue on IE-----------------------------------08/11/2012
+
+
+
+
+----limit number of pictures allowed in each article
+----write script to clean unused pictures.
+----review the uploadfilesevelet again to make sure no security risk
+上传文件管理建议方案：
+在编辑器初始化时在upload.php后面跟上一个服务器生成的绝对唯一的跟踪值，例如：upload.php?infoid=123
+在服务器接收程序中以这个跟踪值保存到数据库中，同时也可以限制单个跟踪值下总上传文件数或者总文件大小，否则就是一个可以上传无限个文件的漏洞了
+最终当前表单提交时，再根据编辑器提交的HTML内容和数据库中上传内容进行比较，删除所有没有使用的上传文件
+定期由服务器脚本删除上传数据库中没提交的文件记录，这样就能防止别人将你的网站作为免费相册空间了
+
+
+---------------Known Issue--------------------------
+1. on the viewthread page, click the userid to view his profile-> click his post -> use back button to viewthread page->click the userid again. it will be blank.
+because the userid is blank
+
+2. if you want to give user access to post news, just updat the user group to newsposter usergroup should work.
+

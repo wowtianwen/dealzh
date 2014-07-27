@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+	<meta http-equiv="content-type" content="text/html;   charset=UTF-8" />
+</h:head>
+<h:body>
+	<ui:composition template="maintemplateTop.xhtml">
+		<ui:define name="mainPageContainer">
+			<div class="mainPageContainer">
+				<!-- js file for each page -->
+				<ui:insert name="js"></ui:insert>
+				<!-- global setting -->
+				<ui:debug render="true" hotkey="e" />
+				<ui:include src="/ad/googleanalytics.xhtml"></ui:include>
+				<!-- header file -->
+				<div class="row">
+					<div class="col-xs-12">
+						<ui:insert name="header">
+							<ui:include src="/header.xhtml"></ui:include>
+						</ui:insert>
+						<!--  ajax status-->
+						<p:ajaxStatus style="width:16px;height:5px">
+							<f:facet name="start">
+								<h:graphicImage value="/resources/images/ai.gif" />
+							</f:facet>
+
+							<f:facet name="complete">
+								<h:outputText value="" />
+							</f:facet>
+						</p:ajaxStatus>
+
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-xs-12">
+						<!--Navigation-->
+						<ui:insert name="navigation">
+						</ui:insert>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<ui:insert name="globalMesages">
+							<p:messages id="globalMessageId" globalOnly="true" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+							<ui:remove>
+								<p:growl id="growl" showDetail="true" sticky="false" />
+							</ui:remove>
+						</ui:insert>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<ui:insert name="content"></ui:insert>
+					</div>
+				</div>
+				<!--  the bottom of the page -->
+				<div class="row">
+					<div class="col-xs-12">
+						<ui:insert name="foot">
+							<ui:include src="/foot.xhtml"></ui:include>
+						</ui:insert>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

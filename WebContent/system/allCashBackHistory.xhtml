@@ -1,0 +1,202 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<ui:composition>
+	<div id="myCashBack">
+		<h:form rendered="#{login.isUserInSysadmin()}">
+			<p:dataTable var="cashBackHistory" value="#{userBackingBean.cashBackHistoryDataModel}" paginator="true" rows="50" lazy="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,15" tableStyleClass="noBorderTable" styleClass="tableWrapper" paginatorPosition="both" emptyMessage="#{msgs.NoCashBack}"
+				filterDelay="1000" filterEvent="blur" editable="true" paginatorAlwaysVisible="false" widgetVar="cashBackHistoryTable">
+				<f:event type="preRenderComponent" listener="#{userBackingBean.initDataModelForAll()}"></f:event>
+				<p:ajax event="rowEdit" listener="#{userBackingBean.handleUserCashBackUpdate}" />
+				<p:column headerText="#{msgs.CreateTime}">
+					<h:outputFormat value="#{cashBackHistory.createTime}">
+						<f:convertDateTime pattern="yyyy-MM-dd"></f:convertDateTime>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.TransactionDate}" filterBy="#{cashBackHistory.transactionDate}">
+					<h:outputFormat value="#{cashBackHistory.transactionDate}">
+						<f:convertDateTime pattern="yyyy-MM-dd"></f:convertDateTime>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.TransactionId}" filterBy="#{cashBackHistory.transactionId}">
+					<h:outputText value="#{cashBackHistory.transactionId}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.userid}" filterBy="#{cashBackHistory.user.userId}">
+					<p:commandLink value="#{cashBackHistory.user.userId}" action="#{userBackingBean.setManageUser(cashBackHistory.user)}" ajax="false"
+						immediate="true"></p:commandLink>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:autoComplete value="#{cashBackHistory.user.userId}" minQueryLength="3" id="userId" completeMethod="${userBackingBean.getUserids}"
+								forceSelection="true" queryDelay="500">
+							</p:autoComplete>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column headerText="#{msgs.Store}" filterBy="#{cashBackHistory.store.name}">
+					<h:outputText value="#{cashBackHistory.store.name}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{msgs.TransactionAmount}">
+					<h:outputText value="#{cashBackHistory.transactionAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.CashBackPercent}">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{cashBackHistory.cashBackPercent}">
+								<f:convertNumber type="percent" maxFractionDigits="3" minFractionDigits="2" pattern="0.###"></f:convertNumber>
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<h:inputText id="cashBackPercentUpdate" value="#{cashBackHistory.cashBackPercent}">
+								<f:convertNumber type="percent" maxFractionDigits="3" minFractionDigits="2" pattern="0.###"></f:convertNumber>
+							</h:inputText>
+							<p:watermark value="#{msgs.CashBackWatermark}" for="cashBackPercentUpdate"></p:watermark>
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+				<p:column headerText="#{msgs.CashBackAmount}">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{cashBackHistory.cashBackAmount}">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$" pattern="###,###.##"></f:convertNumber>
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{cashBackHistory.cashBackAmount}">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$" pattern="###,###.##"></f:convertNumber>
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+
+				<p:column headerText="#{msgs.CommissionAmount}">
+					<h:outputText value="#{cashBackHistory.commissionAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Profit}">
+					<h:outputText value="#{cashBackHistory.profit}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Status}" filterBy="#{cashBackHistory.status}" filterOptions="#{userBackingBean.cashBackStatusOptions}">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{cashBackHistory.status}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:selectOneMenu value="#{cashBackHistory.status}">
+								<f:selectItems value="#{userBackingBean.cashBackStatusOptions}" var="status" itemLabel="#{status.label}" itemValue="#{status.value}"></f:selectItems>
+							</p:selectOneMenu>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column>
+					<p:rowEditor />
+				</p:column>
+				<p:column headerText="#{msgs.action}" rendered="#{login.userInSysadmin}">
+					<p:commandButton value="#{msgs.deleteButton}" actionListener="#{userBackingBean.setCashBackHistory(cashBackHistory)}"
+						update="@widgetVar(DelConfgDia)" process="@form" oncomplete="PF('DelConfgDia').show()" styleClass="commandButtonOrLink smallButton"
+						onerror="HandleAjaxError(xhr, satus, exception)">
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p>#{msgs.CashBackNote1}</p>
+		</h:form>
+		<div style="display: inline; float: left; margin-top: 10px;">
+			<p:commandButton value="#{msgs.AddUserCashBack}" oncomplete="PF('addStore').show()" rendered="#{login.userInSysadmin}">
+			</p:commandButton>
+		</div>
+		<p:dialog widgetVar="addStore" header="#{msgs.AddUserCashBack}" modal="true" height="450" width="800" closable="true" closeOnEscape="true"
+			rendered="#{login.userInSysadmin}">
+			<h:form prependId="false">
+				<h:panelGrid columns="3" columnClasses="th">
+					<h:outputLabel value="#{msgs.TransactionDate}"></h:outputLabel>
+					<p:calendar id="tranDate" value="#{userBackingBean.cashBackHistory.transactionDate}" required="true" pattern="MM/dd/yyyy" mode="popup"
+						showOn="button" navigator="true" popupIconOnly="true" mindate="01/01/2012"></p:calendar>
+					<h:message for="tranDate" errorClass="errorMessClass"></h:message>
+
+					<h:outputLabel value="#{msgs.TransactionId}"></h:outputLabel>
+					<p:inputText id="tranId" value="#{userBackingBean.cashBackHistory.transactionId}"></p:inputText>
+					<h:message for="tranId" errorClass="errorMessClass"></h:message>
+
+					<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+					<p:autoComplete value="#{requestScope.userId}" minQueryLength="3" id="userIdAdd" completeMethod="#{userBackingBean.getUserids}"
+						forceSelection="true" queryDelay="500">
+					</p:autoComplete>
+					<h:message for="userIdAdd" errorClass="errorMessClass"></h:message>
+
+
+					<h:outputLabel value="#{msgs.STORENAME}" title="#{msgs.STORENAME_TIPS}"></h:outputLabel>
+					<p:autoComplete id="storeNameAdd" value="#{requestScope.storeName}" minQueryLength="1" completeMethod="${userBackingBean.getStoreList}"
+						required="true" dropdown="true" scrollHeight="250" forceSelection="true" queryDelay="500" title="#{msgs.STORENAME_TIPS}">
+					</p:autoComplete>
+					<h:message for="storeNameAdd" errorClass="errorMessClass"></h:message>
+
+					<h:outputLabel value="#{msgs.TransactionAmount}" title="#{msgs.TransactionAmount_Tips}"></h:outputLabel>
+					<p:inputText id="orderAmountUserCb" value="#{userBackingBean.cashBackHistory.transactionAmount}" required="true"
+						title="#{msgs.TransactionAmount_Tips}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="number"></f:convertNumber>
+					</p:inputText>
+					<h:message for="orderAmountUserCb" errorClass="errorMessClass"></h:message>
+
+					<h:outputLabel value="#{msgs.CashBackPercent}"></h:outputLabel>
+					<h:inputText id="cashBackPercentUpdate" value="#{userBackingBean.cashBackHistory.cashBackPercent}">
+					</h:inputText>
+					<p:watermark value="#{msgs.CashBackWatermark}" for="cashBackPercentUpdate"></p:watermark>
+
+					<h:outputLabel value="#{msgs.CashBackAmount}"></h:outputLabel>
+					<p:inputText id="cashBackAmt" value="#{userBackingBean.cashBackHistory.cashBackAmount}" required="true" title="#{msgs.TransactionAmount_Tips}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="number"></f:convertNumber>
+					</p:inputText>
+					<h:message for="cashBackAmt" errorClass="errorMessClass"></h:message>
+
+					<h:outputLabel value="#{msgs.CommissionAmount}"></h:outputLabel>
+					<p:inputText id="commissionAmt" value="#{userBackingBean.cashBackHistory.commissionAmount}" required="true"
+						title="#{msgs.TransactionAmount_Tips}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="number"></f:convertNumber>
+					</p:inputText>
+					<h:message for="commissionAmt" errorClass="errorMessClass"></h:message>
+
+					<h:outputLabel></h:outputLabel>
+					<h:outputLabel></h:outputLabel>
+					<h:panelGroup>
+						<p:commandButton value="#{msgs.submit}" action="#{userBackingBean.createUserCashBackHistory(userBackingBean.cashBackHistory)}" process="@form"
+							update="@form @widgetVar(cashBackHistoryTable)" oncomplete="handleComplete(xhr, status, args)">
+						</p:commandButton>
+						<p:commandButton id="cancel" value="#{msgs.CANCEL}" onclick="PF('addStore').hide()" type="button" />
+					</h:panelGroup>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		<p:dialog widgetVar="DelConfgDia" header="#{msgs.Delete_Dialog_Header} " modal="true" height="150" width="500">
+			<h:form>
+				<h:panelGrid id="selectupdate">
+					<h:outputFormat value="#{msgs.Affiliate_Delete}">
+						<f:param value="#{userBackingBean.cashBackHistory.transactionId}"></f:param>
+					</h:outputFormat>
+					<!-- create some space between the label and the button -->
+					<br></br>
+					<br></br>
+					<h:panelGrid columns="2">
+						<p:commandButton id="confirm" value="#{msgs.Delete_Dialog_Yes}" update="@form @widgetVar(cashBackHistoryTable)" process="@this"
+							oncomplete="PF('DelConfgDia').hide()" actionListener="#{userBackingBean.deleteUserCashBackHistory(userBackingBean.cashBackHistory)}" />
+						<p:commandButton id="decline" value="#{msgs.Delete_Dialog_No}" onclick="PF('DelConfgDia').hide()" type="button" />
+					</h:panelGrid>
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</div>
+
+</ui:composition>
+</html>

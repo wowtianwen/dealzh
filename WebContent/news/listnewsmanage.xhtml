@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="metadata">
+		<!-- save cagtThdId in sessionScope, DO NOT USE flash Scope.  -->
+		<f:metadata>
+			<f:viewParam name="#{constants.nameToValueMap.CATEGORY__NEWS_ID}" value="${sessionScope.ctgtNewsId}"></f:viewParam>
+		</f:metadata>
+	</ui:define>
+	<ui:define name="navigation">
+		<h:panelGroup>
+			<ui:include src="/navigationNews.xhtml"></ui:include>
+		</h:panelGroup>
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="listThreadContainer">
+			<h:form>
+				<div class="postButton">
+					<p:button value="#{msgs.postNews}" outcome="createnews"
+						rendered="#{newsBackingBean.ownerForCurrCategory || login.userInSysadmin || login.isCurrentUserInRole(constants.nameToValueMap.NewsPoster_Role_Type)}">
+					</p:button>
+				</div>
+				<br />
+				<p:dataTable var="news" value="#{newsBackingBean.lazyNewsDataModel}" paginator="true" rows="20" lazy="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+					rowsPerPageTemplate="5,10,15" tableStyleClass="noBorderTable" paginatorPosition="bottom">
+					<p:column headerText="#{msgs.threadSubjectLabel}" styleClass="mainColumn">
+						<h:graphicImage name="TopTopic.gif" library="images" rendered="#{news.topped}" />
+						<h:graphicImage name="TopicNew.gif" library="images" rendered="#{!news.topped}" />
+						<h:link value="#{news.subject}" outcome="viewnews" styleClass="longstyle">
+							<f:param name="id" value="#{news.id}"></f:param>
+						</h:link>
+					</p:column>
+
+					<p:column headerText="#{msgs.promptNewsDesc}">
+						<li class="thumb">
+							<div class="content">
+								<div class="readFloor_comment_right">
+									<h:panelGroup styleClass="thumbnail">
+										<h:link outcome="viewnews" styleClass="longstyle">
+											<f:param name="id" value="#{news.id}"></f:param>
+											<img src="#{news.thumbPicURL}" width="100px" height="75px" />
+										</h:link>
+									</h:panelGroup>
+									<h:panelGroup styleClass="txt" layout="block">
+										<h:link value="#{news.subject}" outcome="viewnews" styleClass="title">
+											<f:param name="id" value="#{news.id}"></f:param>
+										</h:link>
+										<p>
+											<h:outputText value="#{news.description}" />
+										</p>
+									</h:panelGroup>
+								</div>
+							</div>
+						</li>
+
+					</p:column>
+					<p:column headerText="#{msgs.threadAuthorLabel}" rendered="#{newsBackingBean.ownerForCurrCategory || login.userInSysadmin}">
+						<p:commandButton value="#{msgs.deleteButton}" actionListener="#{newsBackingBean.deleteNews(news)}" update="@form" process="@form">
+						</p:commandButton>
+
+						<p:commandButton value="#{msgs.Top_Button}" actionListener="#{newsBackingBean.topNews(news,true)}" process="@form" update="@form"
+							rendered="#{!news.topped}">
+						</p:commandButton>
+						<p:commandButton value="#{msgs.Untop_Button}" actionListener="#{newsBackingBean.topNews(news,false)}" process="@form" update="@form"
+							rendered="#{news.topped}">
+						</p:commandButton>
+
+						<p:commandButton value="#{msgs.RegNewsDashBoard}" actionListener="#{newsBackingBean.dashBoardNewsIndex(news,false)}" process="@form"
+							update="@form" rendered="#{!news.onDashBoard}">
+						</p:commandButton>
+						<p:commandButton value="#{msgs.PicNewsDashBoard}" actionListener="#{newsBackingBean.dashBoardNewsIndex(news,true)}" process="@form"
+							update="@form" rendered="#{!news.onDashBoard}">
+						</p:commandButton>
+						<p:commandButton value="#{msgs.OutDashBoard}" actionListener="#{newsBackingBean.unDashBoardNewsIndex(news)}" process="@form" update="@form"
+							rendered="#{news.onDashBoard}">
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+				<br />
+				<div class="postButton">
+					<p:button value="#{msgs.postNews}" outcome="createnews"
+						rendered="#{newsBackingBean.ownerForCurrCategory || login.userInSysadmin || login.isCurrentUserInRole(constants.nameToValueMap.NewsPoster_Role_Type)}">
+					</p:button>
+				</div>
+
+			</h:form>
+		</div>
+	</ui:define>
+
+</ui:composition>
+
+</html>

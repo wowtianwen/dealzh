@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roles xmlns="http://www.example.org/UserGroup_Role"
+	schemaLocation="http://www.example.org/UserGroup_Role UserGroup_Role.xsd">
+	<description>
+		Role and UserGroup mapping information.
+		You may define more
+		roles and user group.
+		User group need to match with the one in data
+		base.
+
+		when you create a new Usergroup, you need to assign it to one of
+		the these
+		roles.
+	</description>
+	<role name="guest">
+		<usergroup>GUEST</usergroup>
+	</role>
+
+	<role name="registered">
+		<usergroup>REGISTERED</usergroup>
+		<usergroup>CATEGORY_OWNER</usergroup>
+		<usergroup>SYSADMIN</usergroup>
+	</role>
+	<role name="newsposter">
+		<usergroup>NEWSPOSTER</usergroup>
+		<usergroup>CATEGORY_OWNER</usergroup>
+		<usergroup>SYSADMIN</usergroup>
+	</role>
+
+	<role name="category_owner">
+		<usergroup>CATEGORY_OWNER</usergroup>
+	</role>
+
+	<role name="sysadmin">
+		<usergroup>SYSADMIN</usergroup>
+	</role>
+
+
+</roles>

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+<body>
+	<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+		<ui:define name="title">#{msgs.SUCCEED}</ui:define>
+		<ui:define name="content">
+			<div>
+				<h:form prependId="false" styleClass="center60pct">
+					<div class="highLight">
+						<p>
+							<h1>Your post is submitted for review.</h1>
+							<ol class="generalNumList">
+								<li>If It is approved. then It will be immediately visible to everyone.</li>
+								<li>If It is rejected, then you can go to your <p:commandLink value="#{msgs.MyAccount}" action="#{userBackingBean.openUserProfile}"
+										global="false" ajax="false"></p:commandLink>to edit it and make sure it follows basic post rules. Then submit for review again.
+								</li>
+								<li>When we are sure you can do follow the basic post rules, your account will be removed from "Review list", you will be able to submit
+									your post directly</li>
+							</ol>
+						</p>
+						<p>Please note: The purpose of the review process is to ensure the quality and healthy of our community.</p>
+					</div>
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

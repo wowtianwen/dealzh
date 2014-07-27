@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="globalMesages">
+		<p:messages id="globalMessageId" globalOnly="false" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		<f:event type="preRenderComponent" listener="#{threadStagingBackingBean.validateUserAccess()}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="listForm" prependId="false">
+			<p:dataTable id="storeTable" widgetVar="storeTable1" value="#{threadStagingBackingBean.threadStagingDataModel}" var="threadStaging"
+				paginator="true" rows="100"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				paginatorPosition="bottom" tableStyleClass="noBorderTable" lazy="true" filterDelay="1000" filterEvent="blur">
+				<p:column headerText="#{msgs.SUBJECT}" styleClass="mainColumn">
+					<h:panelGrid columns="2" columnClasses="smallCell" styleClass="noBorder">
+						<h:panelGroup styleClass="thumbnail" rendered="#{! empty threadStaging.thumbPicURL}">
+							<img src="#{threadStaging.thumbPicURL}" class="dealpicInListing" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="txt" layout="block">
+							<p:commandLink value="#{threadStaging.subject} #{threadStaging.price}"
+								actionListener="#{threadStagingBackingBean.setThreadStaging(threadStaging)}" update=":ViewForm" oncomplete="PF('viewEdit').show()"
+								process="@form"></p:commandLink>
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:column>
+				<p:column headerText="#{msgs.CreateTime}" filterBy="#{threadStaging.createTime}" styleClass="nonMainColumn">
+					<h:outputFormat value="#{threadStaging.createTime}">
+						<f:convertDateTime dateStyle="medium" timeStyle="short" type="both" />
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.STORENAME}" filterBy="#{threadStaging.store.name}" styleClass="nonMainColumn">
+					<h:outputText value="#{threadStaging.store.name}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Status}" filterBy="#{threadStaging.status}" filterOptions="#{threadStagingBackingBean.recordStatusOptions}"
+					styleClass="nonMainColumn">
+					<h:outputText value="#{threadStaging.status}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.action}" rendered="#{login.userInSysadmin || login.isUserOwnerOfAnyCategory(login.getCurrentUser())}"
+					styleClass="nonMainColumn">
+					<h:panelGroup>
+						<p:commandButton value="#{msgs.deleteButton}" actionListener="#{threadStagingBackingBean.setThreadStaging(threadStaging)}"
+							update=":delConfgDiaForm" process="@form" oncomplete="PF('DelConfgDia').show()" styleClass="commandButtonOrLink"
+							onerror="HandleAjaxError(xhr, satus, exception)">
+						</p:commandButton>
+						<p:commandButton value="#{msgs.Promote}" actionListener="#{threadStagingBackingBean.promoteThreadStaging(threadStaging)}" update="@form"
+							process="@form" styleClass="commandButtonOrLink" onerror="HandleAjaxError(xhr, satus, exception)"
+							disabled="#{!threadStaging.status.toString().equals(constants.nameToValueMap.STATUS_PENDING)}">
+						</p:commandButton>
+					</h:panelGroup>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog id="confirmation" widgetVar="DelConfgDia" header="#{msgs.Delete_Dialog_Header} " modal="true" height="150" width="500">
+			<h:form id="delConfgDiaForm">
+				<h:panelGrid id="selectupdate">
+					<h:outputFormat value="#{msgs.Affiliate_Delete}">
+						<f:param value="#{threadStagingBackingBean.threadStaging.subject}"></f:param>
+					</h:outputFormat>
+					<!-- create some space between the label and the button -->
+					<br></br>
+					<br></br>
+					<h:panelGrid columns="2">
+						<p:commandButton id="confirm" value="#{msgs.Delete_Dialog_Yes}" update=":listForm" process="@this" oncomplete="PF('DelConfgDia').hide()"
+							actionListener="#{threadStagingBackingBean.deleteThreadStaging()}" />
+						<p:commandButton id="decline" value="#{msgs.Delete_Dialog_No}" onclick="PF('DelConfgDia').hide()" type="button" />
+					</h:panelGrid>
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="viewEdit" header="#{msgs.ViewStore}" modal="true" height="450" width="700" closable="false">
+			<h:form id="ViewForm" prependId="false">
+				<h:panelGrid columns="1" columnClasses="singleGrid">
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.SUBJECT}"></h:outputLabel>
+						<h:inputText id="tsSubject" value="#{threadStagingBackingBean.threadStaging.subject}" rendered="${threadStagingBackingBean.editMode}"
+							styleClass="inputbox" />
+						<p:message for="tsSubject" rendered="${threadStagingBackingBean.editMode}"></p:message>
+						<div class="afterLabel">
+							<h:outputText value="#{threadStagingBackingBean.threadStaging.subject}" rendered="${!threadStagingBackingBean.editMode}"></h:outputText>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.CONTENT}"></h:outputLabel>
+						<p:editor id="storeDesc" value="#{threadStagingBackingBean.threadStaging.content}" rendered="${threadStagingBackingBean.editMode}" />
+						<p:message for="storeDesc" rendered="${threadStagingBackingBean.editMode}"></p:message>
+						<div class="longText">
+							<h:outputText value="#{threadStagingBackingBean.threadStaging.content}" rendered="${!threadStagingBackingBean.editMode}" escape="false"></h:outputText>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.STORENAME}"></h:outputLabel>
+						<h:outputText value="#{threadStagingBackingBean.threadStaging.store.name}"></h:outputText>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:commandButton value="#{msgs.UPDATE}" actionListener="#{threadStagingBackingBean.updateThreadStaging()}" process="@form" update=":listForm"
+							oncomplete="handleComplete(xhr, status, args)" rendered="${threadStagingBackingBean.editMode}">
+						</p:commandButton>
+						<p:commandButton value="#{msgs.EDIT}" action="#{threadStagingBackingBean.setEditMode(true)}" process="@form" update="@form"
+							oncomplete="handleComplete(xhr, status, args)" rendered="${!threadStagingBackingBean.editMode}">
+						</p:commandButton>
+						<p:commandButton id="cancel" value="#{msgs.CANCEL}" oncomplete="PF('viewEdit').hide()" action="#{threadStagingBackingBean.setEditMode(false)}"
+							process="@form" immediate="true" update="@form" />
+					</h:panelGroup>
+					<h:outputText></h:outputText>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+
+</html>

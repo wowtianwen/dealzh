@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<ui:composition>
+	<div id="listCashBackWithdrawRequest">
+		<h:form id="cashBackWithdrawRequestForm" prependId="false"
+			rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_PROFILE_ACCOUNT_SUMMARY)}">
+			<h1>#{msgs.PaymentHistory}</h1>
+			<p:dataTable value="#{userBackingBean.lazyCashBackWithdrawRequestDataModel}" var="cashbackWithdrawRequest" paginator="true" rows="20"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				paginatorPosition="both" tableStyleClass="noBorderTable" lazy="true" paginatorAlwaysVisible="false">
+				<f:event type="preRenderComponent" listener="#{userBackingBean.initDataModel()}"></f:event>
+				<p:column headerText="#{msgs.WithdrawPayment}">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{cashbackWithdrawRequest.withdrawAmount}">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" currencySymbol="$" type="currency"></f:convertNumber>
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{cashbackWithdrawRequest.withdrawAmount}">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" currencySymbol="$" type="currency"></f:convertNumber>
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column headerText="#{msgs.Paypal_Email}">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{cashbackWithdrawRequest.paypalEmail}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{cashbackWithdrawRequest.paypalEmail}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column headerText="#{msgs.Status}">
+					<h:outputText value="#{cashbackWithdrawRequest.status}" />
+				</p:column>
+				<p:column headerText="#{msgs.CreateTime}">
+					<h:outputText value="#{cashbackWithdrawRequest.createTime}">
+						<f:convertDateTime timeStyle="short" dateStyle="default" type="both"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Note}">
+					<h:outputText value="#{cashbackWithdrawRequest.note}" />
+				</p:column>
+				<p:column headerText="#{msgs.action}">
+					<p:commandButton value="#{msgs.deleteButton}" actionListener="#{userBackingBean.setCashBackWithdrawRequest(cashbackWithdrawRequest)}"
+						update=":delConfgDiaForm" process="@form" oncomplete="PF('DelConfgDia').show()" styleClass="commandButtonOrLink "
+						onerror="HandleAjaxError(xhr, satus, exception)">
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</div>
+
+	<p:dialog id="confirmation" widgetVar="DelConfgDia" header="#{msgs.Delete_Dialog_Header} " modal="true" height="150" width="500">
+		<h:form id="delConfgDiaForm">
+			<h:panelGrid id="selectupdate">
+				<h:outputFormat value="#{msgs.CashBackWithdrawRequest_Delete }">
+				</h:outputFormat>
+				<!-- create some space between the label and the button -->
+				<br></br>
+				<br></br>
+				<h:panelGrid columns="2">
+					<p:commandButton id="confirm" value="#{msgs.Delete_Dialog_Yes}" update=":cashBackWithdrawRequestForm :accountSummaryForm" process="@this"
+						oncomplete="PF('DelConfgDia').hide()" actionListener="#{userBackingBean.deleteCashBackWithdrawRequest(userBackingBean.cashBackWithdrawRequest)}" />
+					<p:commandButton id="decline" value="#{msgs.Delete_Dialog_No}" onclick="PF('DelConfgDia').hide()" type="button" />
+				</h:panelGrid>
+
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+</ui:composition>
+</html>

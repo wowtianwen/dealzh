@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="title">#{msgs.AllEvents}</ui:define>
+	<ui:define name="content">
+		<h:form id="listEventForm">
+			<h1 class="title">#{msgs.AllEvents}</h1>
+			<p:dataTable id="eventTable" value="#{eventBackingBean.lazyEventDataModel}" var="event" paginator="true" rows="40"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				paginatorPosition="both" tableStyleClass="noBorderTable" lazy="true">
+				<p:column headerText="#{msgs.Name}">
+					<h:link value="#{event.name}" outcome="event.xhtml">
+						<f:param name="#{constants.nameToValueMap.PARENT_THREAD_ID}" value="#{event.id}"></f:param>
+					</h:link>
+				</p:column>
+				<p:column headerText="#{msgs.Description}">
+					<h:outputText value='#{event.description}' escape="false"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Owner}">
+					<h:outputText value='#{event.owner.userId}' escape="false"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.NumberOfThread}">
+					<h:outputText value='#{event.numOfThread}' escape="false"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.action}" rendered="#{login.userInSysadmin}">
+					<h:panelGroup>
+						<p:button value="#{msgs.EDIT}" outcome="editEvent">
+							<f:param name="id" value="#{event.id}"></f:param>
+						</p:button>
+						<p:commandButton value="#{msgs.deleteButton}" actionListener="#{eventBackingBean.setSelectedEvent(event)}" update=":delConfgDiaForm"
+							process="@form" oncomplete="PF('DelConfgDia').show()" styleClass="commandButtonOrLink" onerror="HandleAjaxError(xhr, satus, exception)"></p:commandButton>
+						<p:commandButton value="#{msgs.assignOwner_button}" actionListener="#{eventBackingBean.setSelectedEvent(event)}" update=":assignOwnerForm"
+							process="@form" oncomplete="PF('assignOwnerDia').show()" onerror="HandleAjaxError(xhr, satus, exception)">
+						</p:commandButton>
+					</h:panelGroup>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<div style="display: inline; float: left; margin-top: 10px;">
+			<p:button value="#{msgs.PostNewEvent}" outcome="/event/createEvent.xhtml" rendered="#{login.userInSysadmin}">
+			</p:button>
+		</div>
+
+		<p:dialog id="confirmation" widgetVar="DelConfgDia" header="#{msgs.Delete_Dialog_Header} " modal="true" height="150" width="500">
+			<h:form id="delConfgDiaForm">
+				<h:panelGrid id="selectupdate">
+					<h:outputFormat value="#{msgs.Event_Delete}">
+						<f:param value="#{eventBackingBean.selectedEvent.name}">
+						</f:param>
+					</h:outputFormat>
+					<!-- create some space between the label and the button -->
+					<br></br>
+					<br></br>
+					<h:panelGrid columns="2">
+						<p:commandButton id="confirm" value="#{msgs.Delete_Dialog_Yes}" update=":listEventForm" process="@this" oncomplete="PF('DelConfgDia').hide()"
+							actionListener="#{eventBackingBean.deleteEvent}" />
+						<p:commandButton id="decline" value="#{msgs.Delete_Dialog_No}" onclick="PF('DelConfgDia').hide()" type="button" />
+					</h:panelGrid>
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		<p:dialog id="assignOwner" widgetVar="assignOwnerDia" header="#{msgs.Assign_Owner_Header}" modal="true" height="250" width="600">
+			<h:form id="assignOwnerForm">
+				<h:panelGrid columns="2" columnClasses="th">
+
+					<h:outputLabel value="#{msgs.Name}"></h:outputLabel>
+					<h:outputText value="#{eventBackingBean.selectedEvent.name}" />
+
+					<h:outputLabel value="#{msgs.CurrentOwner}"></h:outputLabel>
+					<h:outputText value="#{eventBackingBean.selectedEvent.owner.userId}" />
+
+					<h:outputLabel value="#{msgs.provideUserId}" for="userId" />
+					<p:autoComplete value="#{requestScope.NEWUSERID}" minQueryLength="3" id="userId" completeMethod="${userBackingBean.getUserids}"
+						forceSelection="false" queryDelay="500">
+					</p:autoComplete>
+					<p:message for="userId" />
+
+					<h:panelGroup>
+						<p:commandButton value="#{msgs.Assign_Button}" action="#{eventBackingBean.assignEventOwner()}" process="@form" update=":listEventForm"
+							oncomplete="PF('assignOwnerDia').hide()">
+						</p:commandButton>
+						<p:commandButton id="cancel" value="#{msgs.CANCEL}" onclick="PF('assignOwnerDia').hide()" type="button" />
+					</h:panelGroup>
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+
+</html>

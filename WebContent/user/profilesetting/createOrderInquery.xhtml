@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+<body>
+	<ui:composition>
+		<h:form prependId="false" rendered="#{userBackingBean.profiletab.equalsIgnoreCase(constants.nameToValueMap.USER_TAB_NEW_ORDER_INQUERY)}">
+
+			<h:panelGroup layout="block" styleClass="instruction">
+				<span> #{msgs.OrderInqueryInstruction_Title}</span>
+				<ol class="generalNumList">
+					<li>#{msgs.OrderInqueryInstruction_1}</li>
+					<li>#{msgs.OrderInqueryInstruction_2}</li>
+				</ol>
+			</h:panelGroup>
+			<h1>#{msgs.createOrderInquery}</h1>
+			<h:panelGrid columns="2" styleClass="profileTable">
+				<h:outputLabel value="#{msgs.provideUserId}"></h:outputLabel>
+				<h:outputText value="#{userBackingBean.basicUser.userId}">
+				</h:outputText>
+				<h:outputLabel value="#{msgs.email}"></h:outputLabel>
+				<h:outputText value="#{userBackingBean.basicUser.email}">
+				</h:outputText>
+				<h:outputLabel value="#{msgs.STORENAME}" title="#{msgs.STORENAME_TIPS}"></h:outputLabel>
+				<h:panelGroup>
+					<p:autoComplete id="storeName" value="#{requestScope.storeName}" minQueryLength="1" completeMethod="${userBackingBean.getStoreList}"
+						required="true" dropdown="true" scrollHeight="250" forceSelection="true" queryDelay="500" title="#{msgs.STORENAME_TIPS}">
+					</p:autoComplete>
+					<h:message for="storeName" errorClass="errorMessClass"></h:message>
+				</h:panelGroup>
+				<h:outputLabel value="#{msgs.OrderNumber}" title="#{msgs.OrderNumber_Tips}"></h:outputLabel>
+				<h:panelGroup>
+					<p:inputText id="orderNumber" value="#{userBackingBean.orderInquery.orderNumber}" required="true"
+						validator="#{userBackingBean.checkOrderNumberExist}" title="#{msgs.OrderNumber_Tips}">
+						<p:ajax event="blur" process="@this" update="orderNumberMess"></p:ajax>
+					</p:inputText>
+					<h:message id="orderNumberMess" for="orderNumber" errorClass="errorMessClass"></h:message>
+				</h:panelGroup>
+
+				<h:outputLabel value="#{msgs.TransactionAmount}" title="#{msgs.TransactionAmount_Tips}"></h:outputLabel>
+				<h:panelGroup>
+					<p:inputText id="orderAmount" value="#{userBackingBean.orderInquery.orderAmount}" required="true" title="#{msgs.TransactionAmount_Tips}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="number"></f:convertNumber>
+					</p:inputText>
+					<h:message for="orderAmount" errorClass="errorMessClass"></h:message>
+				</h:panelGroup>
+				<h:outputLabel value="#{msgs.TransactionDate}" title="#{msgs.TransactionDate_Tips}"></h:outputLabel>
+				<h:panelGroup>
+					<p:calendar id="purchaseDate" value="#{userBackingBean.orderInquery.purchaseDate}" required="true" pattern="MM/dd/yyyy" mode="popup"
+						showOn="button" navigator="true" popupIconOnly="true" mindate="01/01/2012" title="#{msgs.TransactionDate_Tips}"></p:calendar>
+					<h:message for="purchaseDate" errorClass="errorMessClass"></h:message>
+				</h:panelGroup>
+
+				<h:outputLabel value="" />
+				<h:panelGroup>
+					<p:commandButton value="#{msgs.submit}" actionListener="#{userBackingBean.createOrderInquery(userBackingBean.orderInquery)}" ajax="true"
+						process="@form" update=":mainProfilePanel" styleClass="commandButton">
+					</p:commandButton>
+				</h:panelGroup>
+			</h:panelGrid>
+		</h:form>
+
+		<h:form id="successMessage">
+			<h:panelGroup styleClass="profileTable" rendered="#{userBackingBean.submitOrderInquerySuccess}" layout="block">
+				<p>
+					<h:outputText value="#{msgs.submit_Success}"></h:outputText>
+					<br /> <br />
+					<p:commandLink value="#{msgs.gotoOrderInqueryList}"
+						actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_ORDER_INQUERY)}" process="@this" update=":mainProfilePanel"
+						ajax="true">
+					</p:commandLink>
+				</p>
+			</h:panelGroup>
+		</h:form>
+	</ui:composition>
+</body>
+</html>

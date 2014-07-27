@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<h:body>
+	<ui:composition>
+		<h:form id="accountSummaryForm"
+			rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_PROFILE_ACCOUNT_SUMMARY)}">
+			<h1>#{msgs.MyAccount}</h1>
+			<h:panelGrid columns="2" columnClasses="th" styleClass="profileTable">
+				<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+				<h:outputText value="#{userBackingBean.basicUser.userId}" />
+
+				<h:outputLabel value="#{msgs.Status}"></h:outputLabel>
+				<h:panelGroup>
+					<h:outputText value="#{userBackingBean.basicUser.status}" />
+					<p:commandButton id="resendActivationCodeButton" value="#{msgs.SendActiationEmail}"
+						actionListener="#{userBackingBean.resendRegActivationCode(userBackingBean.basicUser)}" process="@this" update="@none"
+						oncomplete="disableButton('#resendActivationCodeButton')"
+						rendered="#{userBackingBean.basicUser.status.toString().equals(constants.nameToValueMap.USER_STATUS_PENDING)}"></p:commandButton>
+				</h:panelGroup>
+				<h:outputLabel value="#{msgs.PaidAmount}" styleClass="FieldLabelCSS" title="#{msgs.PaidAmount_Tips}">
+				</h:outputLabel>
+				<p:commandLink actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_CASH_BACK_HISTORY)}" process="@this"
+					update=":mainProfilePanel" title="#{msgs.PaidAmount_Tips}">
+					<h:outputText value="#{userBackingBean.basicUser.paidAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" currencySymbol="$" type="currency"></f:convertNumber>
+					</h:outputText>
+				</p:commandLink>
+				<h:outputLabel value="#{msgs.PendingAmount}" title="#{msgs.PendingAmount_Tips}"></h:outputLabel>
+				<p:commandLink actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_CASH_BACK_HISTORY)}" process="@this"
+					update=":mainProfilePanel" title="#{msgs.PendingAmount_Tips}">
+					<h:outputText value="#{userBackingBean.basicUser.pendingAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" currencySymbol="$" type="currency"></f:convertNumber>
+					</h:outputText>
+				</p:commandLink>
+
+				<h:outputLabel value="#{msgs.AvailableAmount}" title="#{msgs.AvailableAmount_Tips}"></h:outputLabel>
+				<h:panelGroup>
+					<h:outputText value="#{userBackingBean.basicUser.availableAmount}" title="#{msgs.AvailableAmount_Tips}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" currencySymbol="$" type="currency"></f:convertNumber>
+					</h:outputText>
+					<p:commandButton value="#{msgs.WithdrawPayment}" actionListener="#{userBackingBean.initializeCashBackWithdrawRequest()}" process="@this"
+						update=":mainProfilePanel" title="#{msgs.WithdrawPayment_Tip}"></p:commandButton>
+				</h:panelGroup>
+
+				<h:outputLabel value="#{msgs.TotalAmount}" title="#{msgs.TotalAmount_Tips}"></h:outputLabel>
+				<p:commandLink actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_CASH_BACK_HISTORY)}" process="@this"
+					update=":mainProfilePanel" title="#{msgs.TotalAmount_Tips}">
+					<h:outputText value="#{userBackingBean.basicUser.paidAmount+userBackingBean.basicUser.pendingAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" currencySymbol="$" type="currency"></f:convertNumber>
+					</h:outputText>
+				</p:commandLink>
+
+				<h:outputLabel value="#{msgs.PaymentMethod}" title="#{msgs.PaymentMethod_Tips}"></h:outputLabel>
+				<p:commandLink value="#{userBackingBean.basicUser.paymentMethod}"
+					actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_PAYMENT_METHOD)}" process="@this" update=":mainProfilePanel"
+					title="#{msgs.PaymentMethod_Tips}">
+				</p:commandLink>
+
+			</h:panelGrid>
+			<div class="margintop">
+				<h:outputText value="#{msgs.Note}"></h:outputText>
+				<ul class="generalList">
+					<li>#{msgs.CashBackNote1}</li>
+					<li>#{msgs.CashBackNote2}</li>
+					<li>#{msgs.Payment_Note}</li>
+				</ul>
+			</div>
+
+
+
+		</h:form>
+
+		<div>
+			<ui:include src="cashBackWithdrawRequest.xhtml"></ui:include>
+		</div>
+
+	</ui:composition>
+
+
+
+</h:body>
+
+</html>

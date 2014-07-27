@@ -1,0 +1,84 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+	<h:form rendered="#{login.isUserInSysadmin()}">
+		<p:fieldset legend="#{msgs.ManageUsers}">
+			<h:panelGrid columns="3" id="userIdPanel">
+				<h:outputLabel value="#{msgs.provideUserId}" for="userId" />
+				<p:autoComplete value="#{userBackingBean.user.userId}" minQueryLength="3" id="userId" completeMethod="${userBackingBean.getUserids}"
+					forceSelection="true" queryDelay="500">
+					<p:ajax event="itemSelect" listener="#{userBackingBean.handleSelectUser}" update="commandButton" />
+				</p:autoComplete>
+				<p:message for="userId" id="userIdMess" />
+				<h:outputLabel></h:outputLabel>
+				<h:panelGroup id="commandButton">
+					<p:commandButton value="#{msgs.EDIT}" actionListener="#{userBackingBean.editUser}" oncomplete="PF('dialog').show()" process="userIdPanel @this"
+						update="userDetail">
+					</p:commandButton>
+					<p:commandButton value="#{msgs.LOCK}" actionListener="#{userBackingBean.lockUser(true)}" disabled="#{userBackingBean.user.locked}"
+						process="userIdPanel @this" update="@form"></p:commandButton>
+					<p:commandButton value="#{msgs.UNLOCK}" actionListener="#{userBackingBean.lockUser(false)}" disabled="#{!userBackingBean.user.locked}"
+						process="userIdPanel @this" update="@form"></p:commandButton>
+					<p:commandButton value="#{msgs.TRUSTUSER}" actionListener="#{userBackingBean.trustUser(true)}" disabled="#{userBackingBean.user.trustedUser}"
+						process="userIdPanel @this" update="@form"></p:commandButton>
+					<p:commandButton value="#{msgs.UNTRUSTUSER}" actionListener="#{userBackingBean.trustUser(false)}" disabled="#{!userBackingBean.user.trustedUser}"
+						process="userIdPanel @this" update="@form"></p:commandButton>
+					<p:commandButton value="#{msgs.DELETE}" process="@form" onclick="confirmation.show();"></p:commandButton>
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:growl id="messages" showDetail="true" />
+
+		<p:confirmDialog message="#{msgs.user_delete_warning}" header="User Delete" severity="alert" widgetVar="confirmation">
+			<p:commandButton value="Yes Sure" process="userIdPanel @this" update="userIdPanel @form messages" oncomplete="confirmation.hide()"
+				actionListener="#{userBackingBean.deleteUser}" />
+			<p:commandButton value="Not Yet" onclick="confirmation.hide()" type="button" />
+
+		</p:confirmDialog>
+
+		<p:dialog id="editUserDetail" header="User Detail" widgetVar="dialog" showEffect="fold" hideEffect="fold">
+			<h:panelGrid columns="3" id="userDetail">
+				<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+				<p:inputText id="userid" value="#{userBackingBean.user.userId}" disabled="true">
+				</p:inputText>
+				<h:outputText value="#{userBackingBean.user.locked?msgs.locked:msgs.normal}" />
+
+				<h:outputLabel value="#{msgs.password}"></h:outputLabel>
+				<p:password id="password" value="#{userBackingBean.user.password}">
+					<p:ajax process="@this" update="passwordErr" event="valueChange"></p:ajax>
+				</p:password>
+				<p:message id="passwordErr" for="password"></p:message>
+
+				<h:outputLabel value="#{msgs.passwordagain}"></h:outputLabel>
+				<p:password id="passwordagain" value="#{userBackingBean.user.passwordagain}" validator="#{userBackingBean.checkPasswordMatch}">
+					<p:ajax process="password passwordagain" update="passwordagainErr" event="valueChange"></p:ajax>
+				</p:password>
+				<p:message id="passwordagainErr" for="passwordagain"></p:message>
+
+				<h:outputLabel value="#{msgs.firstName}"></h:outputLabel>
+				<p:inputText id="firstname" value="#{userBackingBean.user.firstName}"></p:inputText>
+				<p:message id="firstNameErr" for="firstname"></p:message>
+
+				<h:outputLabel value="#{msgs.middleName}"></h:outputLabel>
+				<p:inputText id="middlename" value="#{userBackingBean.user.middleName}"></p:inputText>
+				<p:message id="middleNameErr" for="middlename"></p:message>
+
+				<h:outputLabel value="#{msgs.lastName}"></h:outputLabel>
+				<p:inputText id="lastname" value="#{userBackingBean.user.lastName}"></p:inputText>
+				<p:message id="lastNameErr" for="lastname"></p:message>
+
+
+				<h:outputLabel value="#{msgs.email}"></h:outputLabel>
+				<p:inputText id="email" value="#{userBackingBean.user.email}">
+					<f:ajax execute="@this" render="emailErr" event="valueChange"></f:ajax>
+				</p:inputText>
+				<p:message id="emailErr" for="email"></p:message>
+			</h:panelGrid>
+			<p:commandButton value="Save" actionListener="#{userBackingBean.update(userBackingBean.user)}" update="@form"></p:commandButton>
+			<p:commandButton value="Cancel" onclick="PF('dialog').hide();"></p:commandButton>
+		</p:dialog>
+	</h:form>
+</ui:composition>
+</html>

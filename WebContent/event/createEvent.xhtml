@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+		<ui:define name="title">#{msgs.CreateEvent}</ui:define>
+		<ui:define name="content">
+			<div class="outLineBorder">
+				<div>
+					<h:form prependId="false">
+						<h:panelGrid columns="3" columnClasses="th">
+							<f:facet name="header">
+								<h:outputText value="#{msgs.CreateEvent}"></h:outputText>
+							</f:facet>
+							<h:outputLabel value="#{msgs.Name}"></h:outputLabel>
+							<p:inputText id='name' value="#{eventBackingBean.selectedEvent.name}" label="#{msgs.Name}" required="true"
+								validator="#{eventBackingBean.checkUniqueueness}">
+								<p:ajax event="change" update="nameMess" process="@this" global="true" partialSubmit="true"></p:ajax>
+							</p:inputText>
+							<p:message id="nameMess" for="name"></p:message>
+
+							<h:outputLabel value="#{msgs.Description}"></h:outputLabel>
+							<p:editor id="Desc" value="#{eventBackingBean.selectedEvent.description}" required="true"></p:editor>
+							<p:message for="Desc"></p:message>
+
+							<h:outputText value=""></h:outputText>
+							<h:panelGroup>
+								<p:commandButton value="#{msgs.submit}" action="#{eventBackingBean.createEvent()}" ajax="false" styleClass="commandButton">
+								</p:commandButton>
+								<p:button value="#{msgs.CANCEL}" outcome="listEvents.xhtml" styleClass="commandButton">
+								</p:button>
+							</h:panelGroup>
+						</h:panelGrid>
+
+
+					</h:form>
+				</div>
+			</div>
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

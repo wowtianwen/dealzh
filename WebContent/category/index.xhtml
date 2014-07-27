@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/newsmaintemplate.xhtml">
+	<ui:define name="navigation">
+		<h:panelGroup>
+			<f:event type="preRenderComponent" listener="#{navigationMapBackingBean.clearNavigationMap()}" />
+			<ui:include src="/navigation.xhtml"></ui:include>
+		</h:panelGroup>
+	</ui:define>
+	<ui:define name="leftpage">
+		<div class="titleOnThreadIndex">
+			<h:outputText value="#{msgs.TopThreads}" />
+		</div>
+		<h:form id="indexForm">
+
+			<ui:repeat value="#{threadDashBoardCacheService.allCategoryArray}" var="category">
+				<p:dataTable value="#{threadDashBoardCacheService.getDashBoards(category)}" var="threadDashBoard" tableStyleClass="tab_two"
+					styleClass="datatable" rowStyleClass="whiteBackGround">
+					<f:facet name="header">
+						<h:link value="#{category.categoryName}" outcome="/thread/listthreads.xhtml">
+							<f:param name="ctgtThdId" value="#{threadDashBoardCacheService.getCategoryId(category)}"></f:param>
+						</h:link>
+					</f:facet>
+					<p:column styleClass="mainColumn">
+						<h:panelGrid columns="2" columnClasses="smallCell" styleClass="tab_three">
+							<h:panelGroup styleClass="thumbnail" rendered="#{! empty threadDashBoard.picturePathURL}">
+								<h:link outcome="/thread/viewthread.xhtml" styleClass="longstyle">
+									<f:param name="id" value="#{threadDashBoard.threadId}"></f:param>
+									<img src="#{threadDashBoard.picturePathURL}" class="dealpicInListing" />
+								</h:link>
+							</h:panelGroup>
+							<h:panelGroup styleClass="txt" layout="block">
+								<h:link value="#{threadDashBoard.threadSubject}" outcome="/thread/viewthread.xhtml" styleClass="subject">
+									<f:param name="id" value="#{threadDashBoard.threadId}"></f:param>
+								</h:link>
+								<h:outputText value="#{threadDashBoard.price}" styleClass="price" rendered="#{!empty threadDashBoard.price}"></h:outputText>
+							</h:panelGroup>
+						</h:panelGrid>
+
+					</p:column>
+
+
+				</p:dataTable>
+
+			</ui:repeat>
+		</h:form>
+	</ui:define>
+	<ui:define name="rightpage">
+		<h:form>
+			<p:dataList value="#{threadCacheEjb.mostRecentThreadList}" var="thread" itemType="disc" styleClass="rightList ">
+				<f:facet name="header">#{msgs.MOSTRECENTTHREAD}</f:facet>
+				<div>
+					<img class="nr1_tableft" src="#{thread.thumbPicURL}" />
+				</div>
+
+				<div class="nr1_tabright">
+					<h3>
+						<div class="listRightPage">
+							<h:link value="#{thread.subject}" outcome="/thread/viewthread" styleClass="longstyle">
+								<f:param name="id" value="#{thread.id}"></f:param>
+							</h:link>
+						</div>
+					</h3>
+				</div>
+			</p:dataList>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

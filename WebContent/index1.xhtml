@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/newsmaintemplate.xhtml">
+
+	<ui:define name="leftpage">
+		<h1>
+			<h:outputText value="#{msgs.EditorPickedDeal}" title="#{msgs.EditorPickedDeal_title}" styleClass="topPickedDeal"></h:outputText>
+		</h1>
+		<h:form>
+			<!-- regular Thread -->
+			<div class="sectionL2">
+				<!-- tab  -->
+				<p:tabView var="category" value="#{threadDashBoardCacheService.allDBCategoryWithAllDealCat}" dynamic="true" cache="true"
+					 activeIndex="#{sessionScope.activeIndexDealTab}">
+					<p:tab title="#{category.categoryName}" >
+						<p:dataGrid value="#{mainDashBoardBackingBean.dashBoardThreadsDB}" var="threadDB" columns="5" styleClass="grid" paginator="true"
+							paginatorAlwaysVisible="false" paginatorPosition="bottom" rows="25"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}">
+							<f:event type="preRenderComponent" listener="#{mainDashBoardBackingBean.prepareFeatch4AllThreadDB(category)}" />
+							<div class="wrapper">
+								<h:panelGroup layout="block">
+									<h:link outcome="/thread/viewthread">
+										<f:param name="id" value="#{threadDB.threadId}"></f:param>
+										<div class="indexImg">
+											<img class="dealPic" src="#{threadDB.picturePathURL}" />
+										</div>
+									</h:link>
+								</h:panelGroup>
+
+								<h:panelGroup layout="block" styleClass="blockLeft">
+									<h:link outcome="/thread/viewthread" value="#{threadDB.threadSubject}">
+										<f:param name="id" value="#{threadDB.threadId}"></f:param>
+									</h:link>
+									<h:outputText value="#{threadDB.price}" styleClass="price" rendered="#{!empty threadDB.price}"></h:outputText>
+								</h:panelGroup>
+								<h:panelGroup styleClass="storeSecton">
+									<h:panelGroup rendered="#{!empty threadDB.store.cashBackPercent}" styleClass="storeCashBackPct">
+										<h:outputFormat value="#{threadDB.store.cashBackPercent}">
+											<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+										</h:outputFormat>
+										<h:outputText value=" cash back"></h:outputText>
+									</h:panelGroup>
+								</h:panelGroup>
+								<h:outputText value="at #{threadDB.storeName}" styleClass="storeName" rendered="#{!empty threadDB.storeName}"></h:outputText>
+								<div class="hotimg">
+									<h:graphicImage name="HOT.png" library="images" rendered="#{(threadDB.markedHot)}" />
+								</div>
+							</div>
+						</p:dataGrid>
+					</p:tab>
+				</p:tabView>
+			</div>
+
+		</h:form>
+		<!-- context web ad -->
+		<ui:include src="/ad/leaderboard.xhtml"></ui:include>
+	</ui:define>
+	<ui:define name="rightpage">
+		<div class="section block">
+			<p:dataGrid value="#{systemCacheEjb.popularStores}" var="popularStore" lazy="false" columns="3" styleClass="smallerGrid">
+				<f:facet name="header">
+					<h:link outcome="stores/listStore.xhtml">
+						<div class="red">#{msgs.PopularStores}</div>
+					</h:link>
+				</f:facet>
+				<div>
+					<h:panelGroup layout="block">
+						<div>
+							<h:graphicImage name="money.jpg" library="images" styleClass="moneySign" title="#{msgs.CashBack}"></h:graphicImage>
+							<h:outputFormat value="#{popularStore.cashBackPercent}" rendered="#{popularStore.cashBackPercent!=0}" styleClass="green"
+								title="#{msgs.CashBack}">
+								<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+							</h:outputFormat>
+							<h:outputFormat value="#{msgs.ComingSoon}" rendered="#{popularStore.cashBackPercent==0}" title="#{msgs.CashBack}">
+							</h:outputFormat>
+						</div>
+						<h:link outcome="/stores/viewStore">
+							<f:param name="id" value="#{popularStore.id}"></f:param>
+							<div class="indexImgRightPage">
+								<h:graphicImage url="/resources/storePic/#{popularStore.storePicturePathURL}" styleClass="dealPicSmaller" />
+							</div>
+
+						</h:link>
+
+					</h:panelGroup>
+
+				</div>
+			</p:dataGrid>
+		</div>
+		<div class="section block">
+			<h:form>
+				<p:dataList value="#{threadDashBoardCacheService.trendingPopularThreadList}" var="thread" itemType="disc" styleClass="rightList">
+					<f:facet name="header">#{msgs.POPULARDEAL}</f:facet>
+					<div>
+						<img class="nr1_tableft" src="#{thread.thumbPicURL}" />
+					</div>
+					<div class="nr1_tabright">
+						<h3>
+							<div class="listRightPage">
+								<h:link value="#{thread.subject}" outcome="/thread/viewthread" styleClass="longstyle">
+									<f:param name="id" value="#{thread.id}"></f:param>
+								</h:link>
+							</div>
+						</h3>
+						<h:panelGroup layout="block">
+							<p:rating id="ratingId" readonly="true" stars="5" value="#{threadBackingBean.getRating(thread.id)}">
+							</p:rating>
+							<p:tooltip for="ratingId" showEffect="fade" id="ratingTip"
+								value="Score: #{threadBackingBean.getRating(thread.id)} Votes: #{threadBackingBean.getVotes(thread.id)} "></p:tooltip>
+						</h:panelGroup>
+					</div>
+
+				</p:dataList>
+			</h:form>
+		</div>
+
+		<div class="section block">
+			<h:form>
+				<p:dataList value="#{threadCacheEjb.mostRecentThreadList}" var="thread" itemType="disc" styleClass="rightList ">
+					<f:facet name="header">#{msgs.MOSTRECENTTHREAD}</f:facet>
+					<div>
+						<img class="nr1_tableft" src="#{thread.thumbPicURL}" />
+					</div>
+
+					<div class="nr1_tabright">
+						<h3>
+							<div class="listRightPage">
+								<h:link value="#{thread.subject}" outcome="/thread/viewthread" styleClass="longstyle">
+									<f:param name="id" value="#{thread.id}"></f:param>
+								</h:link>
+							</div>
+						</h3>
+					</div>
+				</p:dataList>
+			</h:form>
+		</div>
+
+		<div class="ad">
+			<script type="text/javascript">
+			<!--
+				google_ad_client = 'ca-pub-8368630049697559';
+				/* square250x250 */
+				google_ad_slot = '9023872078';
+				google_ad_width = 250;
+				google_ad_height = 250;
+			//-->
+			</script>
+			<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+				
+			</script>
+		</div>
+		<div class="section block">
+			<h:form>
+				<!-- Mixed news -->
+				<div class="sectionHeader">
+					<h:link value="#{msgs.mixNews}" outcome="/news/index" />
+				</div>
+				<ui:repeat value="#{mainDashBoardBackingBean.mixedNewsCategoryNameList}" var="categoryName">
+					<p:dataList value="#{mainDashBoardBackingBean.getMixedNewsDashBoard(categoryName)}" var="newsDB" type="unordered" effectSpeed="slow"
+						styleClass="mixedSection">
+						<h:panelGroup styleClass="txt" layout="block">
+							<h:link value="[#{categoryName}]" outcome="/news/listnews">
+								<f:param name="ctgtNewsId" value="#{newsDB.newsCategoryId}"></f:param>
+							</h:link>
+							<h:link value="#{newsDB.newsSubject}" outcome="/news/viewnews">
+								<f:param name="id" value="#{newsDB.newsId}"></f:param>
+							</h:link>
+						</h:panelGroup>
+					</p:dataList>
+				</ui:repeat>
+			</h:form>
+		</div>
+		<ui:include src="/ad/amazonDealWidget.xhtml"></ui:include>
+	</ui:define>
+	<ui:define name="rightpageAd"></ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<div class="leftSideProfile">
+		<h:form prependId="false" id="userLeftSideForm">
+			<div>
+				<h:graphicImage id="userProfilePicId" url="/resources/profilepic/#{sessionScope.CURRENTUSER.profilePicName}" />
+			</div>
+			<div id="profileLeftLink">
+				<dl>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_Account_Summay}"
+							actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_PROFILE_ACCOUNT_SUMMARY)}" process="@this"
+							update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_Cash_Back_Summary}"
+							actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_CASH_BACK_HISTORY)}" process="@this"
+							update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_Order_Inquery}"
+							actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_ORDER_INQUERY)}" process="@this" update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.PaymentMethod}" actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_PAYMENT_METHOD)}"
+							process="@this" update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_Personal_Information}"
+							actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_BASICPROFILE)}" process="@this" update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_picture}" actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_PROFILE_PIC)}"
+							process="@this" update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_Change_pwd}" actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_CHANGEPWD)}"
+							process="@this" update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_My_Post}" actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_MYPOST)}"
+							process="@this" update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_My_Reply}" actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_MYREPLY)}"
+							process="@this" update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.Profile_My_WatchList}"
+							actionListener="#{userBackingBean.setProfiletab(constants.nameToValueMap.USER_TAB_MYWATCHLIST)}" process="@this" update=":mainProfilePanel"></p:commandLink>
+					</dt>
+					<dt>
+						<p:commandLink value="#{msgs.TellAFriend}" actionListener="#{userBackingBean.populateReferredUsers(userBackingBean.basicUser)}" process="@this"
+							update=":mainProfilePanel" oncomplete="registerReferLinkClick()"></p:commandLink>
+					</dt>
+				</dl>
+
+			</div>
+			<h:inputHidden value="#{sessionScope.profiletab}" id="profiletabid" />
+
+		</h:form>
+	</div>
+</ui:composition>
+</html>

@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<ui:composition>
+	<div id="myCashBack">
+		<h:form rendered="#{login.isUserInSysadmin()}">
+			<p:dataTable var="transactionRecord" value="#{userBackingBean.lazyTransactionRecordDataModel}" paginator="true" rows="50" lazy="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,15" tableStyleClass="noBorderTable" styleClass="tableWrapper" paginatorPosition="both" filterDelay="1000"
+				filterEvent="blur" paginatorAlwaysVisible="false">
+				<p:column headerText="#{msgs.TransactionId}" filterBy="#{transactionRecord.transactionId}" styleClass="tableColumnBreakWord">
+					<h:outputFormat value="#{transactionRecord.transactionId}">
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.Affiliate}" filterBy="#{transactionRecord.affiliateNetwork}" styleClass="tableColumnBreakWord">
+					<h:outputFormat value="#{transactionRecord.affiliateNetwork}">
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.TransactionDate}" filterBy="#{transactionRecord.transactionDate}">
+					<h:outputFormat value="#{transactionRecord.transactionDate}">
+						<f:convertDateTime pattern="yyyy-MM-dd"></f:convertDateTime>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.TransactionAmount}" styleClass="tranTableColumn">
+					<h:outputFormat value="#{transactionRecord.transactionAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.userid}" filterBy="#{transactionRecord.transactionUserId}" styleClass="tranTableColumn">
+					<h:outputFormat value="#{transactionRecord.transactionUserId}">
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.ItemName}" styleClass="tableColumnBreakWord">
+					<h:outputFormat value="#{transactionRecord.itemName}">
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.CommissionAmount}">
+					<h:outputFormat value="#{transactionRecord.commissionAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.Status}" filterBy="#{transactionRecord.recordStatus}" filterOptions="#{userBackingBean.recordStatusOptions}"
+					styleClass="tranTableColumn">
+					<h:outputText value="#{transactionRecord.recordStatus}" />
+				</p:column>
+				<p:column headerText="#{msgs.AdvertiserName}" filterBy="#{transactionRecord.advertiserName}" styleClass="tableColumnBreakWord">
+					<h:outputText value="#{transactionRecord.advertiserName}" />
+				</p:column>
+				<p:column headerText="#{msgs.CreateTime}">
+					<h:outputFormat value="#{transactionRecord.createTime}">
+						<f:convertDateTime dateStyle="short" type="date"></f:convertDateTime>
+					</h:outputFormat>
+				</p:column>
+
+			</p:dataTable>
+			<p>#{msgs.CashBackNote}</p>
+		</h:form>
+	</div>
+
+</ui:composition>
+</html>

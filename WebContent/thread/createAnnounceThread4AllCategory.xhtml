@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+<body>
+	<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+		<ui:define name="title">#{msgs.createThreadSubject}</ui:define>
+		<ui:define name="content">
+			<f:event listener="#{login.verifyLoggedIn('createAnnounceThread4AllCategory')}" type="preRenderView"></f:event>
+			<div>
+				<h:form prependId="false" id="createThreadForm" rendered="#{login.isUserInSysadmin()}">
+					<h:panelGrid columns="3" columnClasses="th" styleClass="createthread">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.createThreadSubject}"></h:outputText>
+						</f:facet>
+
+						<h:outputLabel value="#{msgs.promptThreadSubject}"></h:outputLabel>
+						<p:inputText id='threadSubject' value="#{threadBackingBean.selectedForumThread.subject}" label="#{msgs.promptThreadSubject}" width="100%">
+						</p:inputText>
+						<h:message id="ThreadSubjectMess" for="threadSubject" errorClass="errorMess"></h:message>
+
+						<h:outputLabel value="#{msgs.PriceLabel}"></h:outputLabel>
+						<h:panelGroup>
+							<p:inputText id='threadPrice' value="#{threadBackingBean.selectedForumThread.price}" label="#{msgs.pricePattern}" width="100%">
+							</p:inputText>
+							<p:watermark for="threadPrice" value="#{msgs.pricePattern}" />
+						</h:panelGroup>
+						<h:message for="threadPrice" errorClass="errorMess"></h:message>
+
+						<h:outputLabel value="#{msgs.promptThreadContent}"></h:outputLabel>
+						<cc:xheditor value="#{threadBackingBean.selectedForumThread.content}" style="width:650px;min-height:300px;" id="threadContent"></cc:xheditor>
+						<h:message id="ThreadContentMess" for="threadContent" errorClass="errorMess"></h:message>
+
+						<h:outputLabel value="#{msgs.markedHot}" rendered="#{login.userInSysadmin}"></h:outputLabel>
+						<p:selectBooleanCheckbox id="markedHot" value="#{threadBackingBean.selectedForumThread.markedHot}" rendered="#{login.userInSysadmin}"></p:selectBooleanCheckbox>
+						<h:message for="markedHot" errorClass="errorMess" rendered="#{login.userInSysadmin}"></h:message>
+
+						<h:outputLabel value="#{msgs.categoryName}"></h:outputLabel>
+						<p:selectOneMenu value="#{requestScope.categoryId}">
+							<f:selectItems value="#{systemCacheEjb.allCategories}" var="category" itemLabel="#{category.categoryName}" itemValue="#{category.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:inputHidden id="threadThumbPicURL" value="#{threadBackingBean.selectedForumThread.thumbPicURL}" />
+
+						<h:outputLabel value="" />
+						<cc:captcha validator="#{simpleCaptchaValidator.validateCaptcha}" validatorMessage="#{msgs.invalidCaptchaCode}"
+							rendered="#{!login.userInSysadmin}">
+						</cc:captcha>
+						<br />
+						<h:outputLabel value="" />
+						<h:outputLabel value="" />
+						<p:commandButton value="#{msgs.submit}" action="#{threadBackingBean.createAnnounceThread4AllCategory()}" ajax="false"
+							styleClass="commandButton bigButton" onclick="searchAndSetThumbPicURL('#createThreadForm','#threadThumbPicURL');">
+						</p:commandButton>
+					</h:panelGrid>
+
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

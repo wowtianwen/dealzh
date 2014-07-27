@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<h:body>
+	<ui:composition>
+		<p:dialog modal="true" widgetVar="viewProfileWidget" header="#{msgs.userProfile}" rendered="false">
+			<h:form id="viewProfileForm">
+				<h:inputHidden value="#{userBackingBean.basicUser.id}" />
+
+				<table>
+					<tr>
+						<td class="readFloor_Left">
+							<div>
+								<dl>
+									<dt>
+										<h:graphicImage name="#{userBackingBean.basicUser.profilePicName}" library="profilepic" />
+									</dt>
+									<dt>
+										<h:outputLabel value="#{msgs.userid}#{userBackingBean.basicUser.userId}" />
+									</dt>
+
+								</dl>
+
+							</div>
+
+						</td>
+						<td class="readFloor_main"><h:panelGrid columns="2" columnClasses="th" styleClass="profileTable">
+								<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+								<h:outputText value="#{userBackingBean.basicUser.userId}" />
+								<h:outputLabel value="#{msgs.userOnline}"></h:outputLabel>
+								<h:outputText value="#{fn:contains(userBackingBean.basicUser.online,true)?constants.nameToValueMap.Yes:constants.nameToValueMap.No}" />
+								<h:outputLabel value="#{msgs.userJoined}"></h:outputLabel>
+								<h:outputFormat value="#{userBackingBean.basicUser.createTime}">
+									<f:convertDateTime pattern="yyyy-MM-dd" />
+								</h:outputFormat>
+
+								<h:outputLabel value="#{msgs.userPost}"></h:outputLabel>
+								<h:commandLink value="#{userBackingBean.basicUser.numOfPosts}"
+									action="#{userBackingBean.setProfileNUser(constants.nameToValueMap.USER_TAB_MYPOST)}"></h:commandLink>
+
+								<h:outputLabel value="#{msgs.userReply}"></h:outputLabel>
+								<h:commandLink value="#{userBackingBean.basicUser.numOfReplies}"
+									action="#{userBackingBean.setProfileNUser(constants.nameToValueMap.USER_TAB_MYREPLY)}"></h:commandLink>
+
+								<h:outputLabel value="#{msgs.userLastLogin}"></h:outputLabel>
+								<h:outputFormat value="#{userBackingBean.basicUser.lastLogin}">
+									<f:convertDateTime pattern="yyyy-MM-dd" />
+								</h:outputFormat>
+							</h:panelGrid></td>
+					</tr>
+
+				</table>
+
+			</h:form>
+		</p:dialog>
+
+	</ui:composition>
+
+
+
+</h:body>
+
+</html>

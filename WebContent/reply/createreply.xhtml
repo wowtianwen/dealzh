@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+
+	<div class="outLineBorder whiteBackGround " id="createReplyDiv">
+
+		<h:form id="createReplyForm">
+			<div class="replyFloor_Left readFloor_Left ">
+				<h:panelGroup rendered="#{!empty sessionScope.CURRENTUSER}" styleClass="userInfo">
+					<h:graphicImage name="#{login.currentUser.profilePicName}" library="profilepic" />
+					<ul>
+						<li><h:outputText value="#{login.currentUser.userId}" /></li>
+
+						<li><label>#{msgs.Post}</label> <h:outputText value="#{login.currentUser.numOfPosts}" /></li>
+					</ul>
+				</h:panelGroup>
+
+			</div>
+			<div class="readFloor_Main">
+
+				<h:panelGrid columns="2" columnClasses="th">
+
+					<p:inputText id="replysubject" value="#{replyBackingBean.replyTo.subject}" size="98"></p:inputText>
+					<p:message id="ReplySubjectMess" for="replysubject"></p:message>
+					<cc:xheditor id="replycontent" value="#{replyBackingBean.replyTo.content}" rendered="#{!empty login.currentUser}"
+						style="width:100%;min-height:300px;"></cc:xheditor>
+
+
+					<h:panelGroup styleClass="loginTip" rendered="#{empty login.currentUser}" layout="block">
+						<span> #{msgs.login_Tip} <p:commandLink value="#{msgs.Login}" oncomplete="loginDlg.show()"></p:commandLink> #{msgs.Or} <h:link
+								value="#{msgs.Register}" outcome="/registration/enroll.xhtml">
+							</h:link></span>
+					</h:panelGroup>
+					<p:message id="ReplyContentMess" for="replycontent"></p:message>
+					<h:panelGroup>
+						<p:commandButton value="#{msgs.submit}" actionListener="#{replyBackingBean.createReply()}" process="@form"
+							update=":replyform @form :replyform:replydatatable" onerror="handleAjaxError(xhr,status,exception)" oncomplete="initTextAreaWithEditor();"
+							styleClass="bigButton">
+						</p:commandButton>
+						<p:commandButton type="reset" value="#{msgs.RESET}" styleClass="bigButton">
+						</p:commandButton>
+					</h:panelGroup>
+				</h:panelGrid>
+
+			</div>
+		</h:form>
+
+	</div>
+
+	<cc:loginDlg widgetVar="loginDlg" update=":navigationPanelId :createReplyForm" actionListener="#{login.loginFromDiag()}"
+		onComplete="handleComplete(xhr, status, args);" userId="#{login.user.userId}" password="#{login.user.password}">
+		<f:facet name="header">
+			<h:outputText value="#{msgs.login_Welcome}" />
+		</f:facet>
+		<f:facet name="error">
+			<p:messages globalOnly="true" showDetail="true" autoUpdate="true"></p:messages>
+		</f:facet>
+	</cc:loginDlg>
+</ui:composition>

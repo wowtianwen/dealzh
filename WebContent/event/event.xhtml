@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- the consolidated page for all the thread -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="navigation">
+	</ui:define>
+	<ui:define name="title">
+	#{sessionScope.belongingEvent.name} Deals
+	</ui:define>
+	<ui:define name="metadata">
+		<!-- save cagtThdId in sessionScope, DO NOT USE flash Scope.  -->
+		<f:metadata>
+			<f:viewParam name="#{constants.nameToValueMap.PARENT_THREAD_ID}" value="${sessionScope.parentThdId}"></f:viewParam>
+		</f:metadata>
+	</ui:define>
+	<ui:define name="content">
+		<div class="listThreadContainer">
+			<h1 class="title">#{sessionScope.belongingEvent.name} Deals</h1>
+			<h:form prependId="false">
+				<h2>
+					<span> <p:button value="#{msgs.postNewThread}" outcome="/thread/createthread4Event" styleClass="bigButton">
+						</p:button>
+					</span>
+				</h2>
+
+				<p:tabView var="category" value="#{threadBackingBean.threadCategoryList}" dynamic="true" cache="false" styleClass="hotDealTabView"
+					activeIndex="#{sessionScope.activeCategoryTabForEvent}">
+					<p:tab title="#{category.categoryName}" titleStyleClass="hotDealTitle">
+						<p:dataTable id="datatable" var="thread" value="#{threadBackingBean.lazyThreadDataModel}" paginator="true" rows="40" lazy="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+							rowsPerPageTemplate="5,10,15" tableStyleClass="tab_two" paginatorPosition="bottom" styleClass="datatable"
+							rowStyleClass="#{thread.type.toString().equals(constants.nameToValueMap.Thread_Type_Regular)? 'whiteBackGround' : 'announceThreadRow'}">
+							<f:event type="preRenderComponent" listener="#{threadBackingBean.prepareFeatchAllThread4Event(category)}" />
+							<p:column headerText="#{msgs.threadSubjectLabel}" styleClass="announceMainColumn"
+								rendered="#{!thread.type.toString().equals(constants.nameToValueMap.Thread_Type_Regular)}">
+								<h:panelGrid columns="2" columnClasses="smallCell" styleClass="tab_three">
+									<h:panelGroup styleClass="thumbnail">
+										<div class="imgWrapper" title="Announcement">
+											<h:graphicImage name="speaker.jpg" library="images" styleClass="dealpicInListing"></h:graphicImage>
+										</div>
+									</h:panelGroup>
+									<h:panelGroup styleClass="txt" layout="block">
+										<h:link outcome="/thread/viewthread" styleClass="subject" rendered="#{!thread.topped}">
+											<f:param name="id" value="#{thread.id}"></f:param>
+											<h:outputFormat value=" #{thread.subject}."></h:outputFormat>
+											<h:outputText value=" #{thread.price}" styleClass="priceInList"></h:outputText>
+											<h:graphicImage name="TopicHot.gif" library="images" rendered="#{(thread.markedHot)}" />
+										</h:link>
+									</h:panelGroup>
+								</h:panelGrid>
+							</p:column>
+							<p:column headerText="#{msgs.threadSubjectLabel}" styleClass="mainColumn"
+								rendered="#{thread.type.toString().equals(constants.nameToValueMap.Thread_Type_Regular)}">
+								<h:panelGrid columns="2" columnClasses="smallCell" styleClass="noBorder">
+									<h:panelGroup styleClass="thumbnail" rendered="#{! empty thread.thumbPicURL}">
+										<h:link outcome="/thread/viewthread" target="_blank">
+											<f:param name="id" value="#{thread.id}"></f:param>
+											<img src="#{thread.thumbPicURL}" class="dealpicInListing" />
+										</h:link>
+									</h:panelGroup>
+									<h:panelGroup styleClass="txt" layout="block">
+										<h:link value="#{thread.subject} #{thread.price}" outcome="/thread/viewthread" styleClass="subject" target="_blank"
+											rendered="#{!thread.topped}">
+											<f:param name="id" value="#{thread.id}"></f:param>
+											<h:graphicImage name="TopicHot.gif" library="images" rendered="#{(thread.markedHot)}" />
+										</h:link>
+										<h:link value="#{thread.subject} #{thread.price}" outcome="/thread/viewthread" styleClass="subject bold" rendered="#{thread.topped}">
+											<f:param name="id" value="#{thread.id}"></f:param>
+											<h:graphicImage name="TopicHot.gif" library="images" rendered="#{(thread.markedHot)}" />
+										</h:link>
+										<h:graphicImage name="TopTopic.gif" library="images" rendered="#{thread.topped}" />
+									</h:panelGroup>
+								</h:panelGrid>
+							</p:column>
+							<p:column headerText="#{msgs.Rating}" sortBy="#{thread.rating}" styleClass="nonMainColumn">
+								<h:panelGroup id="ratingGroup">
+									<p:rating id="ratingId" readonly="true" stars="5" value="#{threadBackingBean.getRating(thread.id)}">
+									</p:rating>
+									<p:tooltip for="ratingId" showEffect="fade" id="ratingTip"
+										value="Score: #{threadBackingBean.getRating(thread.id)} Votes: #{threadBackingBean.getVotes(thread.id)} "></p:tooltip>
+								</h:panelGroup>
+							</p:column>
+
+							<p:column headerText="#{msgs.threadReplyHitLabel}" sortBy="#{thread.numberOfReplies}" styleClass="nonMainColumn">
+								<h:outputText value='#{thread.numberOfReplies}/#{thread.numberOfView}' escape="false"></h:outputText>
+							</p:column>
+							<p:column headerText="#{msgs.threadLastUpdateLabel}" sortBy="#{thread.lastReplyTime}" styleClass="nonMainColumn">
+								<h:panelGroup rendered="#{thread.lastReplyTime!=null}">
+									<h:outputText value="#{thread.lastReply.owner.userId}" styleClass="block" />
+									<h:outputFormat value="#{thread.lastReplyTime}">
+										<f:convertDateTime dateStyle="medium" timeStyle="short" type="both" />
+									</h:outputFormat>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{thread.lastReplyTime==null}">
+									<h:outputText value="--/--" />
+								</h:panelGroup>
+							</p:column>
+							<p:column headerText="#{msgs.action}" rendered="#{login.userInSysadmin}" styleClass="nonMainColumn">
+								<p:commandButton value="#{msgs.deleteButton}" actionListener="#{threadBackingBean.deleteThread(thread)}" update="@form" process="@form">
+								</p:commandButton>
+
+								<p:commandButton value="#{msgs.Top_Button}" actionListener="#{threadBackingBean.topThread(thread,true)}" process="@form" update="@form"
+									rendered="#{!thread.topped}">
+								</p:commandButton>
+								<p:commandButton value="#{msgs.Untop_Button}" actionListener="#{threadBackingBean.topThread(thread,false)}" process="@form" update="@form"
+									rendered="#{thread.topped}">
+								</p:commandButton>
+								<p:commandButton value="#{msgs.DashBoard}" actionListener="#{threadBackingBean.dashBoardThread(thread)}" process="@form" update="@form"
+									rendered="#{!thread.onDashBoard}">
+								</p:commandButton>
+								<p:commandButton value="#{msgs.OutDashBoard}" actionListener="#{threadBackingBean.unDashBoardThread(thread)}" process="@form" update="@form"
+									rendered="#{thread.onDashBoard}">
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+						<div class="loading">
+							<p:blockUI block="datatable" trigger="datatable">
+				#{msgs.Loading}<br />
+								<p:graphicImage value="/images/ai.gif" style="position:fixed; left:200px;" />
+							</p:blockUI>
+						</div>
+					</p:tab>
+				</p:tabView>
+				<br />
+				<div class="postButton">
+					<p:button value="#{msgs.postNewThread}" outcome="/thread/createthread4Event">
+					</p:button>
+				</div>
+			</h:form>
+		</div>
+		<ui:include src="/ad/contextweb.xhtml"></ui:include>
+	</ui:define>
+
+</ui:composition>
+
+</html>

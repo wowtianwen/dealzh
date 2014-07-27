@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+
+	<div id="createCommentDiv">
+
+		<h:form id="createCommentForm">
+			<div class="RegularPadding">
+				<h:outputText value="#{msgs.LeaveComment}" />
+			</div>
+			<div class="readFloor_comment_left">
+				<h:panelGroup rendered="#{!empty sessionScope.CURRENTUSER}">
+					<h:graphicImage name="#{login.currentUser.profilePicName}" library="profilepic" styleClass="commentUserProfilePic" />
+					<div>
+						<h:outputText value="#{login.currentUser.userId}" />
+					</div>
+
+				</h:panelGroup>
+
+			</div>
+			<div class="readFloor_Main">
+
+				<h:panelGrid columns="1" columnClasses="th">
+
+					<h:panelGroup>
+						<p:inputTextarea id="commentContent" value="#{commentBackingBean.comment.content}" rendered="#{!empty login.currentUser}" autoResize="true"
+							title="comment detail"></p:inputTextarea>
+						<p:watermark for="commentContent" value="#{commentBackingBean.replyQuoteWaterMark}" rendered="#{!empty login.currentUser}" />
+						<p:message id="ReplyContentMess" for="commentContent"></p:message>
+						<h:panelGroup styleClass="loginTip" rendered="#{empty login.currentUser}" layout="block">
+							<span> #{msgs.login_Tip} <p:commandLink value="#{msgs.Login}" oncomplete="loginDlg.show()"></p:commandLink> #{msgs.Or} <h:link
+									value="#{msgs.Register}" outcome="/registration/enroll.xhtml">
+								</h:link></span>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:commandButton value="#{msgs.submit}" actionListener="#{commentBackingBean.createComment()}" process="@form" update=":commentTableForm @form"
+							onerror="handleAjaxError(xhr,status,exception)">
+						</p:commandButton>
+						<p:commandButton value="#{msgs.RESET}" actionListener="#{commentBackingBean.reset()}" process="@form" update="@form">
+						</p:commandButton>
+					</h:panelGroup>
+				</h:panelGrid>
+
+			</div>
+		</h:form>
+
+	</div>
+
+
+	<cc:loginDlg widgetVar="loginDlg" update=":navigationPanelId :createCommentForm" actionListener="#{login.loginFromDiag()}"
+		onComplete="handleComplete(xhr, status, args);" userId="#{login.user.userId}" password="#{login.user.password}">
+		<f:facet name="header">
+			<h:outputText value="#{msgs.login_Welcome}" />
+		</f:facet>
+		<f:facet name="error">
+			<p:messages globalOnly="true" showDetail="true" autoUpdate="true"></p:messages>
+		</f:facet>
+	</cc:loginDlg>
+</ui:composition>

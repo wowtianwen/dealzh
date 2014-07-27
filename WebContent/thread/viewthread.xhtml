@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:cc="http://java.sun.com/jsf/composite/cc">
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+
+	<!-- define the title for each page -->
+	<ui:define name="title">#{threadBackingBean.selectedForumThread.subject}
+	<f:event type="preRenderComponent" listener="#{threadBackingBean.loadThread}" />
+	</ui:define>
+	<ui:define name="description">
+		<meta name="description" content="#{threadBackingBean.selectedForumThread.subject}"></meta>
+	</ui:define>
+
+	<ui:define name="js">
+		<h:outputScript library="js" name="profile.js" target="head"></h:outputScript>
+	</ui:define>
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="id" value="${sessionScope.threadId}"></f:viewParam>
+			<f:viewParam name="fromuid" value="#{sessionScope.dealRefer}"></f:viewParam>
+		</f:metadata>
+
+	</ui:define>
+	<ui:define name="navigation">
+		<h:panelGroup id="navigationPanelId">
+			<ui:include src="/navigation.xhtml"></ui:include>
+
+		</h:panelGroup>
+	</ui:define>
+	<ui:define name="content">
+		<h:inputHidden value="#{sessionScope.CURRENTUSER.id}" id="dealReferUId"></h:inputHidden>
+		<ui:include src="../WEB-INF/templates/faceBookPlugin.xhtml"></ui:include>
+		<div class="solidBorder viewThread">
+			<!-- Thread Form -->
+			<div>
+				<h:form id="threadform" prependId="false">
+
+					<table class="viewThreadTable">
+						<tr>
+							<td width="20%" class="readFloor_Left">
+								<div class="readNum">
+									<ul class="cc">
+										<li><em>#{threadBackingBean.selectedForumThread.numberOfView}</em> #{msgs.Viewed}</li>
+										<li><em id="topicRepliesNum">#{threadBackingBean.selectedForumThread.numberOfReplies}</em> #{msgs.Replies}</li>
+									</ul>
+								</div>
+							</td>
+							<td class="readTop">
+								<h1>
+									<h:outputText id="threadSubjectDisplay"
+										value="#{threadBackingBean.selectedForumThread.subject} #{threadBackingBean.selectedForumThread.price}"></h:outputText>
+								</h1>
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="readFloor_Left">
+								<div>
+									<div class="userInfo">
+										<h:graphicImage name="#{threadBackingBean.selectedForumThread.owner.profilePicName}" library="profilepic" />
+										<ul>
+											<li><h:outputText value="#{threadBackingBean.selectedForumThread.owner.userId}"></h:outputText></li>
+											<li><label>#{msgs.Member_Since}</label> <h:outputFormat value="#{threadBackingBean.selectedForumThread.owner.createTime}">
+													<f:convertDateTime pattern="yyyy-MM-dd" />
+												</h:outputFormat></li>
+
+											<li><h:outputLabel value="#{msgs.userPost}"></h:outputLabel> <h:link value="#{threadBackingBean.selectedForumThread.owner.numOfPosts}"
+													outcome="/user/viewmypost.xhtml" target="_blank">
+													<f:param name="userId" value="#{threadBackingBean.selectedForumThread.owner.userId}"></f:param>
+													<f:param name="profileTab" value="#{constants.nameToValueMap.USER_TAB_MYPOST}"></f:param>
+												</h:link></li>
+											<li><h:outputLabel value="#{msgs.userReply}"></h:outputLabel> <h:link
+													value="#{threadBackingBean.selectedForumThread.owner.numOfReplies}" outcome="/user/viewmyreply.xhtml" target="_blank">
+													<f:param name="userId" value="#{threadBackingBean.selectedForumThread.owner.userId}"></f:param>
+													<f:param name="profileTab" value="#{constants.nameToValueMap.USER_TAB_MYREPLY}"></f:param>
+												</h:link></li>
+											<li><h:outputLabel value="#{msgs.userLastLogin}"></h:outputLabel> <h:outputFormat
+													value="#{threadBackingBean.selectedForumThread.owner.lastLogin}">
+													<f:convertDateTime pattern="yyyy-MM-dd" />
+												</h:outputFormat></li>
+
+											<li><p:commandLink value="#{msgs.Send_Message}" rendered="#{!empty sessionScope.CURRENTUSER}"
+													actionListener="#{messageBackingBean.setMessageRecipent(threadBackingBean.selectedForumThread.owner.userId)}"
+													oncomplete="messageDlg.show();return false;" process="@this" update=":messageComposeFormId"></p:commandLink></li>
+										</ul>
+									</div>
+								</div>
+							</td>
+							<td class="readFloor_Main">
+								<div class="readFloor_Main_Top">
+									<div class="readFloor_Main_Top_Misc">
+										#{msgs.Post_Label}
+										<h:outputFormat value="#{threadBackingBean.selectedForumThread.createTime}">
+											<f:convertDateTime pattern="yyyy-MM-dd HH:mm a" />
+										</h:outputFormat>
+										<h:panelGroup rendered="#{!empty threadBackingBean.selectedForumThread.store.cashBackPercent}" styleClass="leftPadding ">
+											<h:graphicImage name="money.jpg" library="images" styleClass="moneySign"></h:graphicImage>
+											<h:link styleClass="green" outcome="/stores/viewStore" title="#{msgs.CashBack}"
+												rendered="#{threadBackingBean.selectedForumThread.store.cashBackPercent!=0}">
+												<h:outputFormat value="#{threadBackingBean.selectedForumThread.store.cashBackPercent}">
+													<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+												</h:outputFormat>
+												<f:param name="id" value="#{threadBackingBean.selectedForumThread.store.id}"></f:param>
+											</h:link>
+											<h:link outcome="viewStore" value="#{msgs.ComingSoon}" rendered="#{threadBackingBean.selectedForumThread.store.cashBackPercent==0}">
+												<f:param name="id" value="#{threadBackingBean.selectedForumThread.store.id}"></f:param>
+											</h:link>
+											<p:commandLink title="#{msgs.NoEligibleCashBack_detail}" action="#{login.forwardToLogin('/thread/viewthread.xhtml')}" ajax="false"
+												rendered="#{!login.isUserLoggedIn() &amp;&amp; threadBackingBean.selectedForumThread.store.cashBackPercent!=0}">
+												<h:outputText value="#{msgs.NoEligibleCashBack}" styleClass="redBold"></h:outputText>
+											</p:commandLink>
+											<h:outputText value="#{msgs.EligibleCashBack}" styleClass="green"
+												rendered="#{login.isUserLoggedIn() &amp;&amp; threadBackingBean.selectedForumThread.store.cashBackPercent!=0}"
+												title="#{msgs.NoEligibleCashBack_detail}"></h:outputText>
+										</h:panelGroup>
+										<h:panelGroup>
+											<h:outputText value="#{userBackingBean.deriveMypostTabTitle(threadBackingBean.selectedForumThread.status)}"
+												title="#{msgs.NonApprovedThreadTip}"
+												rendered="#{!threadBackingBean.selectedForumThread.status.toString().equals(constants.nameToValueMap.THREADSTATUS_APPROVED)}"
+												styleClass="red leftPadding"></h:outputText>
+										</h:panelGroup>
+									</div>
+									<div class="facebookshare">
+										<ui:include src="../WEB-INF/templates/twitterPlugin.xhtml"></ui:include>
+									</div>
+									<div class="facebookshare">
+										<a id="share_button" href="#"> <img src="/resources/images/facebook.png" alt="facebook" height="25px" />
+										</a>
+									</div>
+									<div class="facebookshare">
+										<ui:include src="../WEB-INF/templates/BSharePlugin.xhtml"></ui:include>
+									</div>
+									<div class="readFloor_Main_Top_Rating">
+										<p:commandButton icon="thumbUp" actionListener="#{threadBackingBean.handleVotes(1)}" process="@this" update="ratingGroup"
+											styleClass="thumbButton"></p:commandButton>
+										<p:commandButton icon="thumbDown" actionListener="#{threadBackingBean.handleVotes(-1)}" process="@this" update="ratingGroup"
+											styleClass="thumbButton"></p:commandButton>
+										<h:panelGroup id="ratingGroup">
+											<p:rating id="ratingId" readonly="true" stars="5" value="#{threadBackingBean.getRating(threadBackingBean.selectedForumThread.id)}">
+											</p:rating>
+											<p:tooltip for="ratingId" showEffect="fade" id="ratingTip"
+												value="Score: #{threadBackingBean.getRating(threadBackingBean.selectedForumThread.id)} Votes: #{threadBackingBean.getVotes(threadBackingBean.selectedForumThread.id)} "></p:tooltip>
+										</h:panelGroup>
+
+
+									</div>
+
+								</div>
+								<div class="readFloor_Main_Content wrapper">
+									<div class="main">
+										<h:panelGrid columns="1" id="readFloor_Main_Content_Table" styleClass="createthread">
+											<h:panelGroup>
+												<p:inputText id="threadSubject" value="#{threadBackingBean.selectedForumThread.subject}" label="#{msgs.promptThreadSubject}"
+													rendered="${threadBackingBean.editMode}">
+												</p:inputText>
+												<p:message id="ThreadSubjectMess" for="threadSubject" rendered="${threadBackingBean.editMode}"></p:message>
+											</h:panelGroup>
+
+											<h:panelGroup>
+												<p:inputText id='threadPrice' value="#{threadBackingBean.selectedForumThread.price}" label="#{msgs.pricePattern}" width="100%"
+													rendered="#{threadBackingBean.editMode}">
+												</p:inputText>
+												<p:watermark for="threadPrice" value="#{msgs.pricePattern}" rendered="#{threadBackingBean.editMode}" />
+											</h:panelGroup>
+											<h:message for="threadPrice" errorClass="errorMess"></h:message>
+
+											<h:panelGroup>
+												<h:outputText id="contentDetail" value="#{threadBackingBean.selectedForumThread.content}" rendered="#{!threadBackingBean.editMode}"
+													escape="false" styleClass="zhengwen"></h:outputText>
+												<cc:xheditor value="#{threadBackingBean.selectedForumThread.content}" style="width:650px;height:300px;" id="threadcontentid"
+													rendered="#{threadBackingBean.editMode}"></cc:xheditor>
+
+												<p:message for="threadcontentid"></p:message>
+											</h:panelGroup>
+											<h:panelGroup rendered="#{threadBackingBean.editMode and login.userInSysadmin}">
+												<h:outputLabel value="#{msgs.markedHot}">
+												</h:outputLabel>
+												<p:selectBooleanCheckbox id="markedHot" value="#{threadBackingBean.selectedForumThread.markedHot}"></p:selectBooleanCheckbox>
+												<h:message for="markedHot" errorClass="errorMess"></h:message>
+											</h:panelGroup>
+
+											<h:inputHidden value="#{threadBackingBean.selectedForumThread.id}" />
+
+											<h:panelGroup rendered="#{threadBackingBean.editMode}">
+												<p:selectOneMenu value="#{threadBackingBean.selectedForumThread.category.id}"
+													rendered="#{threadBackingBean.selectedForumThread.type.toString().equals(constants.nameToValueMap.Thread_Type_Regular)}">
+													<f:selectItems value="#{systemCacheEjb.allCategoriesButGlobalAnnouncement}" var="category" itemLabel="#{category.categoryName}"
+														itemValue="#{category.id}"></f:selectItems>
+												</p:selectOneMenu>
+												<p:selectOneMenu value="#{threadBackingBean.selectedForumThread.category.id}"
+													rendered="#{!threadBackingBean.selectedForumThread.type.toString().equals(constants.nameToValueMap.Thread_Type_Regular)}">
+													<f:selectItems value="#{systemCacheEjb.allCategories}" var="category" itemLabel="#{category.categoryName}" itemValue="#{category.id}"></f:selectItems>
+												</p:selectOneMenu>
+											</h:panelGroup>
+
+											<h:panelGroup>
+												<!-- update the picURL when news is updated -->
+												<h:inputHidden id="threadThumbPicURL" value="#{threadBackingBean.selectedForumThread.thumbPicURL}" />
+												<h:panelGroup rendered="#{threadBackingBean.editMode}">
+													<p:commandButton value="#{constants.nameToValueMap.Action_UPDATE}" id="updatecommand" action="#{threadBackingBean.updateThread}"
+														process="@form" update="@(#readFloor_Main_Content_Table,#navigationForm,#threadSubjectDisplay) "
+														rendered="#{threadBackingBean.selectedForumThread.status.toString().equals(constants.nameToValueMap.THREADSTATUS_APPROVED)}"
+														onclick="searchAndSetThumbPicURL('#threadform','#threadThumbPicURL');" oncomplete="initTextAreaWithEditor();" styleClass="smallButton">
+													</p:commandButton>
+													<p:commandButton value="#{msgs.SubmitForReview}" action="#{threadBackingBean.updateThreadForReview}" process="@form"
+														update="@(#readFloor_Main_Content_Table,#navigationForm,#threadSubjectDisplay) "
+														rendered="#{!threadBackingBean.selectedForumThread.status.toString().equals(constants.nameToValueMap.THREADSTATUS_APPROVED)}"
+														onclick="searchAndSetThumbPicURL('#threadform','#threadThumbPicURL');" oncomplete="initTextAreaWithEditor();" styleClass="smallButton">
+													</p:commandButton>
+												</h:panelGroup>
+												<p:commandButton value="#{msgs.CANCEL}" action="#{threadBackingBean.enableEditMode(false)}" rendered="#{threadBackingBean.editMode}"
+													process="@form" update="@form" styleClass="smallButton">
+												</p:commandButton>
+											</h:panelGroup>
+										</h:panelGrid>
+									</div>
+									<div class="viewThreadRightPicture">
+										<a href="/help/help.xhtml" target="blank_"> <h:graphicImage library="images" name="viewthreadright.jpg" styleClass="rightpicture"></h:graphicImage>
+										</a>
+									</div>
+
+
+									<br />
+								</div>
+								<div class="readFloor_Main_Content_Action">
+
+									<p:outputPanel id="commandbuttons" autoUpdate="true">
+										<p:commandButton value="#{msgs.EDIT}" update="@(#readFloor_Main_Content_Table)" process="@this" id="editbutton"
+											actionListener="#{threadBackingBean.enableEditMode(true)}" oncomplete="initTextAreaWithEditor();" styleClass="smallButton"
+											rendered="#{!threadBackingBean.editMode &amp;&amp; (login.userInSysadmin ||  login.isUserCategory_Owner(threadBackingBean.belongingCategory)|| login.getCurrentUser().equals(threadBackingBean.selectedForumThread.owner))}">
+											<f:viewParam name="id" value="#{threadBackingBean.selectedForumThread.id}"></f:viewParam>
+										</p:commandButton>
+										<h:panelGroup rendered="#{threadBackingBean.selectedForumThread.status.toString().equals(constants.nameToValueMap.THREADSTATUS_APPROVED)}">
+											<p:commandButton value="#{msgs.Sticky_This_Thread}" id="stickbutton" process="@this" actionListener="#{threadBackingBean.stickThread}"
+												styleClass="smallButton" disabled='#{!login.userLoggedIn ||  login.IsUserStickThread(threadBackingBean.selectedForumThread)}'>
+												<f:viewParam name="id" value="#{threadBackingBean.selectedForumThread.id}"></f:viewParam>
+											</p:commandButton>
+
+											<p:commandButton value="#{msgs.UNSticky_This_Thread}" id="unstickbutton" process="@this"
+												actionListener="#{threadBackingBean.unStickThread}" styleClass="smallButton"
+												disabled='#{!login.userLoggedIn || !login.IsUserStickThread(threadBackingBean.selectedForumThread)}'>
+												<f:viewParam name="id" value="#{threadBackingBean.selectedForumThread.id}"></f:viewParam>
+											</p:commandButton>
+											<p:commandButton value="#{msgs.lockButton}" update="@form" id="logckbutton" process="@this" styleClass="smallButton"
+												actionListener="#{threadBackingBean.lockThread(true)}" disabled="#{threadBackingBean.selectedForumThread.locked}"
+												rendered='#{login.userInSysadmin || threadBackingBean.ownerForCurrCategory}'>
+												<f:viewParam name="id" value="#{threadBackingBean.selectedForumThread.id}"></f:viewParam>
+											</p:commandButton>
+											<p:commandButton value="#{msgs.unLockButton}" update="@form" id="unlockbutton" process="@this" styleClass="smallButton"
+												disabled="#{!threadBackingBean.selectedForumThread.locked}" actionListener="#{threadBackingBean.lockThread(false)}"
+												rendered="#{login.userInSysadmin || threadBackingBean.ownerForCurrCategory}">
+												<f:viewParam name="id" value="#{threadBackingBean.selectedForumThread.id}"></f:viewParam>
+											</p:commandButton>
+
+											<p:commandButton id="dashboardId" value="#{msgs.DashBoard}" styleClass="smallButton"
+												actionListener="#{threadBackingBean.dashBoardThread(threadBackingBean.selectedForumThread)}" process="@form" update="@this"
+												rendered="#{!threadBackingBean.selectedForumThread.onDashBoard  &amp;&amp; (login.userInSysadmin || login.isCurrLogInUser(threadBackingBean.selectedForumThread.category.owner))}">
+											</p:commandButton>
+											<p:commandButton id="undashboardId" value="#{msgs.OutDashBoard}" styleClass="smallButton"
+												actionListener="#{threadBackingBean.unDashBoardThread(threadBackingBean.selectedForumThread)}" process="@form" update="@this"
+												rendered="#{threadBackingBean.selectedForumThread.onDashBoard  &amp;&amp; (login.userInSysadmin ||  login.isCurrLogInUser(threadBackingBean.selectedForumThread.category.owner))}">
+											</p:commandButton>
+										</h:panelGroup>
+										<h:panelGroup
+											rendered="#{!threadBackingBean.selectedForumThread.status.toString().equals(constants.nameToValueMap.THREADSTATUS_APPROVED) &amp;&amp; (login.isUserInSysadmin() || login.isUserOwnerOfAnyCategory(login.getCurrentUser()))}">
+											<p:commandButton value="#{msgs.APPROVE}" actionListener="#{threadBackingBean.approve(threadBackingBean.selectedForumThread)}"
+												process="@form" update="@form"
+												disabled="#{threadBackingBean.selectedForumThread.status.toString().equals(constants.nameToValueMap.THREADSTATUS_APPROVED)}">
+											</p:commandButton>
+											<p:commandButton value="#{msgs.REJECT}" actionListener="#{threadBackingBean.reject(threadBackingBean.selectedForumThread)}" process="@form"
+												update="@form"
+												disabled="#{threadBackingBean.selectedForumThread.status.toString().equals(constants.nameToValueMap.THREADSTATUS_REJECTED)}">
+											</p:commandButton>
+										</h:panelGroup>
+
+									</p:outputPanel>
+								</div>
+
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</div>
+
+			<div class="popularThread">
+				<div>
+					<h1>#{msgs.DEALYOUMIGHTLIKE}</h1>
+				</div>
+				<h:form>
+					<p:dataGrid
+						value="#{threadCacheEjb.getRecentPopularThreads(threadBackingBean.selectedForumThread.category.categoryName,threadBackingBean.selectedForumThread)}"
+						var="thread" columns="8" styleClass="shortgrid" rows="8">
+						<div class="indexImg">
+							<h:panelGroup layout="block">
+								<h:link outcome="/thread/viewthread">
+									<f:param name="id" value="#{thread.id}"></f:param>
+									<img src="#{thread.thumbPicURL}" class="dealPic" />
+								</h:link>
+							</h:panelGroup>
+						</div>
+						<h:panelGroup layout="block" styleClass="block">
+							<h:link outcome="/thread/viewthread" value="#{thread.subject}">
+								<f:param name="id" value="#{thread.id}"></f:param>
+							</h:link>
+							<h:outputText value="#{thread.price}" styleClass="price" rendered="#{!empty thread.price}"></h:outputText>
+						</h:panelGroup>
+					</p:dataGrid>
+
+				</h:form>
+			</div>
+
+			<!-- Reply Form -->
+			<div class="newLine">
+				<h:form id="replyform" prependId="false">
+					<f:event type="preRenderComponent" listener="#{replyBackingBean.loadReplies}" />
+					<p:dataTable id="replydatatable" value="#{replyBackingBean.lazyReplyDataModel}" var="reply" paginator="true" rows="20" lazy="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+						rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" tableStyleClass="viewThreadTable" emptyMessage="#{msgs.NoReply}"
+						paginatorAlwaysVisible="false">
+						<p:column styleClass="readFloor_Left">
+							<div>
+								<div class="userInfo">
+									<h:graphicImage name="#{reply.owner.profilePicName}" library="profilepic" />
+									<ul>
+										<li><h:outputText value="#{reply.owner.userId}"></h:outputText>
+											<div>#{reply.owner.title}</div></li>
+										<li><label>#{msgs.Member_Since}</label> <h:outputFormat value="#{reply.owner.createTime}">
+												<f:convertDateTime pattern="yyyy-MM-dd" />
+											</h:outputFormat></li>
+										<li><h:outputLabel value="#{msgs.userPost}"></h:outputLabel> <h:link value="#{reply.owner.numOfPosts}" outcome="/user/viewmypost.xhtml"
+												target="_blank">
+												<f:param name="userId" value="#{reply.owner.userId}"></f:param>
+												<f:param name="profileTab" value="#{constants.nameToValueMap.USER_TAB_MYPOST}"></f:param>
+											</h:link></li>
+										<li><h:outputLabel value="#{msgs.userReply}"></h:outputLabel> <h:link value="#{reply.owner.numOfReplies}"
+												outcome="/user/viewmyreply.xhtml" target="_blank">
+												<f:param name="userId" value="#{reply.owner.userId}"></f:param>
+												<f:param name="profileTab" value="#{constants.nameToValueMap.USER_TAB_MYREPLY}"></f:param>
+											</h:link></li>
+										<li><h:outputLabel value="#{msgs.userLastLogin}"></h:outputLabel> <h:outputFormat value="#{reply.owner.lastLogin}">
+												<f:convertDateTime pattern="yyyy-MM-dd" />
+											</h:outputFormat></li>
+
+										<li><p:commandLink value="#{msgs.Send_Message}" rendered="#{!empty sessionScope.CURRENTUSER}"
+												actionListener="#{messageBackingBean.setMessageRecipent(reply.owner.userId)}" oncomplete="messageDlg.show();return false;" process="@this"
+												update=":messageComposeFormId"></p:commandLink></li>
+									</ul>
+								</div>
+							</div>
+						</p:column>
+						<p:column styleClass="readFloor_Main">
+							<div class="readFloor_main">
+								<div class="readFloor_Main_Top_Misc">
+									#{msgs.Post_Label}
+									<h:outputFormat value="#{reply.createTime}">
+										<f:convertDateTime pattern="yyyy-MM-dd HH:mm a" />
+									</h:outputFormat>
+								</div>
+								<div class="readFloor_Main_Content">
+									<table id="readFloor_Main_Content_Reply_Table">
+										<tr>
+											<td><h:panelGroup>
+													<p:inputText id='replySubject' value="#{replyBackingBean.editReply.subject}" label="#{msgs.promptThreadSubject}"
+														rendered="${reply.equals(replyBackingBean.editReply)}">
+													</p:inputText>
+													<p:message id="replySubjectMess" for="replySubject" rendered="${reply.equals(replyBackingBean.editReply)}"></p:message>
+												</h:panelGroup> <h:panelGroup>
+													<h:outputText value="#{reply.content}" escape="false" rendered="${!reply.equals(replyBackingBean.editReply)}"></h:outputText>
+													<ui:remove>
+														<p:editor id="replycontentid" value="#{replyBackingBean.editReply.content}" rendered="#{reply.equals(replyBackingBean.editReply)}"></p:editor>
+													</ui:remove>
+													<cc:xheditor id="replycontentid" value="#{replyBackingBean.editReply.content}" rendered="#{reply.equals(replyBackingBean.editReply)}"
+														style="width:650px;height:300px;"></cc:xheditor>
+												</h:panelGroup> <h:panelGroup>
+													<br />
+													<p:outputPanel autoUpdate="true" rendered="#{reply.equals(replyBackingBean.editReply)}">
+														<p:commandButton value="#{msgs.UPDATE}" id="updateButton" action="#{replyBackingBean.updateReply()}" process="@form" update="@form">
+														</p:commandButton>
+
+														<p:commandButton value="#{msgs.CANCEL}" id="cancelButton" action="#{replyBackingBean.cancelUpdate()}" process="@this" update="@form"
+															immediate="true">
+														</p:commandButton>
+													</p:outputPanel>
+												</h:panelGroup></td>
+										</tr>
+									</table>
+
+								</div>
+								<div class="readFloor_Main_Content_Action">
+
+									<p:commandButton value="#{msgs.replylink}" id="replyButton" actionListener="#{replyBackingBean.replyTo(reply)}" process="@this"
+										update=":createReplyForm" oncomplete="initTextAreaWithEditor();jumpTo('#createReplyDiv')" styleClass="smallButton">
+									</p:commandButton>
+
+									<p:commandButton value="#{msgs.EDIT}" process="@this" update="@form" id="editButton" actionListener="#{replyBackingBean.setEditMode(reply)}"
+										styleClass="smallButton" oncomplete="initTextAreaWithEditor();"
+										rendered="#{(!reply.equals(replyBackingBean.editReply)  &amp;&amp; (login.userInSysadmin || login.isUserCategory_Owner(threadBackingBean.belongingCategory)|| login.getCurrentUser().equals(reply.owner)))}">
+
+									</p:commandButton>
+
+									<p:commandButton value="#{msgs.deleteButton}" id="deleteButton" process="@this" update="@form" styleClass="smallButton"
+										actionListener="#{replyBackingBean.deleteReply(reply)}"
+										rendered="#{login.userInSysadmin ||login.isUserCategory_Owner(threadBackingBean.belongingCategory) }">
+									</p:commandButton>
+								</div>
+							</div>
+							<div class="bg-divider"></div>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+
+				<!-- createreply.xhtml should be included in a form -->
+				<ui:include src="/reply/createreply.xhtml"></ui:include>
+
+				<h:form prependId="false" id="messageComposeFormId">
+					<!-- send a message -->
+					<ui:include src="/message/composeMessage.xhtml"></ui:include>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

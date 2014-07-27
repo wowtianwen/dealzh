@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:cc="http://java.sun.com/jsf/composite/cc">
+
+<ui:composition>
+	<div class="bshare-custom">
+		<a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a><a title="分享到人人网" class="bshare-renren"></a><a
+			title="分享到腾讯微博" class="bshare-qqmb"></a><a title="分享到网易微博" class="bshare-neteasemb"></a><a title="更多平台"
+			class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span>
+	</div>
+	<script type="text/javascript" charset="utf-8"
+		src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=daeae4d6-907c-40e6-beeb-9af58fa557f1&amp;pophcol=2&amp;lang=zh"></script>
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+
+	<script type="text/javascript" charset="utf-8">
+		var dealReferUId = $('#dealReferUId').attr('value');
+		var referURL = $(location).attr('href');
+		if (dealReferUId) {
+			referURL = referURL + "&amp;fromuid=" + dealReferUId;
+		}
+		bShare.addEntry({
+			url : referURL
+		});
+	</script>
+</ui:composition>
+</html>

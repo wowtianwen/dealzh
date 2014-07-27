@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="navigation">
+		<ui:include src="/navigation.xhtml"></ui:include>
+	</ui:define>
+	<ui:define name="content">
+		<div class="outLineBorder">
+			<f:metadata>
+				<f:viewParam name="id" value="${flash.keep.id}" requiredMessage="#{NO_CATEGORY_SELECTED}">
+					<f:validateRequired disabled="#{! flash.id}"></f:validateRequired>
+				</f:viewParam>
+			</f:metadata>
+
+			<f:event type="preRenderView" listener="#{categoryBackingBean.loadCategory()}" />
+			<div>
+				<h:form>
+					<h:inputHidden value="#{flash.navCatId}" />
+					<h:inputHidden value="#{categoryBackingBean.selectedForumCategory.id}" />
+
+					<h:panelGrid columns="3" columnClasses="th">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.EditCategorySubject}"></h:outputText>
+						</f:facet>
+
+						<h:outputLabel value="#{msgs.categoryNameLabel}"></h:outputLabel>
+						<p:inputText id="categoryName" value="#{categoryBackingBean.selectedForumCategory.categoryName}" required="true"
+							validator="#{categoryBackingBean.checkUniqueueness}">
+							<p:ajax event="blur" update="categoryNameMess" process="@this"></p:ajax>
+						</p:inputText>
+						<p:message id="categoryNameMess" for="categoryName"></p:message>
+
+						<h:outputLabel value="#{msgs.categoryDescriptionLabel}"></h:outputLabel>
+						<p:editor value="#{categoryBackingBean.selectedForumCategory.description}"></p:editor>
+						<h:outputText value=""></h:outputText>
+
+						<h:outputLabel value="#{msgs.DisplaySequence}"></h:outputLabel>
+						<p:inputText id="displaySequence" value="#{categoryBackingBean.selectedForumCategory.displaySequence}"></p:inputText>
+						<p:message for="displaySequence"></p:message>
+
+
+
+
+						<h:outputLabel value="#{msgs.parentCategoryLabel}"></h:outputLabel>
+						<h:selectOneMenu value="#{categoryBackingBean.parentCategoryId}">
+							<f:selectItem itemLabel="" itemValue="0" />
+							<f:selectItems value="#{systemCacheEjb.allCategories}" var="category" itemLabel="#{category.categoryName}" itemValue="#{category.id}"></f:selectItems>
+						</h:selectOneMenu>
+
+						<!-- plance holder -->
+						<h:outputLabel value="" />
+						<h:panelGroup>
+							<p:commandButton value="Update" action="#{categoryBackingBean.updateCategory}" ajax="false" global="false">
+
+							</p:commandButton>
+							<p:button value="return to Category List" outcome="listcategories.xhtml">
+								<f:param name="navCatId" value="#{flash.navCatId}"></f:param>
+							</p:button>
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<br />
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

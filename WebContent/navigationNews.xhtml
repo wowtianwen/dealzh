@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition>
+	<div class="navigation">
+		<h:link value="#{msgs.Home}->" outcome="/index.xhtml">
+		</h:link>
+		<h:link value="#{msgs.News}" outcome="/news/index.xhtml">
+		</h:link>
+		<ui:repeat value="#{navigationMapBackingBean.navigationMapNewsCategory}" var="navMapCategory">
+			<h:link value="->#{navMapCategory.categoryName}" outcome="/category/listcategories.xhtml" rendered="#{navMapCategory.childrenCategory.size()>0}">
+				<f:param name="#{constants.nameToValueMap.NAVIGATION_CATEGORY_ID}" value="#{navMapCategory.id}"></f:param>
+			</h:link>
+			<h:link value="->#{navMapCategory.categoryName}" rendered="#{navMapCategory.childrenCategory==null||navMapCategory.childrenCategory.size()==0}"
+				outcome="/news/listnews.xhtml">
+				<f:param name="#{constants.nameToValueMap.CATEGORY__NEWS_ID}" value="#{navMapCategory.id}"></f:param>
+			</h:link>
+		</ui:repeat>
+		<h:link value="->#{navigationMapBackingBean.currentNews.subject}" outcome="/news/viewnews.xhtml"
+			rendered="#{navigationMapBackingBean.currentNews!=null}">
+			<f:param name="id" value="#{navigationMapBackingBean.currentNews.id}"></f:param>
+		</h:link>
+	</div>
+</ui:composition>
+</html>

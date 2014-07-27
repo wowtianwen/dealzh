@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<body>
+	<ui:composition>
+		<h:messages layout="list" globalOnly="true" errorClass="errorMess" />
+		<div class="title">
+			<h:outputText value="#{msgs.createUserGroupSubject}" />
+		</div>
+		<div>
+			<h:panelGrid columns="3">
+
+				<h:outputLabel value="#{msgs.promptThreadSubject}" />
+				<h:inputText id="usergroupname" value="#{userGroup.name}" label="#{msgs.promptThreadSubject}">
+				</h:inputText>
+				<h:message id="ThreadSubjectMess" for="threadSubject" errorClass="errorMess" />
+
+				<h:outputLabel value="#{msgs.promptThreadContent}" />
+				<h:inputTextarea id="usergroupdescription" value="#{userGroup.description}" />
+
+			</h:panelGrid>
+
+			<br />
+			<h:panelGrid columns="1">
+				<h:commandButton value="Create" action="#{userGroupBackingBean.save(userGroup)}">
+					<f:ajax event="action" execute="usergroupname usergroupdescription" render="@form" onerror="handleAjaxError"></f:ajax>
+				</h:commandButton>
+			</h:panelGrid>
+
+		</div>
+	</ui:composition>
+</body>
+</html>

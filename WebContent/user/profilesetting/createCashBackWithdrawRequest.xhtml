@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+<body>
+	<ui:composition>
+		<h:form prependId="false"
+			rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_NEW_CASHBACK_WITHDRAW_REQUEST)}">
+			<h1>#{msgs.createCashBackWithdrawRequest}</h1>
+			<h:panelGrid columns="2" styleClass="profileTable">
+				<h:outputLabel value="#{msgs.RequestAmount}" title="#{msgs.RequestAmount_Tips}"></h:outputLabel>
+				<h:panelGroup>
+					<h:inputText id="withdrawAmount" value="#{userBackingBean.cashBackWithdrawRequest.withdrawAmount}"
+						validator="#{userBackingBean.validateCashbackWithdrawAmount}" title="#{msgs.RequestAmount_Tips}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+					</h:inputText>
+					<p:watermark value="valid format is xx.xx" for="withdrawAmount"></p:watermark>
+					<h:message for="withdrawAmount" errorClass="errorMessClass"></h:message>
+				</h:panelGroup>
+
+				<h:outputLabel value="#{msgs.Paypal_Email}" title="#{msgs.Paypal_Email_Tips}"></h:outputLabel>
+				<h:panelGroup>
+					<h:outputText value="#{userBackingBean.cashBackWithdrawRequest.paypalEmail}">
+					</h:outputText>
+				</h:panelGroup>
+				<h:outputLabel value=""></h:outputLabel>
+				<h:outputText value="#{msgs.paypalEmailNote}" styleClass="errorMessClass"></h:outputText>
+
+				<h:outputLabel value="" />
+				<h:panelGroup>
+					<p:commandButton value="#{msgs.submit}" action="#{userBackingBean.createCashbackWithdrawRequest(userBackingBean.cashBackWithdrawRequest)}"
+						ajax="true" process="@form" update=":mainProfilePanel" styleClass="commandButton">
+					</p:commandButton>
+					<p:commandButton value="Reset" type="reset"></p:commandButton>
+				</h:panelGroup>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+	<!-- ##############################Category#################################### -->
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/category/listcategories.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{categoryBackingBean.loadCategory}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/category/editcategory.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/category/createcategory.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{categoryBackingBean.createCategory()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/category/listcategories.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/category/editcategory.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{categoryBackingBean.updateCategory}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/category/listcategories.xhtml</to-view-id>
+			<redirect>
+				<view-param>
+					<name>navCatId</name>
+					<value>#{flash.navCatId}</value>
+				</view-param>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/category/assigncategoryowner.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{categoryBackingBean.assignCategoryOwner()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/category/listcategories.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<!-- #####################Thread ############################### -->
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/thread/createthread.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.createThread()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/thread/listthreads.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/thread/createthread4AllCategory.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.createThread4AllCategory()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/category/indexthreads4AllCategory.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/thread/createthread4AllCategory.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.createThread4AllCategory()}</from-action>
+			<from-outcome>REVIEW</from-outcome>
+			<to-view-id>/thread/threadSubmitResult.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/thread/createAnnounceThread4AllCategory.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.createAnnounceThread4AllCategory()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/category/indexthreads4AllCategory.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/thread/viewthread.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.updateThread}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/thread/listthreads.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/thread/viewthread.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{replyBackingBean.createReply(forumReply)}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/thread/viewthread.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/thread/listthreads.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>LOGIN</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/thread/listthreads.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{login.verifyLogIn("FROMPOSTTHREAD")}</from-action>
+			<from-outcome>CREATETHREAD</from-outcome>
+			<to-view-id>/thread/createthread.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.openHotDeal()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/category/indexthreads4AllCategory.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.openEvent()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/event/event.xhtml</to-view-id>
+			<redirect>
+				<view-param>
+					<name>parentThdId</name>
+					<value>1</value>
+				</view-param>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{login.forwardToLogin('/thread/viewthread.xhtml')}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{login.forwardToLogin('/stores/viewStore.xhtml')}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<!-- ############################News########################### -->
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{newsBackingBean.createNews()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/news/listnewsmanage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- ################################# Login ######################################## -->
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/login.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{login.login()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+			<redirect include-view-params="true">
+			</redirect>
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{login.login()}</from-action>
+			<from-outcome>createthread</from-outcome>
+			<to-view-id>/thread/createthread.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{login.login()}</from-action>
+			<from-outcome>createthread4AllCategory</from-outcome>
+			<to-view-id>/thread/createthread4AllCategory.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{login.login()}</from-action>
+			<from-outcome>createthread4Event</from-outcome>
+			<to-view-id>/thread/createthread4Event.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{login.login()}</from-action>
+			<from-outcome>createnews</from-outcome>
+			<to-view-id>/news/createnews.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{login.login()}</from-action>
+			<from-outcome>/thread/viewthread.xhtml</from-outcome>
+			<to-view-id>/thread/viewthread.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{login.login()}</from-action>
+			<from-outcome>/stores/viewStore.xhtml</from-outcome>
+			<to-view-id>/stores/viewStore.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/registration/enroll.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.enroll()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/registration/enrollSuccess.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/registration/enroll.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.login4Social()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>/login.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.login4Social()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<navigation-case>
+			<from-outcome>LOGOUT</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/newscategory/createcategory.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{newsCategoryBackingBean.createCategory()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/newscategory/listcategories.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/newscategory/editcategory.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{newsCategoryBackingBean.updateCategory}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/newscategory/listcategories.xhtml</to-view-id>
+			<redirect>
+				<view-param>
+					<name>navCatId</name>
+					<value>#{flash.navCatId}</value>
+				</view-param>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{login.initEnroll()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/registration/enroll.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>Application Navigation. should use xml config for
+			navigations
+		</description>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{login.initLogin()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<!-- ################################# Event ######################################## -->
+	<navigation-rule>
+		<from-view-id>/event/createEvent.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{eventBackingBean.createEvent()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/event/listEvents.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/event/editEvent.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{eventBackingBean.updateEvent()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/event/listEvents.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/thread/createthread4Event.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.createThread4Event()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/event/event.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/thread/createthread4Event.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{threadBackingBean.createThread4Event()}</from-action>
+			<from-outcome>REVIEW</from-outcome>
+			<to-view-id>/thread/threadSubmitResult.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<!--################################ cashBack Withdraw Request ################################### -->
+	<navigation-rule>
+		<from-view-id>/user/profilesetting/createCashBackWithdrawRequest.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.createCashbackWithdrawRequest()}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/user/profilesetting/listCashBackWithdrawRequest.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+
+	<!--################################ User################################### -->
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.openUserProfile}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/user/profilesetting/profile.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.openUserProfile(constants.nameToValueMap.USER_TAB_TELL_A_FRIEND)}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/user/profilesetting/profile.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.setManageUser(cashBackHistory.user)}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/user/profilesetting/profileAdmin.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.setManageUser(cashBackWithdrawRequest.user)}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/user/profilesetting/profileAdmin.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{userBackingBean.setManageUser(row.user)}</from-action>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/user/profilesetting/profileAdmin.xhtml</to-view-id>
+			<redirect>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+
+
+	<!--################################ application ################################### -->
+	<application>
+		<message-bundle>resources.application</message-bundle>
+		<locale-config>
+			<default-locale>en</default-locale>
+			<supported-locale>zh</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>resources.application</base-name>
+			<var>msgs</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>resources.global</base-name>
+			<var>global</var>
+		</resource-bundle>
+	</application>
+	<factory>
+		<exception-handler-factory>com.junhong.util.ExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+	<render-kit>
+		<renderer>
+			<display-name>fileupload "context type is not multipe form " temp fix</display-name>
+			<component-family>org.primefaces.component</component-family>
+			<renderer-type>org.primefaces.component.FileUploadRenderer</renderer-type>
+			<renderer-class>com.tempfix.MyFileUploadRenderer</renderer-class>
+		</renderer>
+	</render-kit>
+	<!-- LifeCycle -->
+	<lifecycle>
+		<!-- comment it out in production -->
+		<!-- <phase-listener>com.junhong.util.PhaseInfoListener</phase-listener> -->
+	</lifecycle>
+	<!-- -->
+</faces-config>

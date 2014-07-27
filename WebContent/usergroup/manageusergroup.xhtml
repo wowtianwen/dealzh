@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<body>
+	<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+		<ui:define name="content">
+			<h:messages layout="list" globalOnly="true" errorClass="errorMess"></h:messages>
+			<div class="title">
+				<h:outputText value="#{msgs.createThreadSubject}"></h:outputText>
+			</div>
+			<div>
+				<h:form prependId="false">
+					<h:panelGrid columns="3">
+
+						<h:outputLabel value="#{msgs.promptThreadSubject}"></h:outputLabel>
+						<h:inputText id='threadSubject' value="#{forumThread.subject}" label="#{msgs.promptThreadSubject}" width="100%">
+						</h:inputText>
+						<h:message id="ThreadSubjectMess" for="threadSubject" errorClass="errorMess"></h:message>
+
+						<h:outputLabel value="#{msgs.promptThreadContent}"></h:outputLabel>
+
+						<rich:editor value="#{forumThread.content}"></rich:editor>
+					</h:panelGrid>
+
+					<br />
+					<h:panelGrid columns="1">
+						<h:commandButton value="Create" action="#{threadBackingBean.createThread(forumThread)}">
+							<a4j:ajax execute="@form" status="addressStatus">
+							</a4j:ajax>
+						</h:commandButton>
+						<a4j:status name="addressStatus">
+							<f:facet name="start">
+								<h:graphicImage library="images" value="ai.gif" />
+							</f:facet>
+						</a4j:status>
+					</h:panelGrid>
+
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

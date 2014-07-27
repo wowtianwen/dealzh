@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="globalMesages">
+		<p:messages id="globalMessageId" globalOnly="false" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		<f:event type="preRenderComponent" listener="#{storeBackingBean.validateUserAccess()}" />
+	</ui:define>
+	<ui:define name="js">
+		<h:outputScript library="js" name="profile.js" target="head"></h:outputScript>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="listForm" prependId="false" enctype="multipart/form-data">
+			<p:dataTable id="storeTable" value="#{storeBackingBean.storeDataModel}" var="store" paginator="true" rows="40"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				paginatorPosition="both" tableStyleClass="noBorderTable" lazy="true">
+				<p:column headerText="#{msgs.Logo}" styleClass="storelogo">
+					<h:link outcome="/stores/viewStore">
+						<f:param name="id" value="#{store.id}"></f:param>
+						<h:graphicImage url="/resources/storePic/#{store.storePicturePathURL}" styleClass="storePicInListing" />
+					</h:link>
+				</p:column>
+				<p:column headerText="#{msgs.Name}">
+					<p:commandLink value="#{store.name}" actionListener="#{storeBackingBean.setStore(store)}" update=":ViewStoreForm"
+						oncomplete="PF('viewEditStore').show();" process="@this"></p:commandLink>
+				</p:column>
+				<p:column headerText="#{msgs.DOMAIN}">
+					<h:outputText value="#{store.domain}" />
+				</p:column>
+				<p:column headerText="#{msgs.REDIRECTlINKID}">
+					<h:outputText value="#{store.redirectLinkId}" />
+				</p:column>
+				<p:column headerText="#{msgs.ADVERTISERID}">
+					<h:outputText value="#{store.advertiserId}" />
+				</p:column>
+				<p:column headerText="#{msgs.Affiliate}">
+					<h:link outcome="manageAffiliates" value="#{store.affiliate.name}" rendered="#{!empty(store.affiliate)}"></h:link>
+				</p:column>
+				<p:column headerText="#{msgs.DisplaySequence}">
+					<h:outputText value="#{store.popularOrder}" />
+				</p:column>
+				<p:column headerText="#{msgs.CashBackPercent}">
+					<h:link outcome="/stores/viewStore">
+						<h:outputFormat value="#{store.cashBackPercent}">
+							<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+						</h:outputFormat>
+						<f:param name="id" value="#{store.id}"></f:param>
+					</h:link>
+				</p:column>
+				<p:column headerText="#{msgs.action}" rendered="#{login.userInSysadmin}">
+					<h:panelGroup>
+						<p:commandButton value="#{msgs.deleteButton}" actionListener="#{storeBackingBean.setStore(store)}" update=":delConfgDiaForm" process="@form"
+							oncomplete="PF('DelConfgDia').show()" styleClass="commandButtonOrLink" onerror="HandleAjaxError(xhr, satus, exception)">
+						</p:commandButton>
+						<p:commandButton value="popDeals" actionListener="#{storeBackingBean.populateStoreDealBatch(store)}" update="@form" process="@form"
+							styleClass="commandButtonOrLink" disabled="#{empty store.transformXSL}">
+						</p:commandButton>
+					</h:panelGroup>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<div style="display: inline; float: left; margin-top: 10px;">
+			<p:commandButton value="#{msgs.AddStore}" onclick="PF('addStore').show()" rendered="#{login.userInSysadmin}">
+			</p:commandButton>
+		</div>
+
+		<p:dialog id="confirmation" widgetVar="DelConfgDia" header="#{msgs.Delete_Dialog_Header} " modal="true" height="150" width="500" closable="true"
+			closeOnEscape="true">
+			<h:form id="delConfgDiaForm">
+				<h:panelGrid id="selectupdate">
+					<h:outputFormat value="#{msgs.Affiliate_Delete }">
+						<f:param value="#{storeBackingBean.store.name}">
+						</f:param>
+					</h:outputFormat>
+					<!-- create some space between the label and the button -->
+					<br></br>
+					<br></br>
+					<h:panelGrid columns="2">
+						<p:commandButton id="confirm" value="#{msgs.Delete_Dialog_Yes}" update=":listForm" process="@this" oncomplete="PF('DelConfgDia').hide()"
+							actionListener="#{storeBackingBean.deleteStore()}" />
+						<p:commandButton id="decline" value="#{msgs.Delete_Dialog_No}" onclick="PF('DelConfgDia').hide()" type="button" />
+					</h:panelGrid>
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		<p:dialog widgetVar="addStore" header="#{msgs.AddStore}" modal="true" height="450" width="800" closable="true" closeOnEscape="true">
+			<h:form id="addStoreForm" prependId="false" enctype="multipart/form-data">
+				<h:panelGrid columns="3" columnClasses="th">
+					<h:outputLabel value="#{msgs.Name}"></h:outputLabel>
+					<h:inputText id="nameInAdd" value="#{storeBackingBean.store.name}">
+					</h:inputText>
+					<h:message for="nameInAdd"></h:message>
+					<h:outputText value="#{msgs.ADVERTISERID}"></h:outputText>
+					<h:inputText id="advertiserIdAdd" value="#{storeBackingBean.store.advertiserId}"></h:inputText>
+					<h:message for="advertiserIdAdd"></h:message>
+					<h:outputLabel value="#{msgs.StoreDesc}"></h:outputLabel>
+					<p:editor id="storeDescAdd" value="#{storeBackingBean.store.storeDesc}">
+					</p:editor>
+					<h:message for="storeDescAdd"></h:message>
+					<h:outputLabel value="#{msgs.CashBackDesc}"></h:outputLabel>
+					<p:editor id="cashBackDescAdd" value="#{storeBackingBean.store.cashBackDesc}">
+					</p:editor>
+					<h:message for="cashBackDescAdd"></h:message>
+					<h:outputLabel value="#{msgs.CashBackPercent}"></h:outputLabel>
+					<h:panelGroup>
+						<h:inputText id="cashBackPercentAdd" value="#{storeBackingBean.store.cashBackPercent}">
+						</h:inputText>
+						<p:watermark value="#{msgs.CashBackWatermark}" for="cashBackPercentAdd"></p:watermark>
+					</h:panelGroup>
+					<h:message for="cashBackPercentAdd"></h:message>
+
+					<h:outputLabel value="#{msgs.GenericStoreLink}"></h:outputLabel>
+					<h:inputText id="genericStoreLinkAdd" value="#{storeBackingBean.store.genericStoreLink}">
+					</h:inputText>
+					<h:message for="genericStoreLinkAdd"></h:message>
+
+					<h:outputLabel value="#{msgs.DOMAIN}"></h:outputLabel>
+					<h:inputText id="domainInAdd" value="#{storeBackingBean.store.domain}" />
+					<h:message for="domainInAdd"></h:message>
+					<h:outputLabel id="redirectLinkIdInAdd" value="#{msgs.REDIRECTlINKID}"></h:outputLabel>
+					<h:inputText value="#{storeBackingBean.store.redirectLinkId}" />
+					<h:message for="redirectLinkIdInAdd"></h:message>
+
+					<h:outputLabel value="#{msgs.Affiliate}"></h:outputLabel>
+					<p:selectOneMenu value="#{storeBackingBean.store.affiliateId}" styleClass="parentCatSelectMenu">
+						<f:selectItems value="#{affiliateBackingBean.allAffiliateList}" var="affiliate" itemLabel="#{affiliate.name}" itemValue="#{affiliate.id}"></f:selectItems>
+					</p:selectOneMenu>
+					<h:outputLabel></h:outputLabel>
+					<h:outputLabel></h:outputLabel>
+					<h:panelGroup>
+						<p:commandButton value="#{msgs.submit}" action="#{storeBackingBean.createStore()}" process="@form" update="@form :listForm"
+							oncomplete="handleComplete(xhr, status, args)">
+						</p:commandButton>
+						<p:commandButton id="cancel" value="#{msgs.CANCEL}" onclick="PF('addStore').hide()" type="button" />
+					</h:panelGroup>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="viewEditStore" header="#{msgs.ViewStore}" modal="true" height="450" width="700" closable="true" closeOnEscape="true">
+			<h:form id="ViewStoreForm" prependId="false" enctype="multipart/form-data">
+				<h:panelGrid columns="1" columnClasses="singleGrid">
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.StoreProfilePic}"></h:outputLabel>
+						<h:graphicImage id="storePicId" url="/resources/storePic/#{storeBackingBean.store.storePicturePathURL}" />
+						<p:fileUpload fileUploadListener="#{storeBackingBean.handleStoreProfilePicFileUpload}" mode="advanced" auto="true" sizeLimit="50000"
+							allowTypes="/(\.|\/)(gif|jpe?g|png)$/" oncomplete="refeshPic('#storePicId')" update="@form :listForm"
+							rendered="#{login.userInSysadmin &amp;&amp; storeBackingBean.editMode}" styleClass="storePicUpload" label="#{msgs.Upload}" />
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.Name}"></h:outputLabel>
+						<h:inputText id="nameInUpdate" value="#{storeBackingBean.store.name}" rendered="#{storeBackingBean.editMode}" />
+						<p:message for="nameInUpdate" rendered="#{storeBackingBean.editMode}"></p:message>
+						<h:outputText value="#{storeBackingBean.store.name}" rendered="#{!storeBackingBean.editMode}"></h:outputText>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.ADVERTISERID}"></h:outputLabel>
+						<h:inputText id="advertiserId" value="#{storeBackingBean.store.advertiserId}" rendered="#{storeBackingBean.editMode}" />
+						<p:message for="advertiserId" rendered="#{storeBackingBean.editMode}"></p:message>
+						<h:outputText value="#{storeBackingBean.store.advertiserId}" rendered="#{!storeBackingBean.editMode}"></h:outputText>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.StoreDesc}"></h:outputLabel>
+						<p:editor id="storeDesc" value="#{storeBackingBean.store.storeDesc}" rendered="#{storeBackingBean.editMode}" />
+						<p:message for="storeDesc" rendered="#{storeBackingBean.editMode}"></p:message>
+						<div class="longText">
+							<h:outputText value="#{storeBackingBean.store.storeDesc}" rendered="#{!storeBackingBean.editMode}" escape="false"></h:outputText>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.CashBackDesc}"></h:outputLabel>
+						<p:editor id="cashBackDesc" value="#{storeBackingBean.store.cashBackDesc}" rendered="#{storeBackingBean.editMode}" />
+						<p:message for="cashBackDesc" rendered="#{storeBackingBean.editMode}"></p:message>
+						<div class="longText">
+							<h:outputText value="#{storeBackingBean.store.cashBackDesc}" rendered="#{!storeBackingBean.editMode}" escape="false"></h:outputText>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.CashBackPercent}"></h:outputLabel>
+						<h:panelGroup>
+							<h:inputText id="cashBackPercentUpdate" value="#{storeBackingBean.store.cashBackPercent}" rendered="#{storeBackingBean.editMode}">
+							</h:inputText>
+							<p:watermark value="#{msgs.CashBackWatermark}" for="cashBackPercentUpdate" rendered="#{storeBackingBean.editMode}"></p:watermark>
+							<p:message for="cashBackPercentUpdate" rendered="#{storeBackingBean.editMode}"></p:message>
+						</h:panelGroup>
+
+						<div>
+							<h:outputText value="#{storeBackingBean.store.cashBackPercent*100}%" rendered="#{!storeBackingBean.editMode}"></h:outputText>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.GenericStoreLink}"></h:outputLabel>
+						<h:inputText id="genericStoreLink" value="#{storeBackingBean.store.genericStoreLink}" rendered="#{storeBackingBean.editMode}">
+						</h:inputText>
+						<p:message for="genericStoreLink" rendered="#{storeBackingBean.editMode}"></p:message>
+						<div>
+							<h:outputText value="#{storeBackingBean.store.genericStoreLink}" rendered="#{!storeBackingBean.editMode}"></h:outputText>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.DOMAIN}"></h:outputLabel>
+						<h:inputText id="domainInUpdate" value="#{storeBackingBean.store.domain}" rendered="${storeBackingBean.editMode}" />
+						<p:message for="domainInUpdate" rendered="#{storeBackingBean.editMode}"></p:message>
+						<h:outputText value="#{storeBackingBean.store.domain}" rendered="#{!storeBackingBean.editMode}"></h:outputText>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.REDIRECTlINKID}"></h:outputLabel>
+						<h:inputText id="redirectLinkIdInUpdate" value="#{storeBackingBean.store.redirectLinkId}" rendered="#{storeBackingBean.editMode}" />
+						<p:message for="redirectLinkIdInUpdate" rendered="#{storeBackingBean.editMode}"></p:message>
+						<h:outputText value="#{storeBackingBean.store.redirectLinkId}" rendered="#{!storeBackingBean.editMode}"></h:outputText>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.Affiliate}"></h:outputLabel>
+						<p:selectOneMenu value="#{storeBackingBean.store.affiliateId}" styleClass="parentCatSelectMenu" disabled="#{!storeBackingBean.editMode}">
+							<f:selectItems value="#{affiliateBackingBean.allAffiliateList}" var="affiliate" itemLabel="#{affiliate.name}" itemValue="#{affiliate.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText rendered="#{storeBackingBean.editMode}"></h:outputText>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.DisplaySequence}"></h:outputLabel>
+						<h:inputText id="popularOrderIdInUpdate" value="#{storeBackingBean.store.popularOrder}" rendered="#{storeBackingBean.editMode}" />
+						<p:message for="popularOrderIdInUpdate" rendered="#{storeBackingBean.editMode}"></p:message>
+						<h:outputText value="#{storeBackingBean.store.popularOrder}" rendered="#{!storeBackingBean.editMode}"></h:outputText>
+					</h:panelGroup>
+
+
+					<h:panelGroup>
+						<h:outputLabel value="#{msgs.BFAD}"></h:outputLabel>
+						<h:outputText value="#{storeBackingBean.store.bfAdScan}"></h:outputText>
+						<p:fileUpload fileUploadListener="#{storeBackingBean.handleStoreAdScanFileUpload}" mode="advanced" auto="true" sizeLimit="50000000"
+							allowTypes="/(\.|\/)(pdf|PDF)$/" update="@form" rendered="#{login.userInSysadmin &amp;&amp; storeBackingBean.editMode}"
+							styleClass="storePicUpload" label="#{msgs.Upload}" />
+					</h:panelGroup>
+					<h:panelGroup>
+
+						<p:commandButton value="#{msgs.UPDATE}" actionListener="#{storeBackingBean.updateStore()}" process="@form" update=":listForm @form"
+							oncomplete="handleComplete(xhr, status, args)" rendered="${storeBackingBean.editMode}">
+						</p:commandButton>
+						<p:commandButton value="#{msgs.EDIT}" action="#{storeBackingBean.setEditMode(true)}" process="@form" update="@form"
+							oncomplete="handleComplete(xhr, status, args)" rendered="${!storeBackingBean.editMode}">
+						</p:commandButton>
+						<p:commandButton value="#{msgs.CANCEL}" oncomplete="PF('viewEditStore').hide()" action="#{storeBackingBean.setEditMode(false)}" process="@form"
+							immediate="true" update="@form" />
+					</h:panelGroup>
+					<h:outputText></h:outputText>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+
+</html>

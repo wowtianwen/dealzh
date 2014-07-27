@@ -1,0 +1,55 @@
+<project name="forum" default="dist" basedir="..">
+	<description>
+		simple example build file
+	</description>
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="build" location="build/forum" />
+	<property name="glassfishJar.dir" location="C:\Users\zhanjung\Documents\java\tool\glassfish-3.1.2.2\glassfish3\glassfish\modules" />
+	<property name="dist" location="dist" />
+	<property name="weblib.dir" location="WebContent\WEB-INF\lib" />
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
+	<path id="javacpath">
+		<fileset dir="${glassfishJar.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${weblib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="compile" depends="clean, init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" includes="**/*.java,**/*.xml,**/*.properties">
+			<classpath refid="javacpath">
+			</classpath>
+		</javac>
+		<copydir dest="${build}" src="${src}" includes="**/*.*" excludes="**/*.java">
+		</copydir>
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib" />
+
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/lib/forum-${DSTAMP}.jar" basedir="${build}" />
+	</target>
+
+	<target name="createWeldBundleSourcejar" depends="init" description="generate the weld osgi bundle source file ">
+		<zip destfile="${build}/weld-osgi-bundle-cm-source.jar">
+			<zipgroupfileset dir="${weld-1.1.4.dir}" includes="**/*sources.jar" />
+		</zip>
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+</project>

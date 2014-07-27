@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+
+	<p:dialog header="Send Message" widgetVar="messageDlg" resizable="true" height="500" modal="true" rendered="true">
+		<h:panelGroup id="messagePanelId">
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{msgs.To}" /></td>
+					<td>
+						<!-- forceSelection should be trur, but set to false now due to the Primeface bug Issue 4170: --> <p:autoComplete
+							value="#{messageBackingBean.toUserIdList}" minQueryLength="3" id="userId" completeMethod="${userBackingBean.getUserids}" forceSelection="true"
+							queryDelay="500" required="true" multiple="true" title="the recipient user Id" requiredMessage="#{msgs.Value_Can_Not_Blank}">
+						</p:autoComplete>
+					</td>
+					<td><p:message for="userId"></p:message></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{msgs.SUBJECT}" /></td>
+					<td><p:inputText id="subject" value="#{messageBackingBean.currentMessage.subject}" required="true"
+							requiredMessage="#{msgs.Value_Can_Not_Blank}"></p:inputText></td>
+					<td><p:message for="subject"></p:message></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{msgs.CONTENT}" /></td>
+					<td><p:inputTextarea value="#{messageBackingBean.currentMessage.content}" id="content" autoResize="true" required="true"
+							requiredMessage="#{msgs.Value_Can_Not_Blank}"></p:inputTextarea></td>
+					<td><p:message for="content"></p:message></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><h:panelGroup>
+							<p:commandButton value="#{msgs.Send_button}" actionListener="#{messageBackingBean.sendMessage()}" process="@form"
+								update="messagePanelId  :globalMessageId" oncomplete="handleComplete(xhr, status, args)">
+							</p:commandButton>
+
+							<p:commandButton value="#{msgs.SAVE}" actionListener="#{messageBackingBean.saveDraftMessage()}" process="@form" update="messagePanelId"
+								oncomplete="handleComplete(xhr, status, args)">
+							</p:commandButton>
+							<p:commandButton value="#{msgs.CANCEL}" onclick="PF('messageDlg').hide();" process="@this"></p:commandButton>
+						</h:panelGroup></td>
+				</tr>
+			</table>
+		</h:panelGroup>
+	</p:dialog>
+
+</ui:composition>
+</html>

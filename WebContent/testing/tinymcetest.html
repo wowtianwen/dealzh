@@ -1,0 +1,41 @@
+<script type="text/javascript" src="../resources/tiny_mce/tiny_mce_src.js"></script>
+<script type="text/javascript">
+	tinyMCE.init({
+		mode : "textareas",
+		theme : "advanced"
+	});
+
+	function ajaxLoad() {
+		var ed = tinyMCE.get('content');
+
+		// Do you ajax call here, window.setTimeout fakes ajax call\
+
+		ed.setProgressState(1); // Show progress
+		window.setTimeout(function() {
+			ed.setProgressState(0); // Hide progress
+			ed.setContent('HTML content that got passed from server.');
+		}, 3000);
+	}
+
+	function ajaxSave() {
+		var ed = tinyMCE.get('content');
+		ed.getContent();
+		// Do you ajax call here, window.setTimeout fakes ajax call
+		ed.setProgressState(1); // Show progress
+		window.setTimeout(function() {
+			ed.setProgressState(0); // Hide progress
+			alert(ed.getContent());
+		}, 30);
+	}
+</script>
+
+<form method="post" action="somepage">
+	<textarea name="content" style="width: 100%">
+        </textarea>
+</form>
+
+<div>
+	<a class="btn" onclick="ajaxLoad();return false;" href="javascript:;"> <span>Load</span>
+	</a> <a class="btn" onclick="ajaxSave();return false;" href="javascript:;"> <span>Save</span>
+	</a>
+</div>

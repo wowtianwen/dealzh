@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<h:body>
+	<ui:composition>
+		<ui:define name="globalMesages">
+			<p:messages autoUpdate="true" globalOnly="true"></p:messages>
+		</ui:define>
+
+		<h:form id="paymentMethodId" rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_PAYMENT_METHOD)}"
+			prependId="false">
+			<h1>#{msgs.PaymentMethod}</h1>
+			<h:panelGrid columns="2" columnClasses="th" styleClass="profileTable">
+				<p:selectOneRadio value="#{userBackingBean.paymentMethod}" >
+					<p:ajax event="change" update="@form" process="@this"></p:ajax>
+					<f:selectItem itemLabel="#{msgs.PaymentMethod_Paypal}" itemValue="#{constants.nameToValueMap.PAYMENT_METHOD_PAYPAL}" />
+				</p:selectOneRadio>
+				<h:panelGroup id="payPalEmailId" rendered="#{fn:containsIgnoreCase(userBackingBean.paymentMethod,constants.nameToValueMap.PAYMENT_METHOD_PAYPAL)}">
+					<h:outputText value="#{msgs.Paypal_Email}" styleClass="paddingRight"></h:outputText>
+					<p:inplace>
+						<p:inputText value="#{userBackingBean.basicUser.payPalEmail}"></p:inputText>
+					</p:inplace>
+				</h:panelGroup>
+			</h:panelGrid>
+			<p>#{msgs.Paypal_Note}</p>
+
+			<p:commandButton value="#{msgs.UPDATE}" actionListener="#{userBackingBean.updateUser()}" process="@form" update="@form"></p:commandButton>
+		</h:form>
+	</ui:composition>
+
+
+</h:body>
+
+</html>

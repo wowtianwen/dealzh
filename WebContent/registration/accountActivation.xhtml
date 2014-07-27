@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="u" value="${requestScope.userId}"></f:viewParam>
+			<f:viewParam name="c" value="${requestScope.activateCode}"></f:viewParam>
+		</f:metadata>
+
+	</ui:define>
+	<ui:define name="content">
+		<h:form styleClass="center60pct" id="enrollFormId" prependId="false">
+			<div class="highLight">
+				<f:event type="preRenderComponent" listener="#{userBackingBean.validateRegActivateCode()}" />
+				<h:panelGroup rendered="#{fn:containsIgnoreCase(viewScope.activationSucceed,constants.nameToValueMap.SUCCESS)}">
+					<p>Your account is activated successfully. Now You're Part of yourHotdeal.com...</p>
+					<p>yourHotdeal.com strives to offer its users the best deals.</p>
+					<p>
+						As registered user, you can do:
+						<ul>
+							<li>1. Share deals with thousands of users instantly.</li>
+							<li>2. Earn cashback when you shop through our links</li>
+							<li>3. Comment on all the deals shared by other users.</li>
+							<li>a lot more</li>
+						</ul>
+						Now you can login by click "login" below
+						<h:link outcome="/login.xhtml" value="#{msgs.SignIn} " rendered="#{!login.userLoggedIn}"></h:link>
+					</p>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{fn:containsIgnoreCase(viewScope.activationSucceed,constants.nameToValueMap.FAIL)}">
+					<p>Opps, your activation is not successful, your activation code is not valid or expired.</p>
+					<p>please send the activation code to your email again.</p>
+
+					<h:panelGrid id="resendActivationCodePG" columns="3" columnClasses="thNarrow" styleClass="loginPanelGrid">
+						<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+						<p:inputText id="userid" value="#{userBackingBean.user.userId}" validator="#{userBackingBean.checkUserIdExistence}">
+							<p:ajax process="@this" update="userIdErr" event="valueChange"></p:ajax>
+						</p:inputText>
+						<p:message id="userIdErr" for="userid"></p:message>
+						<h:outputText></h:outputText>
+						<cc:captcha validator="#{simpleCaptchaValidator.validateCaptcha}" validatorMessage="#{msgs.invalidCaptchaCode}">
+						</cc:captcha>
+						<br />
+						<h:outputText></h:outputText>
+						<p:commandButton id="resendActivationCodeButton" value="#{msgs.ResendActiationEmail}"
+							actionListener="#{userBackingBean.resendRegActivationCode()}" process="@(#resendActivationCodePG)" update="@none"
+							oncomplete="disableButton('#resendActivationCodeButton')"></p:commandButton>
+
+					</h:panelGrid>
+
+				</h:panelGroup>
+				<h:panelGroup rendered="#{fn:containsIgnoreCase(viewScope.activationSucceed,constants.nameToValueMap.NOTVALID)}">
+					<p>
+						#{msgs.userActive} Now you can login and do:
+						<ul>
+							<li>1. Share deals with thousands of users instantly.</li>
+							<li>2. Earn cashback when you shop through our links</li>
+							<li>3. Comment on all the deals shared by other users.</li>
+							<li>a lot more</li>
+						</ul>
+						Now you can login by click "login" below
+						<h:link outcome="/login.xhtml" value="#{msgs.SignIn} " rendered="#{!login.userLoggedIn}"></h:link>
+					</p>
+				</h:panelGroup>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+
+</ui:composition>
+
+</html>

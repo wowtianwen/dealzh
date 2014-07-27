@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
+	<ui:insert name="metadata" />
+	<h:head>
+		<link rel="shortcut icon" href="/resources/images/favicon.ico" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<ui:remove>
+			<!-- CSS file for IE  -->
+			<h:outputText
+				value="&lt;!--[if IE ]&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/css/forum-IE.css?v=10&quot; /&gt;&lt;![endif]--&gt;"
+				escape="false" />
+
+			<!-- CSS file for non-IE  -->
+			<h:outputText
+				value="&lt;!--[if !IE ]&gt; &lt;!--&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/css/forum.css?v=10&quot; /&gt;&lt;!--&lt;![endif]--&gt;"
+				escape="false" />
+		</ui:remove>
+		<h:outputStylesheet library="css" name="bootstrap.css"></h:outputStylesheet>
+		<h:outputStylesheet library="css" name="bootstrap-theme.css"></h:outputStylesheet>
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+ 	   <![endif]-->
+		<!-- sina weibo verify property start -->
+		<!-- <meta property="wb:webmaster" content="6dc82ec6e65f99fa" /> -->
+		<meta property="wb:webmaster" content="85e8c41d7f6d6e3a" />
+		<!-- sina weibo verify property end -->
+		<meta name="google-site-verification" content="FVyLlMtuSKLibopDPTWN2DkFB7yJXUUtYoSSphuPgsE" />
+		<meta property="qc:admins" content="24433171276175207445146375" />
+		<ui:insert name="description">
+			<meta name="description" content="#{global.index_descrption}"></meta>
+		</ui:insert>
+		<meta name="keywords"
+			content="yourhotdeal,cash back,ebay cash back,Hot Deal,Hot Deals,your hot deal,Canon Camera deal,Android deal,IPad deal,IPhone deal, HDTV deal,Laptop deal,Tablet deal,IPhone,Android,SmartPhone deal,Camera deal,Xbox deal,PS deal, Clothes,beauty etc" />
+		<!-- JS  -->
+		<h:outputScript library="js" name="forum3.js"></h:outputScript>
+		<title><ui:insert name="title">#{global.forum_title}</ui:insert></title>
+	</h:head>
+	<h:body>
+		<!--  the left part of the page -->
+		<div class=".container-fluid">
+			<dir class="row">
+				<div class="col-xs-12">
+					<ui:insert name="mainPageContainer"></ui:insert>
+				</div>
+			</dir>
+		</div>
+		<script src="/resources/js/bootstrap.js"></script>
+	</h:body>
+</f:view>
+</html>

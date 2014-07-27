@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<ui:composition>
+	<div id="myCashBack">
+		<!-- pending cash back -->
+		<h:form rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_CASH_BACK_HISTORY)}">
+			<h1>#{msgs.PendingCashBackHistory}</h1>
+			<p:dataTable var="cashBackHistory" value="#{userBackingBean.cashBackHistoryDataModel}" paginator="true" rows="40" lazy="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,15" tableStyleClass="noBorderTable" styleClass="tableWrapper" paginatorPosition="bottom"
+				emptyMessage="#{msgs.NoCashBack}" filterDelay="1000" filterEvent="blur" resizableColumns="true" paginatorAlwaysVisible="false">
+				<f:event type="preRenderComponent" listener="#{userBackingBean.initDataModelPendingForUserCashBack()}"></f:event>
+				<p:column headerText="#{msgs.TransactionDate}" filterBy="#{cashBackHistory.transactionDate}">
+					<h:outputFormat value="#{cashBackHistory.transactionDate}">
+						<f:convertDateTime pattern="yyyy-MM-dd"></f:convertDateTime>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.TransactionId}" filterBy="#{cashBackHistory.transactionId}">
+					<h:outputText value="#{cashBackHistory.transactionId}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Store}" filterBy="#{cashBackHistory.store.name}">
+					<h:outputText value="#{cashBackHistory.store.name}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.CashBackPercent}">
+					<h:outputText value="#{cashBackHistory.cashBackPercent}">
+						<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{msgs.TransactionAmount}">
+					<h:outputFormat value="#{cashBackHistory.transactionAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.CashBackAmount}" styleClass="greenText">
+					<h:outputFormat value="#{cashBackHistory.cashBackAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.Status}">
+					<h:outputText value="#{cashBackHistory.status}"></h:outputText>
+				</p:column>
+				<p:columnGroup type="footer">
+					<p:row>
+						<p:column colspan="5" footerText="Totals:" style="text-align:right" styleClass="highlight " />
+						<p:column footerText="\$#{userBackingBean.basicUser.pendingAmount}" styleClass="highlight highlightrow greenText">
+						</p:column>
+					</p:row>
+				</p:columnGroup>
+
+			</p:dataTable>
+			<div class="margintop">
+				<h:outputText value="#{msgs.Note}"></h:outputText>
+				<ul class="generalList">
+					<li>#{msgs.CashBackNote1}</li>
+					<li>#{msgs.CashBackNote2}</li>
+				</ul>
+			</div>
+		</h:form>
+
+		<!-- avaiable cash back -->
+		<h:form rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_CASH_BACK_HISTORY)}">
+			<h1>#{msgs.AvailableCashBackHistory}</h1>
+			<p:dataTable var="cashBackHistory" value="#{userBackingBean.cashBackHistoryDataModel}" paginator="true" rows="40" lazy="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,15" tableStyleClass="noBorderTable" styleClass="tableWrapper" paginatorPosition="bottom"
+				emptyMessage="#{msgs.NoCashBack}" filterDelay="1000" filterEvent="blur" resizableColumns="true" paginatorAlwaysVisible="false">
+				<f:event type="preRenderComponent" listener="#{userBackingBean.initDataModelAvailableForUserCashBack()}"></f:event>
+				<p:column headerText="#{msgs.TransactionDate}" filterBy="#{cashBackHistory.transactionDate}">
+					<h:outputFormat value="#{cashBackHistory.transactionDate}">
+						<f:convertDateTime pattern="yyyy-MM-dd"></f:convertDateTime>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.TransactionId}" filterBy="#{cashBackHistory.transactionId}">
+					<h:outputText value="#{cashBackHistory.transactionId}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Store}" filterBy="#{cashBackHistory.store.name}">
+					<h:outputText value="#{cashBackHistory.store.name}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.CashBackPercent}">
+					<h:outputText value="#{cashBackHistory.cashBackPercent}">
+						<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{msgs.TransactionAmount}">
+					<h:outputFormat value="#{cashBackHistory.transactionAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.CashBackAmount}">
+					<h:outputFormat value="#{cashBackHistory.cashBackAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputFormat>
+
+				</p:column>
+				<p:column headerText="#{msgs.Status}">
+					<h:outputText value="#{cashBackHistory.status}"></h:outputText>
+				</p:column>
+				<p:columnGroup type="footer">
+					<p:row>
+						<p:column colspan="5" footerText="Totals:" style="text-align:right" styleClass="highlight" />
+
+						<p:column footerText="\$#{userBackingBean.basicUser.availableAmount.add(userBackingBean.basicUser.paidAmount)}"
+							styleClass="highlight highlightrow greenText" />
+
+					</p:row>
+				</p:columnGroup>
+				<f:facet name="footer">
+					<div class="greenText">Total(\$#{userBackingBean.basicUser.availableAmount.add(userBackingBean.basicUser.paidAmount)}) - PaidAmount
+						(\$#{userBackingBean.basicUser.paidAmount})=Total Available Amount (\$#{userBackingBean.basicUser.availableAmount})</div>
+				</f:facet>
+			</p:dataTable>
+
+		</h:form>
+	</div>
+
+</ui:composition>
+</html>

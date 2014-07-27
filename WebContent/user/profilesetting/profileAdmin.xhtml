@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+<h:body>
+	<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+		<ui:define name="js">
+			<h:outputScript library="js" name="profile.js" target="head"></h:outputScript>
+		</ui:define>
+
+		<ui:define name="content">
+			<div class="subtitle">
+				<h:outputText value="#{sessionScope.MANAGEUSER.userId}#{msgs.OnesProfile}" />
+				<f:event type="preRenderComponent" listener="#{userBackingBean.loadManageUser()}" />
+			</div>
+			<ui:include src="userleftside.xhtml"></ui:include>
+			<div>
+				<p:outputPanel id="mainProfilePanel">
+					<ui:include src="accountSummary.xhtml"></ui:include>
+					<ui:include src="cashBackHistory.xhtml"></ui:include>
+					<ui:include src="orderInquery.xhtml"></ui:include>
+					<ui:include src="paymentMethod.xhtml"></ui:include>
+					<ui:include src="createCashBackWithdrawRequest.xhtml"></ui:include>
+					<ui:include src="basicuser.xhtml"></ui:include>
+					<ui:include src="profilepic.xhtml"></ui:include>
+					<h:panelGroup rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_CHANGEPWD)}">
+						<ui:include src="changepwd.xhtml"></ui:include>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_MYPOST)}">
+						<ui:include src="mypost.xhtml"></ui:include>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_MYREPLY)}">
+						<ui:include src="myreply.xhtml"></ui:include>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_MYWATCHLIST)}">
+						<ui:include src="mywatchlist.xhtml"></ui:include>
+					</h:panelGroup>
+				</p:outputPanel>
+			</div>
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+</html>

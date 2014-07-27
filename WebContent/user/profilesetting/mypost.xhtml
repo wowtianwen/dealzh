@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<div id="userCashBack">
+		<h:form>
+			<h1>#{sessionScope.CONTEXTUSERID}- #{msgs.MyPost}</h1>
+			<p:tabView var="status" value="#{userBackingBean.allThreadStatus}" dynamic="true" cache="false" styleClass="hotDealTabView"
+				activeIndex="#{sessionScope.activeTab}">
+				<p:tab title="#{userBackingBean.deriveMypostTabTitle(status)}" titleStyleClass="hotDealTitle">
+					<p:dataTable var="thread" value="#{userBackingBean.myDataModel}" paginator="true" rows="20" lazy="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+						rowsPerPageTemplate="5,10,15" tableStyleClass="noBorderTable" paginatorPosition="bottom" first="#{sessionScope.FIRST}"
+						rowStyleClass="whiteBackGround" paginatorAlwaysVisible="false">
+						<f:event type="preRenderComponent" listener="#{userBackingBean.prepare2FetchMyPost(status)}" />
+						<p:column headerText="#{msgs.threadSubjectLabel}" styleClass="myPostMainColumn">
+							<h:panelGrid columns="2" columnClasses="smallCell" styleClass="noBorder">
+								<h:panelGroup styleClass="thumbnail" rendered="#{! empty thread.thumbPicURL}">
+									<h:link outcome="/thread/viewthread">
+										<f:param name="id" value="#{thread.id}"></f:param>
+										<img src="#{thread.thumbPicURL}" class="dealpicInListing" />
+									</h:link>
+								</h:panelGroup>
+								<h:panelGroup styleClass="txt" layout="block">
+									<h:link value="#{thread.subject} #{thread.price}" outcome="/thread/viewthread" styleClass="subject">
+										<f:param name="id" value="#{thread.id}"></f:param>
+										<h:graphicImage name="TopicHot.gif" library="images" rendered="#{(thread.markedHot)}" />
+									</h:link>
+								</h:panelGroup>
+							</h:panelGrid>
+						</p:column>
+						<p:column headerText="#{msgs.threadReplyHitLabel}">
+							<h:outputText value='#{thread.numberOfReplies}/#{thread.numberOfView}' escape="false"></h:outputText>
+						</p:column>
+						<p:column headerText="#{msgs.threadAuthorLabel}">
+							<h:outputText value='#{thread.owner.userId}' escape="false"></h:outputText>
+						</p:column>
+						<p:column headerText="#{msgs.threadLastUpdateLabel}">
+							<h:panelGroup rendered="#{thread.lastReply!=null}">
+								<h:outputText value="#{thread.lastReply.owner.userId}" styleClass="block" />
+								<h:outputFormat value="#{thread.lastReply.createTime}">
+									<f:convertDateTime dateStyle="short" timeStyle="short" type="both" />
+								</h:outputFormat>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{thread.lastReply==null}">
+								<h:outputText value="--/--" />
+							</h:panelGroup>
+						</p:column>
+						<p:column headerText="#{msgs.threadAuthorLabel}" rendered="#{threadBackingBean.ownerForCurrCategory || login.userInSysadmin}">
+
+							<h:commandButton value="Delete" action="#{threadBackingBean.deleteThread(thread)}">
+								<p:ajax event="action" update="@form"></p:ajax>
+							</h:commandButton>
+						</p:column>
+					</p:dataTable>
+
+					<h:panelGroup rendered="#{status.toString().equals(constants.nameToValueMap.THREADSTATUS_REJECTED)}">
+						<p>#{msgs.RejectedThreadNote}</p>
+					</h:panelGroup>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</div>
+
+</ui:composition>
+</html>

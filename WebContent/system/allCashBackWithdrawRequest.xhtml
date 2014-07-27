@@ -1,0 +1,112 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<ui:composition>
+	<h:form id="listForm" prependId="false" rendered="#{login.isUserInSysadmin()}">
+		<p:dataTable value="#{userBackingBean.lazyCashBackWithdrawRequestDataModel}" var="cashBackWithdrawRequest" paginator="true" rows="50"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+			paginatorPosition="both" tableStyleClass="noBorderTable" styleClass="tableWrapper" lazy="true" filterDelay="1000" filterEvent="blur"
+			widgetVar="datatable" paginatorAlwaysVisible="false">
+			<f:event type="preRenderComponent" listener="#{userBackingBean.initDataModelForAll()}"></f:event>
+			<p:column headerText="#{msgs.Id}">
+				<h:outputText value="#{cashBackWithdrawRequest.id}">
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{msgs.userid}" filterBy="#{cashBackWithdrawRequest.user.userId}">
+				<p:commandLink value="#{cashBackWithdrawRequest.user.userId}" action="#{userBackingBean.setManageUser(cashBackWithdrawRequest.user)}" ajax="false"></p:commandLink>
+			</p:column>
+			<p:column headerText="#{msgs.WithdrawPayment}">
+				<h:outputText value="#{cashBackWithdrawRequest.withdrawAmount}">
+					<f:convertNumber maxFractionDigits="2" currencySymbol="$" minFractionDigits="2" type="currency"></f:convertNumber>
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{msgs.Paypal_Email}">
+				<h:outputText value="#{cashBackWithdrawRequest.paypalEmail}" />
+			</p:column>
+			<p:column headerText="#{msgs.Status}" filterBy="#{cashBackWithdrawRequest.status}">
+				<h:outputText value="#{cashBackWithdrawRequest.status}" />
+			</p:column>
+			<p:column headerText="#{msgs.Note}">
+				<h:outputText value="#{cashBackWithdrawRequest.note}" />
+			</p:column>
+
+			<p:column headerText="#{msgs.action}">
+				<p:commandButton value="#{msgs.EDIT}" actionListener="#{userBackingBean.setCashBackWithdrawRequest(cashBackWithdrawRequest)}"
+					update="@widgetVar(viewEditWidget)" oncomplete="PF('viewEditWidget').show()" process="@form"></p:commandButton>
+				<p:commandButton value="#{msgs.deleteButton}" actionListener="#{userBackingBean.setCashBackWithdrawRequest(cashBackWithdrawRequest)}"
+					update="@widgetVar(DelConfgDia)" process="@form" oncomplete="PF('DelConfgDia').show()" styleClass="commandButtonOrLink"
+					onerror="HandleAjaxError(xhr, satus, exception)">
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+
+	<p:dialog id="confirmation" widgetVar="DelConfgDia" header="#{msgs.Delete_Dialog_Header} " modal="true" height="150" width="500"
+		rendered="#{login.isUserInSysadmin()}">
+		<h:form id="delConfgDiaForm">
+			<h:panelGrid id="selectupdate">
+				<h:outputFormat value="#{msgs.CashBackWithdrawRequest_Delete }">
+				</h:outputFormat>
+				<!-- create some space between the label and the button -->
+				<br></br>
+				<br></br>
+				<h:panelGrid columns="2">
+					<p:commandButton id="confirm" value="#{msgs.Delete_Dialog_Yes}" update=" @form @widgetVar(datatable)" process="@this"
+						oncomplete="PF('DelConfgDia').hide()" actionListener="#{userBackingBean.deleteCashBackWithdrawRequest(userBackingBean.cashBackWithdrawRequest)}" />
+					<p:commandButton id="decline" value="#{msgs.Delete_Dialog_No}" onclick="PF('DelConfgDia').hide()" type="button" />
+				</h:panelGrid>
+
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+
+	<p:dialog widgetVar="viewEditWidget" header="#{msgs.viewCashBackRequest}" modal="true" height="450" width="600" closable="true" closeOnEscape="true"
+		rendered="#{login.isUserInSysadmin()}">
+		<p:messages id="globalMessageId" globalOnly="true" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		<h:form id="viewEditForm" prependId="false">
+			<h:panelGrid columns="1" columnClasses="singleGrid">
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.Id}"></h:outputLabel>
+					<h:outputText value="#{userBackingBean.cashBackWithdrawRequest.id}"></h:outputText>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.WithdrawPayment}"></h:outputLabel>
+					<p:inplace>
+						<p:inputText value="#{userBackingBean.cashBackWithdrawRequest.withdrawAmount}"></p:inputText>
+					</p:inplace>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.Paypal_Email}"></h:outputLabel>
+					<p:inplace>
+						<p:inputText value="#{userBackingBean.cashBackWithdrawRequest.paypalEmail}"></p:inputText>
+					</p:inplace>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.Status}"></h:outputLabel>
+					<p:inplace>
+						<p:selectOneMenu value="#{userBackingBean.cashBackWithdrawRequest.status}">
+							<f:selectItems value="#{userBackingBean.recordStatusOptions}" var="status" itemLabel="#{status.label}" itemValue="#{status.value}"></f:selectItems>
+						</p:selectOneMenu>
+					</p:inplace>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="#{msgs.Note}"></h:outputLabel>
+					<p:inputTextarea value="#{userBackingBean.cashBackWithdrawRequest.note}" rows="3" autoResize="true">
+					</p:inputTextarea>
+				</h:panelGroup>
+
+
+				<h:panelGroup>
+					<h:outputLabel value=""></h:outputLabel>
+					<p:commandButton value="#{msgs.UPDATE}"
+						actionListener="#{userBackingBean.updateCashbackWithdrawRequest(userBackingBean.cashBackWithdrawRequest)}" process="@form"
+						update="@form @widgetVar(datatable)" oncomplete="handleComplete(xhr, status, args)">
+					</p:commandButton>
+				</h:panelGroup>
+				<h:outputText></h:outputText>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+</ui:composition>
+</html>

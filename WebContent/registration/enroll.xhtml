@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="js">
+		<h:outputScript library="js" name="socialLogin-min.js" target="head"></h:outputScript>
+	</ui:define>
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="referBy" value="#{sessionScope.referBy}"></f:viewParam>
+		</f:metadata>
+	</ui:define>
+	<ui:define name="content">
+		<div class="socialWrapper">
+			<div class="socialLogin">
+				<div class="title">Login with social Account</div>
+				<ui:include src="/WEB-INF/templates/faceBookLoginPlugin.xhtml"></ui:include>
+				<ui:include src="/WEB-INF/templates/googleLoginPlugin.xhtml"></ui:include>
+				<ui:include src="/WEB-INF/templates/qqLoginPlugin.xhtml"></ui:include>
+				<ui:include src="/WEB-INF/templates/socialLoginPluginForms.xhtml"></ui:include>
+			</div>
+			<p:separator></p:separator>
+
+			<h:form id="enrollFormId" prependId="false" rendered="#{sessionScope.LOGINTYPE.equals(constants.nameToValueMap.LOGIN_TYPE_SELF)}">
+				<div>
+					<h:panelGrid columns="3" columnClasses="thNarrow" styleClass="loginPanelGrid">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.user_reg_sign_up}" styleClass="title" />
+						</f:facet>
+						<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+						<p:inputText id="userid" value="#{userBackingBean.user.userId}">
+							<f:validateBean validationGroups="com.junhong.forum.constaint.group.EnrollGroup"></f:validateBean>
+							<p:ajax process="@this" update="userIdErr" event="valueChange"></p:ajax>
+						</p:inputText>
+						<p:message id="userIdErr" for="userid"></p:message>
+
+						<h:outputLabel value="#{msgs.password}"></h:outputLabel>
+						<p:password id="password" value="#{userBackingBean.user.password}">
+							<p:ajax process="@this" update="passwordErr" event="valueChange"></p:ajax>
+						</p:password>
+						<p:message id="passwordErr" for="password"></p:message>
+
+						<h:outputLabel value="#{msgs.passwordagain}"></h:outputLabel>
+						<p:password id="passwordagain" value="#{userBackingBean.user.passwordagain}" validator="#{userBackingBean.checkPasswordMatch}">
+							<p:ajax process="password passwordagain" update="passwordagainErr" event="valueChange"></p:ajax>
+						</p:password>
+						<p:message id="passwordagainErr" for="passwordagain"></p:message>
+
+						<h:outputLabel value="#{msgs.email}"></h:outputLabel>
+						<h:panelGroup>
+							<p:inputText id="email" value="#{userBackingBean.user.email}" validator="#{userBackingBean.checkEmailExistence}">
+								<f:ajax execute="@this" render="emailErr" event="valueChange"></f:ajax>
+							</p:inputText>
+							<br />
+							<h:outputText value="#{msgs.emailNote}" styleClass="red"></h:outputText>
+						</h:panelGroup>
+						<p:message id="emailErr" for="email"></p:message>
+
+						<h:outputText></h:outputText>
+						<cc:captcha validator="#{simpleCaptchaValidator.validateCaptcha}" validatorMessage="#{msgs.invalidCaptchaCode}">
+						</cc:captcha>
+						<br />
+						<h:outputText></h:outputText>
+						<h:panelGroup>
+							<p:commandButton value="#{msgs.createuser}" action="#{userBackingBean.enroll()}" ajax="false" partialSubmit="false" styleClass="bigButton"></p:commandButton>
+							<p:commandButton value="Reset" type="reset" styleClass="bigButton"></p:commandButton>
+						</h:panelGroup>
+					</h:panelGrid>
+				</div>
+			</h:form>
+		</div>
+
+
+
+	</ui:define>
+
+
+</ui:composition>
+
+</html>

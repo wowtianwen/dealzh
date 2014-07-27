@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:composite="http://java.sun.com/jsf/composite" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<composite:interface name="loginDlg">
+	<composite:attribute name="widgetVar" required="true" type="java.lang.String"></composite:attribute>
+	<composite:attribute name="update" required="true" type="java.lang.String"></composite:attribute>
+	<composite:attribute name="onComplete" type="java.lang.String"></composite:attribute>
+	<composite:attribute name="userId" default="#{login.user.userId}"></composite:attribute>
+	<composite:attribute name="password" default="#{login.user.password}"></composite:attribute>
+	<composite:facet name="header"></composite:facet>
+	<composite:facet name="error"></composite:facet>
+	<composite:attribute name="model" default="true" type="java.lang.Boolean"></composite:attribute>
+	<composite:attribute name="height" default="300" type="java.lang.String"></composite:attribute>
+	<composite:attribute name="width" default="200" type="java.lang.String"></composite:attribute>
+	<composite:attribute name="actionListener" required="true" method-signature="void action()"></composite:attribute>
+</composite:interface>
+<composite:implementation>
+	<p:dialog widgetVar="loginDlg" modal="#{cc.attrs.model}" id="hahahaha">
+		<h:form>
+			<composite:renderFacet name="header"></composite:renderFacet>
+			<composite:renderFacet name="error"></composite:renderFacet>
+			<h:panelGrid columns="3">
+				<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+				<p:inputText id="userid" value="#{cc.attrs.userId}">
+				</p:inputText>
+				<h:message id="userIdErr" for="userid"></h:message>
+
+				<h:outputLabel value="#{msgs.password}"></h:outputLabel>
+				<p:password id="password" value="#{login.user.password}" feedback="false">
+				</p:password>
+				<h:message id="passwordErr" for="password"></h:message>
+			</h:panelGrid>
+			<p:commandButton value="#{msgs.submit}" actionListener="#{cc.attrs.actionListener}" process="@form" update="#{cc.attrs.update}"
+				oncomplete="#{cc.attrs.onComplete}">
+			</p:commandButton>
+			<p:commandButton value="#{msgs.CANCEL}" oncomplete="PF('loginDlg').hide()">
+			</p:commandButton>
+		</h:form>
+	</p:dialog>
+
+</composite:implementation>
+</html>

@@ -1,0 +1,118 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<h:head>
+
+</h:head>
+<ui:composition>
+	<p:button value="#{msgs.Compose}" onclick="messageDlg.show();return false" />
+
+	<p:layout id="messageOuterlayoutId" styleClass="outLayout_Message">
+		<f:event type="preRenderComponent" listener="#{messageBackingBean.fetchAllInboxMessages(constants.nameToValueMap.Message_Inbox)}" />
+		<p:layoutUnit position="west" collapsible="true" header="#{msgs.Messages}" resizable="true" id="outLayoutUnit_West_message" size="200">
+			<h:form prependId="false">
+				<p:tree value="#{messageBackingBean.root}" var="node" selectionMode="single" id="message_LeftSide">
+					<p:ajax event="select" listener="#{messageBackingBean.fetchAllInboxSentArchieveMessages}" process="@this" update=":listMessageForm"></p:ajax>
+					<p:treeNode icon="inboxIcon" type="#{constants.nameToValueMap.Message_Inbox}" styleClass="messageToolBarClass">
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+					<p:treeNode icon="inboxIcon" type="#{constants.nameToValueMap.Message_Draft}" styleClass="messageToolBarClass">
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+					<p:treeNode icon="inboxIcon" type="#{constants.nameToValueMap.Message_Sent}" styleClass="messageToolBarClass">
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+					<p:treeNode icon="inboxIcon" type="#{constants.nameToValueMap.Message_Archieve}" styleClass="messageToolBarClass">
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+
+				</p:tree>
+			</h:form>
+		</p:layoutUnit>
+		<p:layoutUnit position="center" styleClass="outLayoutUnit_Center_Message">
+			<p:layout id="messageInnerLayoutId" styleClass="innerLayout_Message">
+				<p:layoutUnit position="west" resizable="true" collapsible="true" styleClass="innerLayoutUnit_West_Message" size="500">
+					<h:form id="listMessageForm" prependId="false">
+						<p:menubar styleClass="lightgraybackground">
+							<p:menuitem id="archieveId" value="#{msgs.MessageButtonArchieve}" actionListener="#{messageBackingBean.archieve()}" process="@all"
+								update=":listMessageForm">
+							</p:menuitem>
+							<p:menuitem value="#{msgs.MessageButtonDelete}" actionListener="#{messageBackingBean.markDelete()}" process=":listMessageForm"
+								update=":listMessageForm"></p:menuitem>
+							<p:menuitem value="#{msgs.MessageButtonMarkRead}" actionListener="#{messageBackingBean.markRead(true)}"
+								disabled="#{!messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Inbox)}" process="@form" update="@form"></p:menuitem>
+							<p:menuitem value="#{msgs.MessageButtonMarkUnread}" actionListener="#{messageBackingBean.markRead(false)}"
+								disabled="#{!messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Inbox)}" process="@form" update="@form"></p:menuitem>
+							<p:menuitem value="#{msgs.Refresh}" actionListener="#{messageBackingBean.retrieveMessages(constants.nameToValueMap.Message_Inbox)}"
+								disabled="#{!messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Inbox)}" process="@form" update="@form"></p:menuitem>
+						</p:menubar>
+						<p:dataTable id="listMessageId" binding="#{messageBackingBean.dataTable}" value="#{messageBackingBean.inboxSentArchieveDraftMessages}"
+							lazy="true" var="mess" paginator="true" rows="10" tableStyleClass="noBorderTable"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+							paginatorPosition="bottom" selection="#{messageBackingBean.selectedMessages}" rowKey="#{mess.id}" widgetVar="messageTable"
+							rowStyleClass='#{messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Inbox) and messageBackingBean.getMessageStatus(mess.id).toString().equals(constants.nameToValueMap.Message_Status_NEW)? "newMessage" : "readMessage"}'
+							paginatorAlwaysVisible="false">
+							<ui:remove>
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search Messages:" />
+										<h:inputText id="globalFilter" onkeyup="messageTable.filter()" style="width:150px" />
+									</p:outputPanel>
+								</f:facet>
+							</ui:remove>
+							<p:column selectionMode="multiple" style="width:18px" />
+							<p:column>
+								<f:facet name="header">
+								</f:facet>
+								<h:outputText value="#{msgs.From} #{mess.from.userId}"
+									rendered="#{messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Inbox)}" />
+								<h:outputText value="#{msgs.To} #{mess.toUserids}"
+									rendered="#{messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Sent) or  messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Draft)}" />
+								<h:outputText value="#{mess.toUserids}"
+									rendered="#{messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Archieve)}" />
+								<br />
+								<p:commandLink value="#{mess.subject}" process="@form" actionListener="#{messageBackingBean.setForView(mess)}"
+									update="@form, :messageReplyButtonFormId "
+									rendered="#{!messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Draft)}"></p:commandLink>
+
+								<p:commandLink value="#{mess.subject}" process="@form" actionListener="#{messageBackingBean.displayDraftMessage(mess)}"
+									rendered="#{messageBackingBean.messageGroup.equalsIgnoreCase(constants.nameToValueMap.Message_Draft)}"
+									oncomplete="messageDlg.show();return false"></p:commandLink>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msgs.Newest}" />
+								</f:facet>
+								<h:outputFormat value="#{mess.createTime}">
+									<f:convertDateTime pattern="H:mm a, MMM d yyyy" />
+								</h:outputFormat>
+							</p:column>
+						</p:dataTable>
+
+					</h:form>
+				</p:layoutUnit>
+
+				<p:layoutUnit position="center" collapsible="true" styleClass="innerLayoutUnit_Center_Message noBorder">
+					<h:form prependId="false" id="messageReplyButtonFormId">
+						<h:panelGrid>
+							<h:commandLink action="/user/profilesetting/profile.xhtml" value="#{msgs.From} #{messageBackingBean.messageDisplay.from.userId}:" />
+							<h:outputText value="#{msgs.To} #{messageBackingBean.messageDisplay.toUserids}" />
+							<h:outputText value="#{messageBackingBean.messageDisplay.subject}" />
+						</h:panelGrid>
+
+						<p:inputTextarea id="messageReplyTextArea" readonly="true" value="#{messageBackingBean.messageDisplay.content}" autoResize="false"></p:inputTextarea>
+
+						<p:commandButton value="#{msgs.replylink}" actionListener="#{messageBackingBean.prepareReply()}" process="@this" oncomplete="messageDlg.show()"
+							update=":messageComposeFormId:messagePanelId" />
+					</h:form>
+
+				</p:layoutUnit>
+			</p:layout>
+		</p:layoutUnit>
+
+	</p:layout>
+	<h:form prependId="false" id="messageComposeFormId">
+		<ui:include src="/message/composeMessage.xhtml"></ui:include>
+	</h:form>
+
+</ui:composition>
+</html>

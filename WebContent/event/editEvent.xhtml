@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="navigation">
+		<ui:include src="/navigation.xhtml"></ui:include>
+	</ui:define>
+	<ui:define name="content">
+		<div class="outLineBorder">
+			<f:metadata>
+				<f:viewParam name="id" value="${flash.keep.id}" requiredMessage="#{NO_EVENT_SELECTED}">
+					<f:validateRequired disabled="#{! flash.id}"></f:validateRequired>
+				</f:viewParam>
+			</f:metadata>
+
+			<f:event type="preRenderView" listener="#{eventBackingBean.loadEvent()}" />
+			<div>
+				<h:form>
+					<h:inputHidden value="#{flash.navCatId}" />
+					<h:inputHidden value="#{eventBackingBean.selectedEvent.id}" />
+
+					<h:panelGrid columns="3" columnClasses="th">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.UpdateEvent}"></h:outputText>
+						</f:facet>
+
+						<h:outputLabel value="#{msgs.Name}"></h:outputLabel>
+						<p:inputText id="name" value="#{eventBackingBean.selectedEvent.name}" required="true" validator="#{eventBackingBean.checkUniqueueness}">
+							<p:ajax event="blur" update="NameMess" process="@this"></p:ajax>
+						</p:inputText>
+						<p:message id="NameMess" for="name"></p:message>
+
+						<h:outputLabel value="#{msgs.Description}"></h:outputLabel>
+						<p:editor value="#{eventBackingBean.selectedEvent.description}"></p:editor>
+						<h:outputText value=""></h:outputText>
+
+						<h:outputText value=""></h:outputText>
+						<h:panelGroup>
+							<p:commandButton value="Update" action="#{eventBackingBean.updateEvent()}" ajax="false" global="false">
+							</p:commandButton>
+							<p:button value="#{msgs.ReturnToEventList}" outcome="listEvents.xhtml">
+							</p:button>
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<br />
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

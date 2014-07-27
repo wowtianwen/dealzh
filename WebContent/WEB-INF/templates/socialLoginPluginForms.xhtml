@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:cc="http://java.sun.com/jsf/composite/cc">
+
+<ui:composition>
+	<div class="socialLoginForms">
+
+		<!-- for facebook -->
+		<h:form styleClass="#{sessionScope.LOGINTYPE.equals(constants.nameToValueMap.LOGIN_TYPE_FACEBOOK)?'diplayShow':'diplayNone'}" id="enroll4SocialForm"
+			prependId="false">
+			<div class="highLight">
+				<h:panelGrid columns="3" columnClasses="thNarrow" styleClass="loginPanelGrid">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.user_reg_sign_up}" styleClass="title" />
+					</f:facet>
+					<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+					<p:inputText id="userid4Social" value="#{userBackingBean.user.userId}">
+					</p:inputText>
+					<p:message id="userIdErr4Social" for="userid4Social"></p:message>
+
+					<h:outputLabel value="#{msgs.email}"></h:outputLabel>
+					<h:panelGroup>
+						<p:inputText id="email4Social" value="#{userBackingBean.user.email}">
+						</p:inputText>
+						<br />
+						<h:outputText value="#{msgs.emailNote}" styleClass="red"></h:outputText>
+					</h:panelGroup>
+					<p:message id="emailErr4Social" for="email4Social"></p:message>
+					<h:inputHidden value="#{userBackingBean.user.socialToken}" id="socialToken">
+					</h:inputHidden>
+					<h:inputHidden value="#{userBackingBean.user.loginType}" id="loginType">
+					</h:inputHidden>
+					<h:outputLabel></h:outputLabel>
+					<h:outputLabel></h:outputLabel>
+					<h:panelGroup>
+						<p:commandButton id="submit" value="#{msgs.submit}" action="#{userBackingBean.login4Social()}" ajax="false" partialSubmit="false"
+							styleClass="bigButton"></p:commandButton>
+					</h:panelGroup>
+				</h:panelGrid>
+			</div>
+
+		</h:form>
+		<!-- for qq -->
+		<h:form styleClass="#{sessionScope.LOGINTYPE.equals(constants.nameToValueMap.LOGIN_TYPE_QQ)?'diplayShow':'diplayNone'}" id="enroll4SocialFormqq"
+			prependId="false">
+			<div class="highLight">
+				<h:panelGrid columns="3" columnClasses="thNarrow" styleClass="loginPanelGrid">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.user_reg_sign_up}" styleClass="title" />
+					</f:facet>
+					<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+					<p:inputText id="userid4Socialqq" value="#{userBackingBean.user.userId}">
+					</p:inputText>
+					<p:message id="userIdErr4Socialqq" for="userid4Socialqq"></p:message>
+
+					<h:outputLabel value="#{msgs.email}"></h:outputLabel>
+					<h:panelGroup>
+						<p:inputText id="email4Socialqq" value="#{userBackingBean.user.email}">
+						</p:inputText>
+						<br />
+						<h:outputText value="#{msgs.emailNote}" styleClass="red"></h:outputText>
+					</h:panelGroup>
+					<p:message id="emailErr4Socialqq" for="email4Socialqq"></p:message>
+					<h:inputHidden value="#{userBackingBean.user.socialToken}" id="socialTokenqq">
+					</h:inputHidden>
+					<h:inputHidden value="#{userBackingBean.user.loginType}" id="loginTypeqq">
+					</h:inputHidden>
+					<h:outputLabel></h:outputLabel>
+					<h:outputLabel></h:outputLabel>
+					<h:panelGroup>
+						<p:commandButton id="submitqq" value="#{msgs.submit}" action="#{userBackingBean.login4Social()}" ajax="false" partialSubmit="false"
+							styleClass="bigButton"></p:commandButton>
+					</h:panelGroup>
+				</h:panelGrid>
+			</div>
+
+		</h:form>
+
+		<!-- for google -->
+		<h:form styleClass="#{sessionScope.LOGINTYPE.equals(constants.nameToValueMap.LOGIN_TYPE_GOOGLE)?'diplayShow':'diplayNone'}"
+			id="enroll4SocialFormgoogle" prependId="false">
+			<div class="highLight">
+				<h:panelGrid columns="3" columnClasses="thNarrow" styleClass="loginPanelGrid">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.user_reg_sign_up}" styleClass="title" />
+					</f:facet>
+					<h:outputLabel value="#{msgs.userid}"></h:outputLabel>
+					<p:inputText id="userid4Socialgoogle" value="#{userBackingBean.user.userId}">
+					</p:inputText>
+					<p:message id="userIdErr4Socialgoogle" for="userid4Socialgoogle"></p:message>
+
+					<h:outputLabel value="#{msgs.email}"></h:outputLabel>
+					<h:panelGroup>
+						<p:inputText id="email4Socialgoogle" value="#{userBackingBean.user.email}">
+						</p:inputText>
+						<br />
+						<h:outputText value="#{msgs.emailNote}" styleClass="red"></h:outputText>
+					</h:panelGroup>
+					<p:message id="emailErr4Socialgoogle" for="email4Socialgoogle"></p:message>
+					<h:inputHidden value="#{userBackingBean.user.socialToken}" id="socialTokengoogle">
+					</h:inputHidden>
+					<h:inputHidden value="#{userBackingBean.user.loginType}" id="loginTypegoogle">
+					</h:inputHidden>
+					<h:outputLabel></h:outputLabel>
+					<h:outputLabel></h:outputLabel>
+					<h:panelGroup>
+						<p:commandButton id="submitgoogle" value="#{msgs.submit}" action="#{userBackingBean.login4Social()}" ajax="false" partialSubmit="false"
+							styleClass="bigButton"></p:commandButton>
+					</h:panelGroup>
+				</h:panelGrid>
+			</div>
+
+		</h:form>
+	</div>
+
+</ui:composition>
+</html>

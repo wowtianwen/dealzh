@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:cc="http://java.sun.com/jsf/composite/cc">
+<body>
+	<ui:composition template="/WEB-INF/templates/maintemplate.xhtml">
+		<ui:define name="title">#{msgs.createNewsLabel}</ui:define>
+		<ui:define name="content">
+			<f:event listener="#{login.verifyLoggedIn('createnews')}" type="preRenderView"></f:event>
+			<div>
+				<h:form prependId="false" id="createNewsForm"
+					rendered="#{newsBackingBean.ownerForCurrCategory || login.userInSysadmin || login.isCurrentUserInRole(constants.nameToValueMap.NewsPoster_Role_Type)}">
+					<h:panelGrid columns="3" columnClasses="th">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.createNewsLabel}"></h:outputText>
+						</f:facet>
+
+						<h:outputLabel value="#{msgs.promptsubject}"></h:outputLabel>
+						<p:inputText id='subject' value="#{newsBackingBean.news.subject}" label="#{msgs.promptsubject}" width="100%">
+						</p:inputText>
+						<h:message id="subjectMess" for="subject" errorClass="errorMess"></h:message>
+
+						<h:outputLabel value="#{msgs.promptNewsDesc}"></h:outputLabel>
+						<p:inputTextarea id="description" value="#{newsBackingBean.news.description}" label="#{msgs.promptsubject}" width="100%" autoResize="false">
+						</p:inputTextarea>
+						<h:message for="description" errorClass="errorMess"></h:message>
+
+
+						<h:outputLabel value="#{msgs.promptContent}"></h:outputLabel>
+						<cc:xheditor value="#{newsBackingBean.news.content}" style="width:650px;height:300px;" id="threadContent"></cc:xheditor>
+						<h:message id="ThreadContentMess" for="threadContent" errorClass="errorMess"></h:message>
+
+						<h:inputHidden id="newsThumbPicURL" value="#{newsBackingBean.news.thumbPicURL}" />
+						<p:commandButton value="#{msgs.submit}" action="#{newsBackingBean.createNews()}" ajax="false" styleClass="commandButton"
+							onclick="searchAndSetThumbPicURL('#createNewsForm','#newsThumbPicURL');">
+						</p:commandButton>
+						<h:outputLabel value="#{newsBackingBean.news.content}" />
+
+					</h:panelGrid>
+
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

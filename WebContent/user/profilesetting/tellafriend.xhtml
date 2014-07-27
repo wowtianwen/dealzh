@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<ui:composition>
+		<h:form rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_TELL_A_FRIEND)}" prependId="false">
+			<h1>#{msgs.TellAFriend}</h1>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{msgs.ShareIsEasy}"></h:outputLabel>
+				<h:inputText id="referLink" readonly="true" value="www.yourhotdeal.com/registration/enroll.xhtml?referBy=#{sessionScope.CURRENTUSER.id}"></h:inputText>
+			</h:panelGrid>
+			<p class="note">Copy And share above link with your friends. Once your friend register on yourhotdeal.com, you will receive $5 bonus for each
+				friend who register through this link.</p>
+
+			<div class="newSection">
+				<!-- All Invited  list-->
+				<h1>#{msgs.ReferredUsers}</h1>
+				<p:dataList value="#{userBackingBean.referredUserList}" var="referred" itemType="disc" emptyMessage="#{msgs.NoReferredUsersFound}"
+					styleClass="generalList">
+					<div>
+						<h:outputText value="#{referred.userId}"></h:outputText>
+					</div>
+					<f:facet name="footer">you have referred #{userBackingBean.referredUserList.size()} friends
+				</f:facet>
+				</p:dataList>
+
+				<p class="note">yourhotdeal will pay you for every new member you refer to our site who then shops at our partner merchant sites. Pets, minor
+					children and imaginary friends don't qualify, nor do referrals to friends or housemates who don't actually do their own shopping via their own
+					account on yourhotdeal.com.</p>
+			</div>
+		</h:form>
+
+	</ui:composition>
+</h:body>
+</html>

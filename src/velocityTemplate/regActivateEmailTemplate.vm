@@ -1,0 +1,12 @@
+Dear ${userId},
+<p>
+Thank you for registering at the yourhotdeal.com. To get you started, we offer you $${regBonus} bonus. If you refer your friend to join us, you will get additional $${regBonus} refer bonus for each user you referred.
+</p>
+<p>
+Please note - you must complete this last step to become a registered member to share deals,earn cash back etc. You will only need to visit this URL once to activate your account.
+</p>
+<p>
+To complete your registration, please visit this URL:
+<a href="http://www.yourhotdeal.com/registration/${activationpage}">Click here to activate your account</a>
+</p>
+

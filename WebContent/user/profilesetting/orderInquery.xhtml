@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<ui:composition>
+	<div>
+		<h:form id="orderInqueryForm" prependId="false"
+			rendered="#{userBackingBean.profiletab.equalsIgnoreCase(constants.nameToValueMap.USER_TAB_ORDER_INQUERY)}">
+			<h1>#{msgs.Order_Inquery}</h1>
+
+			<p:dataTable value="#{userBackingBean.lazyOrderInqueryDataModel}" var="row" paginator="true" rows="20"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {PageLinks}  {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				paginatorPosition="both" tableStyleClass="noBorderTable" lazy="true" paginatorAlwaysVisible="false">
+				<f:event type="preRenderComponent" listener="#{userBackingBean.initDataModel()}"></f:event>
+				<p:column headerText="#{msgs.CreateTime}">
+					<h:outputText value="#{row.createTime}">
+						<f:convertDateTime pattern="yyyy-MM-dd"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.OrderNumber}" filterBy="#{row.orderNumber}">
+					<h:outputText value="#{row.orderNumber}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.STORENAME}">
+					<h:outputText value="#{row.store.name}" />
+				</p:column>
+				<p:column headerText="#{msgs.TransactionDate}">
+					<h:outputFormat value="#{row.purchaseDate}">
+						<f:convertDateTime pattern="yyyy-MM-dd"></f:convertDateTime>
+					</h:outputFormat>
+				</p:column>
+				<p:column headerText="#{msgs.TransactionAmount}">
+					<h:outputText value="#{row.orderAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.CashBackAmount}">
+					<h:outputText value="#{row.cashBackAmount}">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" type="currency" currencySymbol="$"></f:convertNumber>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.Status}">
+					<h:outputText value="#{row.status}" />
+				</p:column>
+				<p:column headerText="#{msgs.Note}">
+					<h:outputText value="#{row.note}" />
+				</p:column>
+				<p:column headerText="#{msgs.action}">
+					<p:commandButton value="#{msgs.deleteButton}" actionListener="#{userBackingBean.setOrderInquery(row)}" update=":delConfgDiaForm2" process="@form"
+						oncomplete="PF('DelConfgDia2').show()" styleClass="commandButtonOrLink " onerror="HandleAjaxError(xhr, satus, exception)">
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:commandButton value="#{msgs.AddOrderInquery}" actionListener="#{userBackingBean.initializeOrderInquery()}" process="@this"
+				update=":mainProfilePanel " title="#{msgs.AddOrderInquery}" ajax="true"></p:commandButton>
+			<div class="margintop">
+				<h:outputText value="#{msgs.Note}"></h:outputText>
+				<ul class="generalList">
+					<li><h:outputText value="#{msgs.OrderInqueryNote2}"></h:outputText></li>
+					<li>#{msgs.OrderInqueryNote}</li>
+				</ul>
+			</div>
+
+
+		</h:form>
+
+
+	</div>
+
+	<p:dialog widgetVar="DelConfgDia2" header="#{msgs.Delete_Dialog_Header} " modal="true" height="150" width="500"
+		rendered="#{fn:containsIgnoreCase(userBackingBean.profiletab,constants.nameToValueMap.USER_TAB_ORDER_INQUERY)}">
+		<h:form id="delConfgDiaForm2">
+			<h:panelGrid id="selectupdate">
+				<h:outputFormat value="#{msgs.OrderInquery_Delete}">
+				</h:outputFormat>
+				<!-- create some space between the label and the button -->
+				<br></br>
+				<br></br>
+				<h:panelGrid columns="2">
+					<p:commandButton id="confirm" value="#{msgs.Delete_Dialog_Yes}" update=":orderInqueryForm" process="@this" oncomplete="PF('DelConfgDia2').hide()"
+						actionListener="#{userBackingBean.deleteOrderInquery(userBackingBean.orderInquery)}" />
+					<p:commandButton id="decline" value="#{msgs.Delete_Dialog_No}" onclick="PF('DelConfgDia2').hide()" type="button" />
+				</h:panelGrid>
+
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+</ui:composition>
+</html>
