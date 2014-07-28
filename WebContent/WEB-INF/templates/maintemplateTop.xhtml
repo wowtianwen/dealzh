@@ -9,17 +9,15 @@
 		<link rel="shortcut icon" href="/resources/images/favicon.ico" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<ui:remove>
-			<!-- CSS file for IE  -->
-			<h:outputText
-				value="&lt;!--[if IE ]&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/css/forum-IE.css?v=10&quot; /&gt;&lt;![endif]--&gt;"
-				escape="false" />
+		<!-- CSS file for IE  -->
+		<h:outputText
+			value="&lt;!--[if IE ]&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/css/forum-IE.css?v=10&quot; /&gt;&lt;![endif]--&gt;"
+			escape="false" />
 
-			<!-- CSS file for non-IE  -->
-			<h:outputText
-				value="&lt;!--[if !IE ]&gt; &lt;!--&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/css/forum.css?v=10&quot; /&gt;&lt;!--&lt;![endif]--&gt;"
-				escape="false" />
-		</ui:remove>
+		<!-- CSS file for non-IE  -->
+		<h:outputText
+			value="&lt;!--[if !IE ]&gt; &lt;!--&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/css/forum.css?v=10&quot; /&gt;&lt;!--&lt;![endif]--&gt;"
+			escape="false" />
 		<h:outputStylesheet library="css" name="bootstrap.css"></h:outputStylesheet>
 		<h:outputStylesheet library="css" name="bootstrap-theme.css"></h:outputStylesheet>
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

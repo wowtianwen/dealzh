@@ -9,105 +9,135 @@
 
 		<div class="row">
 			<div class="col-xs-9">
-				<div class="panel well">（图片介绍如何拿到返利） 轻松拿返利：1、登录yourhotdeal 2、选择购买商家 3、下单购物成功 4、3天内邮件提醒到账</div>
-			</div>
-			<div class="col-xs-3">
-				<div class="panel well">热门返利商家：（16-20个）</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-9">
-				<h:outputText value="#{msgs.EditorPickedDeal}" title="#{msgs.EditorPickedDeal_title}" styleClass="topPickedDeal"></h:outputText>
-				<h:form>
-					<p:tabView var="category" value="#{threadDashBoardCacheService.allDBCategoryWithAllDealCat}" dynamic="true" cache="true"
-						activeIndex="#{sessionScope.activeIndexDealTab}">
-						<p:tab title="#{category.categoryName}">
-							<p:dataScroller value="#{mainDashBoardBackingBean.dashBoardThreadsDB}" var="threadDB" chunkSize="10">
-								<f:event type="preRenderComponent" listener="#{mainDashBoardBackingBean.prepareFeatch4AllThreadDB(category)}" />
-								<div class="row">
-									<div class="col-xs-4">
-										<h:panelGroup layout="block">
-											<h:link outcome="/thread/viewthread">
-												<f:param name="id" value="#{threadDB.threadId}"></f:param>
-												<div class="thumbnail">
-													<img src="#{threadDB.picturePathURL}" data-src="holder.js/100x100" />
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="panel well">（图片介绍如何拿到返利） 轻松拿返利：1、登录yourhotdeal 2、选择购买商家 3、下单购物成功 4、3天内邮件提醒到账</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<h:outputText value="#{msgs.EditorPickedDeal}" title="#{msgs.EditorPickedDeal_title}" styleClass="topPickedDeal"></h:outputText>
+						<h:form>
+							<p:tabView var="category" value="#{threadDashBoardCacheService.allDBCategoryWithAllDealCat}" dynamic="true" cache="true"
+								activeIndex="#{sessionScope.activeIndexDealTab}">
+								<p:tab title="#{category.categoryName}">
+									<p:dataScroller value="#{mainDashBoardBackingBean.dashBoardThreadsDB}" var="threadDB" chunkSize="10">
+										<f:event type="preRenderComponent" listener="#{mainDashBoardBackingBean.prepareFeatch4AllThreadDB(category)}" />
+										<div class="row">
+											<div class="col-xs-4">
+												<h:panelGroup layout="block">
+													<h:link outcome="/thread/viewthread" styleClass="thumbnail">
+														<f:param name="id" value="#{threadDB.threadId}"></f:param>
+														<img src="#{threadDB.picturePathURL}" data-src="holder.js/100x100" class="img-responsive " />
+													</h:link>
+													<h:graphicImage name="HOT.png" library="images" rendered="#{(threadDB.markedHot)}" />
+												</h:panelGroup>
+												<h:panelGroup styleClass="storeSecton">
+													<h:panelGroup rendered="#{!empty threadDB.store.cashBackPercent}" styleClass="storeCashBackPct">
+														<h:outputFormat value="#{threadDB.store.cashBackPercent}">
+															<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+														</h:outputFormat>
+														<h:outputText value="cash back"></h:outputText>
+													</h:panelGroup>
+												</h:panelGroup>
+											</div>
+											<div class="col-xs-8">
+												<div class="row">
+													<div class="col-xs-12">
+														<h:link outcome="/thread/viewthread">
+															<f:param name="id" value="#{threadDB.threadId}"></f:param>
+															<h5>#{threadDB.threadSubject}</h5>
+														</h:link>
+													</div>
 												</div>
-											</h:link>
-											<div class="hotimg">
-												<h:graphicImage name="HOT.png" library="images" rendered="#{(threadDB.markedHot)}" />
-											</div>
-										</h:panelGroup>
-										<h:panelGroup styleClass="storeSecton">
-											<h:panelGroup rendered="#{!empty threadDB.store.cashBackPercent}" styleClass="storeCashBackPct">
-												<h:outputFormat value="#{threadDB.store.cashBackPercent}">
-													<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
-												</h:outputFormat>
-												<h:outputText value=" cash back"></h:outputText>
-											</h:panelGroup>
-										</h:panelGroup>
-									</div>
-									<div class="col-xs-8">
-										<div class="row">
-											<div class="col-xs-12">
-												<h:link outcome="/thread/viewthread">
-													<f:param name="id" value="#{threadDB.threadId}"></f:param>
-													<h5>#{threadDB.threadSubject}</h5>
-												</h:link>
-											</div>
-										</div>
 
-										<div class="row">
-											<div class="col-xs-12">
-												<p>
-													<h:outputText value="#{threadDB.fullContent}" escape="false"></h:outputText>
-												</p>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-xs-6">
-												<ui:include src="/WEB-INF/templates/BSharePlugin.xhtml"></ui:include>
-											</div>
-											<div class="col-xs-6">
-												<h:outputText value="#{msgs.like}"></h:outputText>
-												<h:link outcome="/thread/viewthread" value="#{msgs.comment}">
-													<f:param name="id" value="#{threadDB.threadId}"></f:param>
-												</h:link>
-											</div>
-										</div>
+												<div class="row">
+													<div class="col-xs-12">
+														<p>
+															<h:outputText value="#{threadDB.fullContent}" escape="false"></h:outputText>
+														</p>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-6">
+														<ui:include src="/WEB-INF/templates/BSharePlugin.xhtml"></ui:include>
+													</div>
+													<div class="col-xs-6">
+														<h:outputText value="#{msgs.like}"></h:outputText>
+														<h:link outcome="/thread/viewthread" value="#{msgs.comment}">
+															<f:param name="id" value="#{threadDB.threadId}"></f:param>
+														</h:link>
+													</div>
+												</div>
 
-									</div>
+											</div>
 
-								</div>
-								<f:facet name="loader">
-									<p:commandButton type="button" value="More" icon="ui-icon-circle-triangle-s" />
-								</f:facet>
-							</p:dataScroller>
-						</p:tab>
-					</p:tabView>
-				</h:form>
+										</div>
+										<f:facet name="loader">
+											<p:commandButton type="button" value="More" icon="ui-icon-circle-triangle-s" />
+										</f:facet>
+									</p:dataScroller>
+								</p:tab>
+							</p:tabView>
+						</h:form>
+					</div>
+				</div>
 			</div>
+
 			<div class="col-xs-3">
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="panel">晒单</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">#{msgs.PopularStores}</div>
+							<p:dataList value="#{systemCacheEjb.popularStores}" var="popularStore" lazy="false" itemStyleClass="list-inline">
+								<div>
+									<h:graphicImage name="money.jpg" library="images" styleClass="moneySign" title="#{msgs.CashBack}"></h:graphicImage>
+									<h:outputFormat value="#{popularStore.cashBackPercent}" rendered="#{popularStore.cashBackPercent!=0}" styleClass="green"
+										title="#{msgs.CashBack}">
+										<f:convertNumber type="percent" maxFractionDigits="2" minFractionDigits="2"></f:convertNumber>
+									</h:outputFormat>
+									<h:outputFormat value="#{msgs.ComingSoon}" rendered="#{popularStore.cashBackPercent==0}" title="#{msgs.CashBack}">
+									</h:outputFormat>
+								</div>
+								<h:link outcome="/stores/viewStore">
+									<f:param name="id" value="#{popularStore.id}"></f:param>
+									<div class="indexImgRightPage">
+										<h:graphicImage url="/resources/storePic/#{popularStore.storePicturePathURL}" styleClass="dealPicSmaller" />
+									</div>
+
+								</h:link>
+
+							</p:dataList>
+							<div class="col-md-6"></div>
+						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="panel">论坛最新贴</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="panel">精华帖</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="panel">海淘问答</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="panel">晒单</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="panel">论坛最新贴</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="panel">精华帖</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="panel">海淘问答</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</ui:define>
 

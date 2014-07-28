@@ -3,82 +3,78 @@
 
 <ui:composition>
 	<h:form id="headForm" prependId="false">
-		<div class="header">
-			<div class="row">
-				<div class="col-xs-12">
-					<ul class="list-inline pull-left">
-						<li><a href="http://www.weibo.com/yourhotdeal" target="_BLANK">weibo</a></li>
-						<li><a href="https://www.facebook.com/yourhotdeals" target="_BLANK">facebook</a></li>
-						<li><a href="https://twitter.com/yourhotdeal" target="_BLANK">Twitter</a></li>
-						<li><a href="">google+</a></li>
-						<li><a href="">wechat</a></li>
-					</ul>
-					<ul class="list-inline pull-right">
+		<div class="row">
+			<div class="col-xs-12">
+				<ul class="list-inline pull-left">
+					<li><a href="http://www.weibo.com/yourhotdeal" target="_BLANK">weibo</a></li>
+					<li><a href="https://www.facebook.com/yourhotdeals" target="_BLANK">facebook</a></li>
+					<li><a href="https://twitter.com/yourhotdeal" target="_BLANK">Twitter</a></li>
+					<li><a href="">google+</a></li>
+					<li><a href="">wechat</a></li>
+				</ul>
+				<ul class="list-inline pull-right">
 
-						<li><p:commandLink action="#{login.initEnroll()}" rendered="#{!login.userLoggedIn}" ajax="false" styleClass="tip">
+					<li><p:commandLink action="#{login.initEnroll()}" rendered="#{!login.userLoggedIn}" ajax="false" styleClass="tip">
 										#{msgs.newUserBonus}
 									</p:commandLink></li>
 
-						<li><p:commandLink action="#{userBackingBean.openUserProfile(constants.nameToValueMap.USER_TAB_TELL_A_FRIEND)}"
-								value="#{msgs.referUserBonus} " rendered="#{login.userLoggedIn}" ajax="false" styleClass="tip">
-							</p:commandLink></li>
+					<li><p:commandLink action="#{userBackingBean.openUserProfile(constants.nameToValueMap.USER_TAB_TELL_A_FRIEND)}"
+							value="#{msgs.referUserBonus} " rendered="#{login.userLoggedIn}" ajax="false" styleClass="tip">
+						</p:commandLink></li>
 
-						<li><p:commandLink action="#{login.initLogin()}" value="#{msgs.SignIn} " rendered="#{!login.userLoggedIn}" ajax="false">
-							</p:commandLink></li>
+					<li><p:commandLink action="#{login.initLogin()}" value="#{msgs.SignIn} " rendered="#{!login.userLoggedIn}" ajax="false">
+						</p:commandLink></li>
 
-						<li><h:panelGroup rendered="#{login.userLoggedIn}">
-								<p:commandLink value="#{msgs.Hello} #{login.currentUser.userId}" action="#{userBackingBean.openUserProfile}" global="false" ajax="false"></p:commandLink>
-							</h:panelGroup></li>
+					<li><h:panelGroup rendered="#{login.userLoggedIn}">
+							<p:commandLink value="#{msgs.Hello} #{login.currentUser.userId}" action="#{userBackingBean.openUserProfile}" global="false" ajax="false"></p:commandLink>
+						</h:panelGroup></li>
 
-						<li><p:commandLink action="#{login.logOut}" value="#{msgs.LogOut}" disabled="#{!login.userLoggedIn}" ajax="false" /></li>
+					<li><p:commandLink action="#{login.logOut}" value="#{msgs.LogOut}" disabled="#{!login.userLoggedIn}" ajax="false" /></li>
 
-						<li><h:link id="messagesNumberx" value="#{msgs.Message} #{sessionScope.NumberOfNewMessages}" outcome="/message/messagebox.xhtml"
-								rendered="#{login.userLoggedIn}" /></li>
-						<li><h:link outcome="/threadStaging/listThreadStaging.xhtml" value="#{msgs.StagingDeal}"
-								rendered="#{login.isUserInSysadmin() || login.isUserOwnerOfAnyCategory(login.getCurrentUser())}" /></li>
-						<li><h:link outcome="/system/managePendingThread.xhtml" value="#{msgs.PendingThread}"
-								rendered="#{login.isUserInSysadmin() || login.isUserOwnerOfAnyCategory(login.getCurrentUser())}" /></li>
-						<li><h:link outcome="/system/index.xhtml" value="${msgs.SystemAdmin}" rendered="#{login.isUserInSysadmin()}"></h:link></li>
-						<li><h:outputFormat value="#{msgs.Online_User}">
-								<f:param value="#{onlineCounter.counter}"></f:param>
-							</h:outputFormat></li>
+					<li><h:link id="messagesNumberx" value="#{msgs.Message} #{sessionScope.NumberOfNewMessages}" outcome="/message/messagebox.xhtml"
+							rendered="#{login.userLoggedIn}" /></li>
+					<li><h:link outcome="/threadStaging/listThreadStaging.xhtml" value="#{msgs.StagingDeal}"
+							rendered="#{login.isUserInSysadmin() || login.isUserOwnerOfAnyCategory(login.getCurrentUser())}" /></li>
+					<li><h:link outcome="/system/managePendingThread.xhtml" value="#{msgs.PendingThread}"
+							rendered="#{login.isUserInSysadmin() || login.isUserOwnerOfAnyCategory(login.getCurrentUser())}" /></li>
+					<li><h:link outcome="/system/index.xhtml" value="${msgs.SystemAdmin}" rendered="#{login.isUserInSysadmin()}"></h:link></li>
+					<li><h:outputFormat value="#{msgs.Online_User}">
+							<f:param value="#{onlineCounter.counter}"></f:param>
+						</h:outputFormat></li>
 
-					</ul>
-				</div>
+				</ul>
 			</div>
+		</div>
 
-			<!--top over-->
-			<div class="row">
-				<div class="small-3 columns">
-					<h:link outcome="/index.xhtml" title="#{msgs.Home}">
-						<h:graphicImage name="logo2.jpg" library="images" alt="Home" />
-					</h:link>
-				</div>
-				<div class="small-9 columns">
-					<ui:include src="/ad/selfAd.xhtml"></ui:include>
-				</div>
+		<!--top over-->
+		<div class="row">
+			<div class="col-xs-3 ">
+				<h:link outcome="/index.xhtml" title="#{msgs.Home}">
+					<h:graphicImage name="logo2.jpg" library="images" alt="Home" />
+				</h:link>
 			</div>
-			<div class="row">
-				<div class="small-12 columns">
-					<nav class="top-bar">
-						<section class="top-bar-section">
-							<ul>
+			<div class="col-xs-9">
+				<ui:include src="/ad/selfAd.xhtml"></ui:include>
+			</div>
+		</div>
+		<div class="row">
+			<div class="small-12 columns">
+				<nav class="navbar navbar-default" role="navigation">
+					<div class="container-fluid">
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
 								<li><h:link id="home" outcome="/index.xhtml" value="#{msgs.Home}" /></li>
-								<li>|</li>
 								<li><h:link id="hotDeal" outcome="/category/indexthreads4AllCategory.xhtml">
 					 #{msgs.HotDeals}(<span class="numOfDeals4Today">#{threadCacheEjb.numberOfDeals4Today} #{msgs.dealsToday}</span>)
 						</h:link></li>
-
-								<li>|</li>
 								<li><h:link id="listStore" outcome="/stores/listStore.xhtml" value="#{msgs.Store}" /></li>
-								<li>|</li>
 								<li><h:link id="cashBack" outcome="/help/help.xhtml">#{msgs.CashBack}<span class="red">(New)</span>
 									</h:link></li>
-
 							</ul>
-						</section>
-					</nav>
-				</div>
+
+						</div>
+					</div>
+				</nav>
 			</div>
 		</div>
 	</h:form>
